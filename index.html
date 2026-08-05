@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Razzak's Job Feed — Tableau / BI Roles (AU &amp; NZ)</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
+  h1 { font-size: 1.4rem; }
+  .meta { color: #666; font-size: 0.9rem; margin-bottom: 1.5rem; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid #ddd; vertical-align: top; }
+  th { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.03em; color: #888; }
+  tr:hover { background: rgba(127,127,127,0.08); }
+  a { color: inherit; }
+  code { background: rgba(127,127,127,0.15); padding: 0.15rem 0.4rem; border-radius: 4px; }
+  .empty { color: #888; font-style: italic; }
+</style>
+</head>
+<body>
+<h1>Tableau / BI Job Feed — Australia &amp; New Zealand</h1>
+<p class="meta">
+  Auto-updated daily. Raw JSON: <code>jobs.json</code> in this repo, or fetch it directly
+  at the same path as this page.
+</p>
+<div id="updated" class="meta"></div>
+<table id="table">
+  <thead><tr><th>Date</th><th>Company</th><th>Title</th><th>Location</th><th></th></tr></thead>
+  <tbody id="rows"></tbody>
+</table>
+<p id="empty" class="empty" style="display:none;">No jobs listed yet.</p>
+
+<script>
+fetch('jobs.json')
+  .then(r => r.json())
+  .then(data => {
+    document.getElementById('updated').textContent = 'Last updated: ' + (data.updated || 'n/a') + ' — ' + data.count + ' listing(s)';
+    const rows = document.getElementById('rows');
+    if (!data.jobs || !data.jobs.length) {
+      document.getElementById('empty').style.display = 'block';
+      return;
+    }
+    const sorted = [...data.jobs].sort((a, b) => b.date.localeCompare(a.date));
+    for (const j of sorted) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${j.date}</td><td>${j.company}</td><td>${j.title}</td><td>${j.location}</td><td><a href="${j.url}" target="_blank" rel="noopener">View →</a></td>`;
+      rows.appendChild(tr);
+    }
+  })
+  .catch(() => {
+    document.getElementById('empty').textContent = 'Could not load jobs.json.';
+    document.getElementById('empty').style.display = 'block';
+  });
+</script>
+</body>
+</html>
