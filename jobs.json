@@ -1,132 +1,20 @@
-{
-  "updated": "2026-08-05",
-  "count": 18,
-  "jobs": [
-    {
-      "date": "2026-07-30",
-      "company": "Konnexus",
-      "title": "Tableau Reporting Developer",
-      "location": "Melbourne, VIC",
-      "url": "https://www.seek.com.au/job/93171580"
-    },
-    {
-      "date": "2026-07-30",
-      "company": "Billigence",
-      "title": "Senior Tableau Consultant",
-      "location": "Melbourne, VIC",
-      "url": "https://www.seek.com.au/job/93157572"
-    },
-    {
-      "date": "2026-07-30",
-      "company": "InterWorks",
-      "title": "Senior Data Consultant",
-      "location": "Melbourne, VIC",
-      "url": "https://www.seek.com.au/job/93641704"
-    },
-    {
-      "date": "2026-07-30",
-      "company": "Equity Trustees",
-      "title": "Business Intelligence & Solutions Analyst",
-      "location": "Melbourne, VIC",
-      "url": "https://www.seek.com.au/job/93132044"
-    },
-    {
-      "date": "2026-07-30",
-      "company": "Hays Technology (recruiter)",
-      "title": "Senior BI Reporting Analyst",
-      "location": "Melbourne, VIC",
-      "url": "https://www.seek.com.au/job/93498378"
-    },
-    {
-      "date": "2026-07-30",
-      "company": "Konnexus",
-      "title": "Data Quality Analyst",
-      "location": "Melbourne, VIC",
-      "url": "https://www.seek.com.au/job/93588267"
-    },
-    {
-      "date": "2026-07-30",
-      "company": "Just Digital People (recruiter)",
-      "title": "BI and Data Analyst",
-      "location": "Melbourne, VIC",
-      "url": "https://www.seek.com.au/job/93567037"
-    },
-    {
-      "date": "2026-07-30",
-      "company": "Auto & General",
-      "title": "Business & Reporting Analyst",
-      "location": "Toowong, Brisbane, QLD",
-      "url": "https://www.glassdoor.com.au (listing found via search; verify current URL)"
-    },
-    {
-      "date": "2026-07-30",
-      "company": "Royal Flying Doctor Service Victoria",
-      "title": "Data Analyst",
-      "location": "Melbourne, VIC",
-      "url": "https://www.seek.com.au/job/93628991"
-    },
-    {
-      "date": "2026-07-30",
-      "company": "UniSuper Management Pty Ltd",
-      "title": "Data Analyst",
-      "location": "Melbourne, VIC",
-      "url": "https://www.seek.com.au/job/93045271"
-    },
-    {
-      "date": "2026-07-30",
-      "company": "Keypath Education",
-      "title": "Data Scientist, Strategy & Insights",
-      "location": "Melbourne, VIC (Fully Remote)",
-      "url": "https://keypatheducation.teamtailor.com/jobs"
-    },
-    {
-      "date": "2026-07-31",
-      "company": "Transport for NSW",
-      "title": "Data Analyst",
-      "location": "Macquarie Park, NSW",
-      "url": "https://jobs.transport.nsw.gov.au/job/Macquarie-Park-Data-Analyst-NSW-2113/1061583266/"
-    },
-    {
-      "date": "2026-07-31",
-      "company": "City of Melbourne",
-      "title": "Senior Business Intelligence Analyst",
-      "location": "Melbourne, VIC",
-      "url": "https://au.linkedin.com/jobs/view/senior-business-intelligence-analyst-at-city-of-melbourne-4445090127"
-    },
-    {
-      "date": "2026-08-04",
-      "company": "Downer EDI",
-      "title": "Reporting & Data Analyst",
-      "location": "Melbourne, VIC",
-      "url": "https://au.linkedin.com/jobs/view/reporting-and-data-analyst-at-downer-4448820607"
-    },
-    {
-      "date": "2026-08-04",
-      "company": "Compare the Market Australia",
-      "title": "Senior Reporting Analyst",
-      "location": "Brisbane, QLD",
-      "url": "https://au.linkedin.com/jobs/view/senior-reporting-analyst-at-compare-the-market-australia-4446285864"
-    },
-    {
-      "date": "2026-08-04",
-      "company": "Bulla Dairy Foods",
-      "title": "Senior Business Intelligence (BI) Analyst",
-      "location": "Derrimut, VIC",
-      "url": "https://au.linkedin.com/jobs/view/senior-business-intelligence-bi-analyst-at-bulla-dairy-foods-4448538364"
-    },
-    {
-      "date": "2026-08-05",
-      "company": "MECCA Brands",
-      "title": "Inventory & Reporting Analyst",
-      "location": "Richmond, VIC",
-      "url": "https://au.linkedin.com/jobs/view/inventory-reporting-analyst-at-mecca-brands-4448935065"
-    },
-    {
-      "date": "2026-08-05",
-      "company": "Ignte",
-      "title": "Data and Reporting Analyst",
-      "location": "Greater Sydney, NSW",
-      "url": "https://au.linkedin.com/jobs/view/data-and-reporting-analyst-at-ignte-4448953434"
-    }
-  ]
-}
+[
+  {"date": "2026-07-30", "company": "Konnexus", "title": "Tableau Reporting Developer", "location": "Melbourne, VIC", "url": "https://www.seek.com.au/job/93171580", "fallback_search": "https://www.google.com/search?q=%22Konnexus%22+%22Tableau+Reporting+Developer%22+Melbourne+job", "relevance": 90},
+  {"date": "2026-07-30", "company": "Billigence", "title": "Senior Tableau Consultant", "location": "Melbourne, VIC", "url": "https://www.seek.com.au/job/93157572", "fallback_search": "https://www.google.com/search?q=%22Billigence%22+%22Senior+Tableau+Consultant%22+Melbourne+job", "relevance": 85},
+  {"date": "2026-07-30", "company": "InterWorks", "title": "Senior Data Consultant", "location": "Melbourne, VIC", "url": "https://www.seek.com.au/job/93641704", "fallback_search": "https://www.google.com/search?q=%22InterWorks%22+%22Senior+Data+Consultant%22+Melbourne+job", "relevance": 80},
+  {"date": "2026-07-30", "company": "Equity Trustees", "title": "Business Intelligence & Solutions Analyst", "location": "Melbourne, VIC", "url": "https://www.seek.com.au/job/93132044", "fallback_search": "https://www.google.com/search?q=%22Equity+Trustees%22+%22Business+Intelligence+%26+Solutions+Analyst%22+Melbourne+job", "relevance": 65},
+  {"date": "2026-07-30", "company": "Hays Technology (recruiter)", "title": "Senior BI Reporting Analyst", "location": "Melbourne, VIC", "url": "https://www.seek.com.au/job/93498378", "fallback_search": "https://www.google.com/search?q=%22Hays%22+%22Senior+BI+Reporting+Analyst%22+Melbourne+job", "relevance": 70},
+  {"date": "2026-07-30", "company": "Konnexus", "title": "Data Quality Analyst", "location": "Melbourne, VIC", "url": "https://www.seek.com.au/job/93588267", "fallback_search": "https://www.google.com/search?q=%22Konnexus%22+%22Data+Quality+Analyst%22+Melbourne+job", "relevance": 55},
+  {"date": "2026-07-30", "company": "Just Digital People (recruiter)", "title": "BI and Data Analyst", "location": "Melbourne, VIC", "url": "https://www.seek.com.au/job/93567037", "fallback_search": "https://www.google.com/search?q=%22Just+Digital+People%22+%22BI+and+Data+Analyst%22+Melbourne+job", "relevance": 65},
+  {"date": "2026-07-30", "company": "Auto & General", "title": "Business & Reporting Analyst", "location": "Toowong, Brisbane, QLD", "url": null, "fallback_search": "https://www.google.com/search?q=%22Auto+%26+General%22+%22Business+%26+Reporting+Analyst%22+Toowong+job", "relevance": 70, "note": "Original link was a Glassdoor homepage placeholder, not a direct job link — use fallback search."},
+  {"date": "2026-07-30", "company": "Royal Flying Doctor Service Victoria", "title": "Data Analyst", "location": "Melbourne, VIC", "url": "https://www.seek.com.au/job/93628991", "fallback_search": "https://www.google.com/search?q=%22Royal+Flying+Doctor+Service%22+%22Data+Analyst%22+Melbourne+job", "relevance": 70},
+  {"date": "2026-07-30", "company": "UniSuper Management Pty Ltd", "title": "Data Analyst", "location": "Melbourne, VIC", "url": "https://www.seek.com.au/job/93045271", "fallback_search": "https://www.google.com/search?q=%22UniSuper%22+%22Data+Analyst%22+Melbourne+job", "relevance": 70},
+  {"date": "2026-07-30", "company": "Keypath Education", "title": "Data Scientist, Strategy & Insights", "location": "Melbourne, VIC (Fully Remote)", "url": "https://keypatheducation.teamtailor.com/jobs", "fallback_search": "https://www.google.com/search?q=%22Keypath+Education%22+%22Data+Scientist%2C+Strategy+%26+Insights%22+job", "relevance": 55},
+  {"date": "2026-07-31", "company": "Transport for NSW", "title": "Data Analyst", "location": "Macquarie Park, NSW", "url": "https://jobs.transport.nsw.gov.au/job/Macquarie-Park-Data-Analyst-NSW-2113/1061583266/", "fallback_search": "https://www.google.com/search?q=%22Transport+for+NSW%22+%22Data+Analyst%22+Macquarie+Park+job", "relevance": 85},
+  {"date": "2026-07-31", "company": "City of Melbourne", "title": "Senior Business Intelligence Analyst", "location": "Melbourne, VIC", "url": "https://au.linkedin.com/jobs/view/senior-business-intelligence-analyst-at-city-of-melbourne-4445090127", "fallback_search": "https://www.google.com/search?q=%22City+of+Melbourne%22+%22Senior+Business+Intelligence+Analyst%22+job", "relevance": 50},
+  {"date": "2026-08-04", "company": "Downer EDI", "title": "Reporting & Data Analyst", "location": "Melbourne, VIC", "url": "https://au.linkedin.com/jobs/view/reporting-and-data-analyst-at-downer-4448820607", "fallback_search": "https://www.google.com/search?q=%22Downer%22+%22Reporting+%26+Data+Analyst%22+Melbourne+job", "relevance": 55},
+  {"date": "2026-08-04", "company": "Compare the Market Australia", "title": "Senior Reporting Analyst", "location": "Brisbane, QLD", "url": "https://au.linkedin.com/jobs/view/senior-reporting-analyst-at-compare-the-market-australia-4446285864", "fallback_search": "https://www.google.com/search?q=%22Compare+the+Market%22+%22Senior+Reporting+Analyst%22+Brisbane+job", "relevance": 50},
+  {"date": "2026-08-04", "company": "Bulla Dairy Foods", "title": "Senior Business Intelligence (BI) Analyst", "location": "Derrimut, VIC", "url": "https://au.linkedin.com/jobs/view/senior-business-intelligence-bi-analyst-at-bulla-dairy-foods-4448538364", "fallback_search": "https://www.google.com/search?q=%22Bulla+Dairy+Foods%22+%22Business+Intelligence+Analyst%22+Derrimut+job", "relevance": 50},
+  {"date": "2026-08-05", "company": "MECCA Brands", "title": "Inventory & Reporting Analyst", "location": "Richmond, VIC", "url": "https://au.linkedin.com/jobs/view/inventory-reporting-analyst-at-mecca-brands-4448935065", "fallback_search": "https://www.google.com/search?q=%22MECCA+Brands%22+%22Inventory+%26+Reporting+Analyst%22+Richmond+job", "relevance": 55},
+  {"date": "2026-08-05", "company": "Ignte", "title": "Data and Reporting Analyst", "location": "Greater Sydney Area, NSW", "url": "https://au.linkedin.com/jobs/view/data-and-reporting-analyst-at-ignte-4448953434", "fallback_search": "https://www.google.com/search?q=%22Ignte%22+%22Data+and+Reporting+Analyst%22+Sydney+job", "relevance": 45}
+]

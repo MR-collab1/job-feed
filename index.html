@@ -1,57 +1,145 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
+<title>Tableau / BI Job Feed — AU & NZ</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Razzak's Job Feed — Tableau / BI Roles (AU &amp; NZ)</title>
 <style>
-  :root { color-scheme: light dark; }
-  body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
+  body { font-family: -apple-system, Segoe UI, Arial, sans-serif; margin: 2rem auto; max-width: 960px; color: #1a1a1a; }
   h1 { font-size: 1.4rem; }
-  .meta { color: #666; font-size: 0.9rem; margin-bottom: 1.5rem; }
-  table { width: 100%; border-collapse: collapse; }
-  th, td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid #ddd; vertical-align: top; }
-  th { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.03em; color: #888; }
-  tr:hover { background: rgba(127,127,127,0.08); }
-  a { color: inherit; }
-  code { background: rgba(127,127,127,0.15); padding: 0.15rem 0.4rem; border-radius: 4px; }
-  .empty { color: #888; font-style: italic; }
+  .controls { display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center; margin: 1rem 0 1.5rem; padding: 0.75rem 1rem; background: #f4f4f4; border-radius: 8px; }
+  .controls label { font-size: 0.85rem; display: flex; flex-direction: column; gap: 0.25rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  th, td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid #e0e0e0; vertical-align: top; }
+  th { cursor: pointer; user-select: none; background: #fafafa; position: sticky; top: 0; }
+  tr:hover { background: #fafafa; }
+  .relevance-bar { display: inline-block; height: 8px; border-radius: 4px; background: #2b7a2b; vertical-align: middle; margin-right: 6px; }
+  .relevance-high { background: #2b7a2b; }
+  .relevance-med { background: #b8860b; }
+  .relevance-low { background: #a33; }
+  .note { font-size: 0.78rem; color: #a33; }
+  .fallback { font-size: 0.8rem; color: #555; }
+  #empty { padding: 1.5rem; text-align: center; color: #777; }
+  footer { margin-top: 2rem; font-size: 0.8rem; color: #777; }
 </style>
 </head>
 <body>
+
 <h1>Tableau / BI Job Feed — Australia &amp; New Zealand</h1>
-<p class="meta">
-  Auto-updated daily. Raw JSON: <code>jobs.json</code> in this repo, or fetch it directly
-  at the same path as this page.
-</p>
-<div id="updated" class="meta"></div>
-<table id="table">
-  <thead><tr><th>Date</th><th>Company</th><th>Title</th><th>Location</th><th></th></tr></thead>
-  <tbody id="rows"></tbody>
+<p>Auto-updated from the job-search agent's run history. Raw JSON: <code>jobs.json</code> in this repo, or fetch it directly at the same path as this page.</p>
+
+<div class="controls">
+  <label>From date
+    <input type="date" id="fromDate">
+  </label>
+  <label>To date
+    <input type="date" id="toDate">
+  </label>
+  <label>Min relevance: <span id="relVal">0</span>%
+    <input type="range" id="minRelevance" min="0" max="100" step="5" value="0">
+  </label>
+  <label>&nbsp;
+    <button id="reset">Reset filters</button>
+  </label>
+</div>
+
+<table id="jobsTable">
+  <thead>
+    <tr>
+      <th data-key="date">Date</th>
+      <th data-key="company">Company</th>
+      <th data-key="title">Title</th>
+      <th data-key="location">Location</th>
+      <th data-key="relevance">Relevance</th>
+      <th>Link</th>
+    </tr>
+  </thead>
+  <tbody id="jobsBody"></tbody>
 </table>
-<p id="empty" class="empty" style="display:none;">No jobs listed yet.</p>
+<div id="empty" style="display:none;">No jobs match the current filters.</div>
+
+<footer>Data sourced from Seek, Indeed, LinkedIn Jobs, Jora, and company career pages. Relevance % is an automated estimate of fit against the candidate profile, not a guarantee — always read the full listing.</footer>
 
 <script>
+let jobs = [];
+let sortKey = 'date';
+let sortDir = -1;
+
+function relevanceClass(v) {
+  if (v >= 70) return 'relevance-high';
+  if (v >= 50) return 'relevance-med';
+  return 'relevance-low';
+}
+
+function render() {
+  const from = document.getElementById('fromDate').value;
+  const to = document.getElementById('toDate').value;
+  const minRel = Number(document.getElementById('minRelevance').value);
+  document.getElementById('relVal').textContent = minRel;
+
+  let filtered = jobs.filter(j => {
+    if (from && j.date < from) return false;
+    if (to && j.date > to) return false;
+    if ((j.relevance || 0) < minRel) return false;
+    return true;
+  });
+
+  filtered.sort((a, b) => {
+    let av = a[sortKey], bv = b[sortKey];
+    if (av < bv) return -1 * sortDir;
+    if (av > bv) return 1 * sortDir;
+    return 0;
+  });
+
+  const body = document.getElementById('jobsBody');
+  body.innerHTML = '';
+  document.getElementById('empty').style.display = filtered.length ? 'none' : 'block';
+
+  for (const j of filtered) {
+    const tr = document.createElement('tr');
+    const linkHtml = j.url
+      ? `<a href="${j.url}" target="_blank" rel="noopener">Open listing</a>` +
+        (j.fallback_search ? `<br><a class="fallback" href="${j.fallback_search}" target="_blank" rel="noopener">search fallback</a>` : '')
+      : (j.fallback_search ? `<a href="${j.fallback_search}" target="_blank" rel="noopener">search (no direct link)</a>` : '—');
+    const noteHtml = j.note ? `<div class="note">${j.note}</div>` : '';
+    tr.innerHTML = `
+      <td>${j.date}</td>
+      <td>${j.company}</td>
+      <td>${j.title}${noteHtml}</td>
+      <td>${j.location}</td>
+      <td><span class="relevance-bar ${relevanceClass(j.relevance || 0)}" style="width:${j.relevance || 0}px;"></span>${j.relevance ?? '?'}%</td>
+      <td>${linkHtml}</td>
+    `;
+    body.appendChild(tr);
+  }
+}
+
+document.querySelectorAll('th[data-key]').forEach(th => {
+  th.addEventListener('click', () => {
+    const key = th.dataset.key;
+    if (sortKey === key) { sortDir *= -1; } else { sortKey = key; sortDir = 1; }
+    render();
+  });
+});
+
+document.getElementById('fromDate').addEventListener('input', render);
+document.getElementById('toDate').addEventListener('input', render);
+document.getElementById('minRelevance').addEventListener('input', render);
+document.getElementById('reset').addEventListener('click', () => {
+  document.getElementById('fromDate').value = '';
+  document.getElementById('toDate').value = '';
+  document.getElementById('minRelevance').value = 0;
+  render();
+});
+
 fetch('jobs.json')
   .then(r => r.json())
-  .then(data => {
-    document.getElementById('updated').textContent = 'Last updated: ' + (data.updated || 'n/a') + ' — ' + data.count + ' listing(s)';
-    const rows = document.getElementById('rows');
-    if (!data.jobs || !data.jobs.length) {
-      document.getElementById('empty').style.display = 'block';
-      return;
-    }
-    const sorted = [...data.jobs].sort((a, b) => b.date.localeCompare(a.date));
-    for (const j of sorted) {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${j.date}</td><td>${j.company}</td><td>${j.title}</td><td>${j.location}</td><td><a href="${j.url}" target="_blank" rel="noopener">View →</a></td>`;
-      rows.appendChild(tr);
-    }
-  })
+  .then(data => { jobs = data; render(); })
   .catch(() => {
-    document.getElementById('empty').textContent = 'Could not load jobs.json.';
     document.getElementById('empty').style.display = 'block';
+    document.getElementById('empty').textContent = 'Could not load jobs.json.';
   });
 </script>
+
 </body>
 </html>
