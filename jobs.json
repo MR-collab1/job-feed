@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-30",
-  "count": 11,
+  "updated": "2026-08-05",
+  "count": 18,
   "jobs": [
     {
       "date": "2026-07-30",
@@ -78,6 +78,55 @@
       "title": "Data Scientist, Strategy & Insights",
       "location": "Melbourne, VIC (Fully Remote)",
       "url": "https://keypatheducation.teamtailor.com/jobs"
+    },
+    {
+      "date": "2026-07-31",
+      "company": "Transport for NSW",
+      "title": "Data Analyst",
+      "location": "Macquarie Park, NSW",
+      "url": "https://jobs.transport.nsw.gov.au/job/Macquarie-Park-Data-Analyst-NSW-2113/1061583266/"
+    },
+    {
+      "date": "2026-07-31",
+      "company": "City of Melbourne",
+      "title": "Senior Business Intelligence Analyst",
+      "location": "Melbourne, VIC",
+      "url": "https://au.linkedin.com/jobs/view/senior-business-intelligence-analyst-at-city-of-melbourne-4445090127"
+    },
+    {
+      "date": "2026-08-04",
+      "company": "Downer EDI",
+      "title": "Reporting & Data Analyst",
+      "location": "Melbourne, VIC",
+      "url": "https://au.linkedin.com/jobs/view/reporting-and-data-analyst-at-downer-4448820607"
+    },
+    {
+      "date": "2026-08-04",
+      "company": "Compare the Market Australia",
+      "title": "Senior Reporting Analyst",
+      "location": "Brisbane, QLD",
+      "url": "https://au.linkedin.com/jobs/view/senior-reporting-analyst-at-compare-the-market-australia-4446285864"
+    },
+    {
+      "date": "2026-08-04",
+      "company": "Bulla Dairy Foods",
+      "title": "Senior Business Intelligence (BI) Analyst",
+      "location": "Derrimut, VIC",
+      "url": "https://au.linkedin.com/jobs/view/senior-business-intelligence-bi-analyst-at-bulla-dairy-foods-4448538364"
+    },
+    {
+      "date": "2026-08-05",
+      "company": "MECCA Brands",
+      "title": "Inventory & Reporting Analyst",
+      "location": "Richmond, VIC",
+      "url": "https://au.linkedin.com/jobs/view/inventory-reporting-analyst-at-mecca-brands-4448935065"
+    },
+    {
+      "date": "2026-08-05",
+      "company": "Ignte",
+      "title": "Data and Reporting Analyst",
+      "location": "Greater Sydney, NSW",
+      "url": "https://au.linkedin.com/jobs/view/data-and-reporting-analyst-at-ignte-4448953434"
     }
   ]
 }
