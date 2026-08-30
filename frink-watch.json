@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-08-30T12:48Z",
+  "last_checked": "2026-08-30T18:48Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -31,7 +31,10 @@
       "known_venues": [
         "Raydium (DEX)"
       ],
-      "pair": "dexscreener.com/solana/gttzhq4hjg5xf8yufitpwxqfm2jgh1zdwzqlbmoghjdg"
+      "pair": "dexscreener.com/solana/gttzhq4hjg5xf8yufitpwxqfm2jgh1zdwzqlbmoghjdg",
+      "contract": "HpCD8RwwMo3FYVsYzT99PmXuLZNJTETJh6ysPsAhBMEv",
+      "contract_confidence": "UNVERIFIED - from search summary, not read off an explorer",
+      "pool": "82iEeEYgapjNmTr9H2wV1MkbihgGig6WEy4t2sbUXZc4 (Raydium pool, NOT the token)"
     },
     {
       "name": "Frink Coin",
@@ -40,7 +43,10 @@
       "known_venues": [
         "Moonshot (DEX)"
       ],
-      "pair": "dexscreener.com/solana/joj8nt2gmuslnqlvntyqpxmzvngjnzggyyms5ummoon"
+      "pair": "dexscreener.com/solana/joj8nt2gmuslnqlvntyqpxmzvngjnzggyyms5ummoon",
+      "contract": "AGrLr9FGjWvYbN9dGFUPU6p8iTL3v4HPAoQcVLUMpump",
+      "contract_confidence": "UNVERIFIED - from search summary. \"pump\" suffix = pump.fun launch.",
+      "liquidity": "~$6.5K - effectively no exit liquidity"
     },
     {
       "name": "Frink Coin",
@@ -89,7 +95,8 @@
   "do_not_notify_on": [
     "Aggregator pages merely restating the unverified Kraken/Figure/BYDFi venue claims",
     "Price movement with no listing event",
-    "Presale marketing or 'top memecoin' listicles with no listing event"
+    "Presale marketing or 'top memecoin' listicles with no listing event",
+    "CRITICAL FALSE POSITIVE: exchange 'price pages' (coinbase.com/price/..., bitget.com/price/..., binance.com/price/...). These exist for thousands of assets the exchange does NOT list for trading and are auto-generated. A price page is NEVER evidence of a listing. Only a dated announcement from the exchange's own newsroom/announcements feed counts."
   ],
-  "baseline_notes": "2026-08-30 12:48Z check: no new listing. frinkcoin.in BSC token still confirmed as having NO CEX or DEX venue - aggregators agree it is unlisted everywhere. Added a second BSC contract as a known name-collision variant."
+  "baseline_notes": "2026-08-30 18:48Z check: NO listing. Search summaries asserted FRINK is 'available on Bitget and Coinbase' - this is FALSE, sourced from auto-generated price pages (coinbase.com/price/solana-frinkcoin-8up2, bitget.com/price/frinkcoin), not trading listings. Rejected as a false positive. Also filled in two Solana mints."
 }
