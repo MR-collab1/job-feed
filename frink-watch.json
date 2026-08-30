@@ -1,8 +1,14 @@
 {
   "_comment": "Baseline of known FRINK / Frinkcoin crypto assets and their venues. Updated by the recurring listing-watch check. A venue not in this file is treated as a NEW listing worth notifying about.",
-  "watch_terms": ["frinkcoin", "frink coin", "FRINK", "FRNK", "FRN"],
+  "watch_terms": [
+    "frinkcoin",
+    "frink coin",
+    "FRINK",
+    "FRNK",
+    "FRN"
+  ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-08-30",
+  "last_checked": "2026-08-30T06:48Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -11,29 +17,60 @@
       "contract": "0xf938c9a22c6fc9e6b81b24b68db94b92dc4a7976",
       "supply": "21,000,000",
       "status": "Untracked on CoinMarketCap; near-zero price; ~29 holders",
-      "known_venues": ["Kraken (listed by aggregators, unconfirmed)", "Figure Markets (unconfirmed)", "BYDFi (unconfirmed)"],
+      "known_venues": [
+        "Kraken (listed by aggregators, unconfirmed)",
+        "Figure Markets (unconfirmed)",
+        "BYDFi (unconfirmed)"
+      ],
       "notes": "CoinCarp reports no active exchange availability. Aggregator venue claims conflict and are treated as unverified, NOT as confirmed live listings."
     },
     {
       "name": "FRINKCOIN",
       "ticker": "FRINK",
       "chain": "Solana",
-      "known_venues": ["Raydium (DEX)"],
+      "known_venues": [
+        "Raydium (DEX)"
+      ],
       "pair": "dexscreener.com/solana/gttzhq4hjg5xf8yufitpwxqfm2jgh1zdwzqlbmoghjdg"
     },
     {
       "name": "Frink Coin",
       "ticker": "FRINK",
       "chain": "Solana",
-      "known_venues": ["Moonshot (DEX)"],
+      "known_venues": [
+        "Moonshot (DEX)"
+      ],
       "pair": "dexscreener.com/solana/joj8nt2gmuslnqlvntyqpxmzvngjnzggyyms5ummoon"
     },
     {
       "name": "Frink Coin",
       "ticker": "FRN",
       "chain": "Solana",
-      "known_venues": ["CoinMooner (tracker only)"],
+      "known_venues": [
+        "CoinMooner (tracker only)"
+      ],
       "notes": "Presale via coingabbar ended 2026-04-30 at 0.025205 USDT; stated plan to list on a Solana DEX. No confirmed listing yet."
+    },
+    {
+      "name": "FrinkCoin",
+      "ticker": "FRINK",
+      "chain": "BSC (BEP-20)",
+      "contract": "0x2d1a8026e1bdc8134a0eaff6f949f1ec6f98f0fc",
+      "site": "frinkcoin.in",
+      "known_venues": [],
+      "status": "NO confirmed venue. Project states it will trade only after a CEX listing - deliberately no DEX pool, no PancakeSwap liquidity.",
+      "notes": "PRIMARY WATCH TARGET: this project's entire model is a pending CEX listing, so it is the most likely source of a real listing event. CAUTION: site messaging is self-contradictory (claims no PancakeSwap trading while some sources say it is buyable there). Unaudited claims - treat any 'listing' news from project channels as unverified until the exchange itself announces it."
+    },
+    {
+      "name": "Frinkcoin",
+      "ticker": "FRINK",
+      "chain": "Solana",
+      "contract": "Epcq3sCGpE3nscboQJER8rUBWWXcCo5iaqr1YejVy9qa",
+      "supply": "1,000,000,000",
+      "known_venues": [
+        "webby.fun (launchpad)"
+      ],
+      "notes": "Pre-existing; missed in the initial 2026-08-30 baseline sweep. Not a new listing."
     }
   ],
   "notify_on": [
@@ -45,5 +82,6 @@
     "Aggregator pages merely restating the unverified Kraken/Figure/BYDFi venue claims",
     "Price movement with no listing event",
     "Presale marketing or 'top memecoin' listicles with no listing event"
-  ]
+  ],
+  "baseline_notes": "2026-08-30 06:48Z check: added the BSC and webby.fun Solana assets. Both pre-existed the baseline - they were gaps in the first sweep, NOT new listing events. No notification sent."
 }
