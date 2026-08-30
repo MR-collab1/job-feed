@@ -1,0 +1,49 @@
+{
+  "_comment": "Baseline of known FRINK / Frinkcoin crypto assets and their venues. Updated by the recurring listing-watch check. A venue not in this file is treated as a NEW listing worth notifying about.",
+  "watch_terms": ["frinkcoin", "frink coin", "FRINK", "FRNK", "FRN"],
+  "baseline_established": "2026-08-30",
+  "last_checked": "2026-08-30",
+  "known_assets": [
+    {
+      "name": "Frinkcoin",
+      "ticker": "FRNK",
+      "chain": "Ethereum",
+      "contract": "0xf938c9a22c6fc9e6b81b24b68db94b92dc4a7976",
+      "supply": "21,000,000",
+      "status": "Untracked on CoinMarketCap; near-zero price; ~29 holders",
+      "known_venues": ["Kraken (listed by aggregators, unconfirmed)", "Figure Markets (unconfirmed)", "BYDFi (unconfirmed)"],
+      "notes": "CoinCarp reports no active exchange availability. Aggregator venue claims conflict and are treated as unverified, NOT as confirmed live listings."
+    },
+    {
+      "name": "FRINKCOIN",
+      "ticker": "FRINK",
+      "chain": "Solana",
+      "known_venues": ["Raydium (DEX)"],
+      "pair": "dexscreener.com/solana/gttzhq4hjg5xf8yufitpwxqfm2jgh1zdwzqlbmoghjdg"
+    },
+    {
+      "name": "Frink Coin",
+      "ticker": "FRINK",
+      "chain": "Solana",
+      "known_venues": ["Moonshot (DEX)"],
+      "pair": "dexscreener.com/solana/joj8nt2gmuslnqlvntyqpxmzvngjnzggyyms5ummoon"
+    },
+    {
+      "name": "Frink Coin",
+      "ticker": "FRN",
+      "chain": "Solana",
+      "known_venues": ["CoinMooner (tracker only)"],
+      "notes": "Presale via coingabbar ended 2026-04-30 at 0.025205 USDT; stated plan to list on a Solana DEX. No confirmed listing yet."
+    }
+  ],
+  "notify_on": [
+    "Any centralized exchange (Binance, Coinbase, Kraken, OKX, Bybit, KuCoin, MEXC, Gate.io, Bitget, Upbit, etc.) announcing a FRINK/FRNK/Frinkcoin spot or futures listing",
+    "A confirmed new DEX pool for a FRINK-named token on a new chain",
+    "The Frink Coin presale token completing its planned DEX listing"
+  ],
+  "do_not_notify_on": [
+    "Aggregator pages merely restating the unverified Kraken/Figure/BYDFi venue claims",
+    "Price movement with no listing event",
+    "Presale marketing or 'top memecoin' listicles with no listing event"
+  ]
+}
