@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-08-30T06:48Z",
+  "last_checked": "2026-08-30T12:48Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -71,6 +71,14 @@
         "webby.fun (launchpad)"
       ],
       "notes": "Pre-existing; missed in the initial 2026-08-30 baseline sweep. Not a new listing."
+    },
+    {
+      "name": "Frinkcoin",
+      "ticker": "FRINK",
+      "chain": "BSC (BEP-20)",
+      "contract": "0x2b62c3a9b2878c0cca8828ee58d56ad28124958d",
+      "known_venues": [],
+      "notes": "Second, DISTINCT BSC contract sharing the FRINK name (tracked by TheBitTimes/CoinSniper). Not the 0x2d1a8026... frinkcoin.in token. Recorded as a pre-existing name-collision variant so future checks do not flag it as a new listing. Name collisions across chains are dense for this ticker - always match on contract, never on symbol."
     }
   ],
   "notify_on": [
@@ -83,5 +91,5 @@
     "Price movement with no listing event",
     "Presale marketing or 'top memecoin' listicles with no listing event"
   ],
-  "baseline_notes": "2026-08-30 06:48Z check: added the BSC and webby.fun Solana assets. Both pre-existed the baseline - they were gaps in the first sweep, NOT new listing events. No notification sent."
+  "baseline_notes": "2026-08-30 12:48Z check: no new listing. frinkcoin.in BSC token still confirmed as having NO CEX or DEX venue - aggregators agree it is unlisted everywhere. Added a second BSC contract as a known name-collision variant."
 }
