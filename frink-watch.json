@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-08-30T18:48Z",
+  "last_checked": "2026-08-31T12:48Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -85,6 +85,15 @@
       "contract": "0x2b62c3a9b2878c0cca8828ee58d56ad28124958d",
       "known_venues": [],
       "notes": "Second, DISTINCT BSC contract sharing the FRINK name (tracked by TheBitTimes/CoinSniper). Not the 0x2d1a8026... frinkcoin.in token. Recorded as a pre-existing name-collision variant so future checks do not flag it as a new listing. Name collisions across chains are dense for this ticker - always match on contract, never on symbol."
+    },
+    {
+      "name": "FRINKCOIN",
+      "ticker": "FRINK",
+      "chain": "Ethereum",
+      "contract": "0x8082db21c92d8933706cc35d46b44fbc9dbf85ec",
+      "known_venues": [],
+      "contract_confidence": "UNVERIFIED - from a Coinscan URL in search results, not read off Etherscan",
+      "notes": "SECOND distinct Ethereum FRINK, separate from FRNK at 0xf938c9a2... Directly relevant to the user, who holds a 'FRINK ETH' position: their holding could be either ETH contract. Corrects the earlier statement that 0xf938c9a2... was the only Ethereum FRINK."
     }
   ],
   "notify_on": [
@@ -98,5 +107,5 @@
     "Presale marketing or 'top memecoin' listicles with no listing event",
     "CRITICAL FALSE POSITIVE: exchange 'price pages' (coinbase.com/price/..., bitget.com/price/..., binance.com/price/...). These exist for thousands of assets the exchange does NOT list for trading and are auto-generated. A price page is NEVER evidence of a listing. Only a dated announcement from the exchange's own newsroom/announcements feed counts."
   ],
-  "baseline_notes": "2026-08-30 18:48Z check: NO listing. Search summaries asserted FRINK is 'available on Bitget and Coinbase' - this is FALSE, sourced from auto-generated price pages (coinbase.com/price/solana-frinkcoin-8up2, bitget.com/price/frinkcoin), not trading listings. Rejected as a false positive. Also filled in two Solana mints."
+  "baseline_notes": "2026-08-31 12:48Z check: no listing. Aggregators now state FRINKCOIN is on 0 exchanges across 0 trading pairs. Found a second Ethereum FRINK contract (0x8082db21...), which corrects the earlier claim that only one ETH FRINK existed."
 }
