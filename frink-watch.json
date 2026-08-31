@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-08-31T12:48Z",
+  "last_checked": "2026-08-31T18:48Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -105,7 +105,12 @@
     "Aggregator pages merely restating the unverified Kraken/Figure/BYDFi venue claims",
     "Price movement with no listing event",
     "Presale marketing or 'top memecoin' listicles with no listing event",
-    "CRITICAL FALSE POSITIVE: exchange 'price pages' (coinbase.com/price/..., bitget.com/price/..., binance.com/price/...). These exist for thousands of assets the exchange does NOT list for trading and are auto-generated. A price page is NEVER evidence of a listing. Only a dated announcement from the exchange's own newsroom/announcements feed counts."
+    "CRITICAL FALSE POSITIVE: exchange 'price pages' (coinbase.com/price/..., bitget.com/price/..., binance.com/price/...). These exist for thousands of assets the exchange does NOT list for trading and are auto-generated. A price page is NEVER evidence of a listing. Only a dated announcement from the exchange's own newsroom/announcements feed counts.",
+    "Inflated market-cap figures on aggregator pages (e.g. Bitget showing FRNK at $0.006804 / $142.89M mcap) that contradict $0 24h volume elsewhere. Market cap = price x supply and is meaningless without liquidity; a dead token can show a large mcap. Not a listing signal."
   ],
-  "baseline_notes": "2026-08-31 12:48Z check: no listing. Aggregators now state FRINKCOIN is on 0 exchanges across 0 trading pairs. Found a second Ethereum FRINK contract (0x8082db21...), which corrects the earlier claim that only one ETH FRINK existed."
+  "baseline_notes": "2026-08-31 18:48Z check: no listing. Logged two aggregator data-quality traps (inflated Bitget mcap; chain/contract mismatch on Bitget's swap page).",
+  "data_quality_warnings": [
+    "Bitget reports FRNK at $0.006804 with a $142.89M market cap while CoinMarketCap/CoinCarp report the token untracked with $0 volume. The Bitget figure is almost certainly price x total supply on a token with no real market. Do not treat it as a valuation.",
+    "Bitget's web3 swap page for FRNK (web3.bitget.com/en/swap/bnb/0xf938c9A2...) labels the chain as BNB while using the ETHEREUM contract address. Aggregators mismatch chain and contract for this ticker - another reason to verify on a block explorer rather than trusting aggregator pages."
+  ]
 }
