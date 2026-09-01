@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-08-31T18:48Z",
+  "last_checked": "2026-09-01T06:48Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -91,9 +91,12 @@
       "ticker": "FRINK",
       "chain": "Ethereum",
       "contract": "0x8082db21c92d8933706cc35d46b44fbc9dbf85ec",
-      "known_venues": [],
+      "known_venues": [
+        "Uniswap / Ethereum DEX pair (tracked on DEXTools)"
+      ],
       "contract_confidence": "UNVERIFIED - from a Coinscan URL in search results, not read off Etherscan",
-      "notes": "SECOND distinct Ethereum FRINK, separate from FRNK at 0xf938c9a2... Directly relevant to the user, who holds a 'FRINK ETH' position: their holding could be either ETH contract. Corrects the earlier statement that 0xf938c9a2... was the only Ethereum FRINK."
+      "notes": "SECOND distinct Ethereum FRINK, separate from FRNK at 0xf938c9a2... Directly relevant to the user, who holds a 'FRINK ETH' position: their holding could be either ETH contract. Corrects the earlier statement that 0xf938c9a2... was the only Ethereum FRINK. DISCOVERY, not a new listing: this pair pre-existed and was simply absent from the baseline. Unlike FRNK 0xf938c9a2... (which shows $0 volume), this ETH contract has an actual live DEX market.",
+      "price_observed": "$0.0000167 (2026-09-01)"
     }
   ],
   "notify_on": [
@@ -108,7 +111,7 @@
     "CRITICAL FALSE POSITIVE: exchange 'price pages' (coinbase.com/price/..., bitget.com/price/..., binance.com/price/...). These exist for thousands of assets the exchange does NOT list for trading and are auto-generated. A price page is NEVER evidence of a listing. Only a dated announcement from the exchange's own newsroom/announcements feed counts.",
     "Inflated market-cap figures on aggregator pages (e.g. Bitget showing FRNK at $0.006804 / $142.89M mcap) that contradict $0 24h volume elsewhere. Market cap = price x supply and is meaningless without liquidity; a dead token can show a large mcap. Not a listing signal."
   ],
-  "baseline_notes": "2026-08-31 18:48Z check: no listing. Logged two aggregator data-quality traps (inflated Bitget mcap; chain/contract mismatch on Bitget's swap page).",
+  "baseline_notes": "2026-09-01 06:48Z check: no new listing. Filled in that the second ETH contract 0x8082db21... has a live Uniswap pair at ~$0.0000167 (DEXTools). Pre-existing, so not an alert - but it distinguishes the two Ethereum FRINKs: one is dead, one actually trades.",
   "data_quality_warnings": [
     "Bitget reports FRNK at $0.006804 with a $142.89M market cap while CoinMarketCap/CoinCarp report the token untracked with $0 volume. The Bitget figure is almost certainly price x total supply on a token with no real market. Do not treat it as a valuation.",
     "Bitget's web3 swap page for FRNK (web3.bitget.com/en/swap/bnb/0xf938c9A2...) labels the chain as BNB while using the ETHEREUM contract address. Aggregators mismatch chain and contract for this ticker - another reason to verify on a block explorer rather than trusting aggregator pages."
