@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-02T12:48Z",
+  "last_checked": "2026-09-03T12:48Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -107,6 +107,18 @@
       "launched": "2024-01-25",
       "contract_confidence": "UNVERIFIED - from Top100Token search result",
       "notes": "Ninth FRINK-named asset. Pre-existing (launched Jan 2024), so a discovery rather than a listing event."
+    },
+    {
+      "name": "Frinkcoin (The Simpson cryptocurrency)",
+      "ticker": "FRINK",
+      "chain": "Solana",
+      "contract": "6gbTN8EBnqGwxTdpfKv23hq1z7QZwko5Ff3SXKDGpump",
+      "known_venues": [
+        "pump.fun (via Phantom token page)"
+      ],
+      "site": "frinkcoinz.com",
+      "contract_confidence": "UNVERIFIED - from a Phantom token URL in search results",
+      "notes": "Tenth FRINK-named asset. 'pump' suffix = pump.fun launch. Pre-existing; a discovery, not a listing event."
     }
   ],
   "notify_on": [
@@ -121,7 +133,7 @@
     "CRITICAL FALSE POSITIVE: exchange 'price pages' (coinbase.com/price/..., bitget.com/price/..., binance.com/price/...). These exist for thousands of assets the exchange does NOT list for trading and are auto-generated. A price page is NEVER evidence of a listing. Only a dated announcement from the exchange's own newsroom/announcements feed counts.",
     "Inflated market-cap figures on aggregator pages (e.g. Bitget showing FRNK at $0.006804 / $142.89M mcap) that contradict $0 24h volume elsewhere. Market cap = price x supply and is meaningless without liquidity; a dead token can show a large mcap. Not a listing signal."
   ],
-  "baseline_notes": "2026-09-02 12:48Z check: no listing. Added a ninth FRINK-named asset (Solana 4onqpWnV..., launched Jan 2024). Pattern after ~3 days of checks: no listing pipeline for any FRINK asset, but a steady stream of previously-unknown same-name contracts - the name is heavily reused.",
+  "baseline_notes": "2026-09-03 12:48Z check: no listing. Tenth FRINK-named asset recorded (Solana 6gbTN8EB...pump, frinkcoinz.com). Running tally after ~6 days: 10 distinct FRINK-named tokens across Ethereum (2), BSC (2), Solana (6); zero confirmed exchange listings for any of them.",
   "data_quality_warnings": [
     "Bitget reports FRNK at $0.006804 with a $142.89M market cap while CoinMarketCap/CoinCarp report the token untracked with $0 volume. The Bitget figure is almost certainly price x total supply on a token with no real market. Do not treat it as a valuation.",
     "Bitget's web3 swap page for FRNK (web3.bitget.com/en/swap/bnb/0xf938c9A2...) labels the chain as BNB while using the ETHEREUM contract address. Aggregators mismatch chain and contract for this ticker - another reason to verify on a block explorer rather than trusting aggregator pages."
