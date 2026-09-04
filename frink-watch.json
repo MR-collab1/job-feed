@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-03T12:48Z",
+  "last_checked": "2026-09-04T00:48Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -94,8 +94,8 @@
       "known_venues": [
         "Uniswap / Ethereum DEX pair (tracked on DEXTools)"
       ],
-      "contract_confidence": "UNVERIFIED - from a Coinscan URL in search results, not read off Etherscan",
-      "notes": "SECOND distinct Ethereum FRINK, separate from FRNK at 0xf938c9a2... Directly relevant to the user, who holds a 'FRINK ETH' position: their holding could be either ETH contract. Corrects the earlier statement that 0xf938c9a2... was the only Ethereum FRINK. DISCOVERY, not a new listing: this pair pre-existed and was simply absent from the baseline. Unlike FRNK 0xf938c9a2... (which shows $0 volume), this ETH contract has an actual live DEX market.",
+      "contract_confidence": "DISPUTED - Coinscan exposes it under /tokens/eth/ (implying a token contract) but DEXTools exposes the SAME address under /pair-explorer/ (implying a liquidity PAIR). Cannot resolve: block explorers are egress-blocked. Do not treat as a confirmed token contract.",
+      "notes": "SECOND distinct Ethereum FRINK, separate from FRNK at 0xf938c9a2... Directly relevant to the user, who holds a 'FRINK ETH' position: their holding could be either ETH contract. Corrects the earlier statement that 0xf938c9a2... was the only Ethereum FRINK. DISCOVERY, not a new listing: this pair pre-existed and was simply absent from the baseline. Unlike FRNK 0xf938c9a2... (which shows $0 volume), this ETH contract has an actual live DEX market. CAUTION: address type unresolved (token vs pair) - see contract_confidence.",
       "price_observed": "$0.0000167 (2026-09-01)"
     },
     {
@@ -119,6 +119,18 @@
       "site": "frinkcoinz.com",
       "contract_confidence": "UNVERIFIED - from a Phantom token URL in search results",
       "notes": "Tenth FRINK-named asset. 'pump' suffix = pump.fun launch. Pre-existing; a discovery, not a listing event."
+    },
+    {
+      "name": "FRINKCOIN",
+      "ticker": "FRINK",
+      "chain": "Ethereum",
+      "address": "0x46493b80bef377b79bcbecda36042533f27d1170",
+      "address_type": "UNKNOWN - seen only as a DEXTools pair-explorer URL, so most likely a liquidity pair rather than a token contract",
+      "price_observed": "$0.0000402 (2026-09-04)",
+      "known_venues": [
+        "Ethereum DEX pair (DEXTools)"
+      ],
+      "notes": "Third Ethereum-side FRINK address. Pre-existing; a discovery, not a listing event."
     }
   ],
   "notify_on": [
@@ -133,9 +145,10 @@
     "CRITICAL FALSE POSITIVE: exchange 'price pages' (coinbase.com/price/..., bitget.com/price/..., binance.com/price/...). These exist for thousands of assets the exchange does NOT list for trading and are auto-generated. A price page is NEVER evidence of a listing. Only a dated announcement from the exchange's own newsroom/announcements feed counts.",
     "Inflated market-cap figures on aggregator pages (e.g. Bitget showing FRNK at $0.006804 / $142.89M mcap) that contradict $0 24h volume elsewhere. Market cap = price x supply and is meaningless without liquidity; a dead token can show a large mcap. Not a listing signal."
   ],
-  "baseline_notes": "2026-09-03 12:48Z check: no listing. Tenth FRINK-named asset recorded (Solana 6gbTN8EB...pump, frinkcoinz.com). Running tally after ~6 days: 10 distinct FRINK-named tokens across Ethereum (2), BSC (2), Solana (6); zero confirmed exchange listings for any of them.",
+  "baseline_notes": "2026-09-04 00:48Z check: no listing. Found a third ETH-side FRINK address and, more importantly, evidence that 0x8082db21... may be a liquidity PAIR rather than a token contract - correcting an earlier characterisation.",
   "data_quality_warnings": [
     "Bitget reports FRNK at $0.006804 with a $142.89M market cap while CoinMarketCap/CoinCarp report the token untracked with $0 volume. The Bitget figure is almost certainly price x total supply on a token with no real market. Do not treat it as a valuation.",
-    "Bitget's web3 swap page for FRNK (web3.bitget.com/en/swap/bnb/0xf938c9A2...) labels the chain as BNB while using the ETHEREUM contract address. Aggregators mismatch chain and contract for this ticker - another reason to verify on a block explorer rather than trusting aggregator pages."
+    "Bitget's web3 swap page for FRNK (web3.bitget.com/en/swap/bnb/0xf938c9A2...) labels the chain as BNB while using the ETHEREUM contract address. Aggregators mismatch chain and contract for this ticker - another reason to verify on a block explorer rather than trusting aggregator pages.",
+    "DEXTools /pair-explorer/<addr> URLs expose PAIR addresses, not token contracts. Coinscan /tokens/eth/<addr> implies a token. The same address (0x8082db21...) appears under both, so at least one aggregator is mislabelling. Without explorer access this cannot be resolved - never present an address whose type is unresolved as a token contract."
   ]
 }
