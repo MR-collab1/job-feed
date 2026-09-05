@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-04T18:48Z",
+  "last_checked": "2026-09-05T12:48Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -57,7 +57,8 @@
       "known_venues": [
         "CoinMooner (tracker only)"
       ],
-      "notes": "Presale via coingabbar ended 2026-04-30 at 0.025205 USDT; stated plan to list on a Solana DEX. No confirmed listing yet."
+      "notes": "Presale via coingabbar ended 2026-04-30 at 0.025205 USDT; stated plan to list on a Solana DEX. No confirmed listing yet. MATERIAL: a 15% buy/sell tax means ~30% round-trip loss before any price move. High-tax tokens are a common structure in exit scams and make profitable trading near-impossible at small size.",
+      "tax": "15% buy/sell tax on the BSC version (10% marketing, 5% liquidity) per project materials"
     },
     {
       "name": "FrinkCoin",
@@ -133,6 +134,15 @@
         "Ethereum DEX pair (DEXTools)"
       ],
       "notes": "Third Ethereum-side FRINK address. Pre-existing; a discovery, not a listing event."
+    },
+    {
+      "name": "FrinkCoin",
+      "ticker": "FRINK",
+      "chain": "Ethereum",
+      "address": "0x71771e820a9414b5f415b7f14d51701502c1f753",
+      "address_type": "UNKNOWN - from a CoinBrain /coins/eth-<addr> URL; CoinBrain uses this path for tokens, but type unconfirmed",
+      "known_venues": [],
+      "notes": "FOURTH distinct Ethereum-side FRINK address. Pre-existing; a discovery, not a listing."
     }
   ],
   "notify_on": [
@@ -148,7 +158,7 @@
     "Inflated market-cap figures on aggregator pages (e.g. Bitget showing FRNK at $0.006804 / $142.89M mcap) that contradict $0 24h volume elsewhere. Market cap = price x supply and is meaningless without liquidity; a dead token can show a large mcap. Not a listing signal.",
     "CRITICAL FALSE POSITIVE: DEX aggregators, routers, wallets and trading bots (Jupiter, Phantom, Maestro Bot, Soul Sniper, MEXC DEX+, 1inch etc.) 'supporting' a token. These surface ANY token with an on-chain pool automatically - they are not listings and involve no exchange decision. 'MEXC DEX+' in particular is MEXC's on-chain aggregator front-end and is NOT a MEXC centralized-exchange listing."
   ],
-  "baseline_notes": "2026-09-04 18:48Z check: no listing. Rejected an aggregator false positive - the Solana Raydium FRINK is reachable through Jupiter/Phantom/Maestro/Soul Sniper/MEXC DEX+, but these all route the same ~$8K pool and are not listings. MEXC DEX+ is NOT the MEXC CEX.",
+  "baseline_notes": "2026-09-05 12:48Z check: no listing. Fourth Ethereum-side FRINK address found (0x71771e82...). Also recorded that the FRN BSC variant carries a 15% buy/sell tax.",
   "data_quality_warnings": [
     "Bitget reports FRNK at $0.006804 with a $142.89M market cap while CoinMarketCap/CoinCarp report the token untracked with $0 volume. The Bitget figure is almost certainly price x total supply on a token with no real market. Do not treat it as a valuation.",
     "Bitget's web3 swap page for FRNK (web3.bitget.com/en/swap/bnb/0xf938c9A2...) labels the chain as BNB while using the ETHEREUM contract address. Aggregators mismatch chain and contract for this ticker - another reason to verify on a block explorer rather than trusting aggregator pages.",
