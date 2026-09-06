@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-05T12:48Z",
+  "last_checked": "2026-09-06T18:48Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -143,6 +143,15 @@
       "address_type": "UNKNOWN - from a CoinBrain /coins/eth-<addr> URL; CoinBrain uses this path for tokens, but type unconfirmed",
       "known_venues": [],
       "notes": "FOURTH distinct Ethereum-side FRINK address. Pre-existing; a discovery, not a listing."
+    },
+    {
+      "name": "FRINKCOIN",
+      "ticker": "FRINKCOIN",
+      "chain": "Solana",
+      "contract": "8ptRMYbzE4bHY9oM6y5cYpksRYry2nbZXDLa3bDL8UP2",
+      "known_venues": [],
+      "contract_confidence": "UNVERIFIED - from a Phantom token URL",
+      "notes": "Thirteenth FRINK-named asset. Pre-existing; a discovery, not a listing."
     }
   ],
   "notify_on": [
@@ -158,7 +167,7 @@
     "Inflated market-cap figures on aggregator pages (e.g. Bitget showing FRNK at $0.006804 / $142.89M mcap) that contradict $0 24h volume elsewhere. Market cap = price x supply and is meaningless without liquidity; a dead token can show a large mcap. Not a listing signal.",
     "CRITICAL FALSE POSITIVE: DEX aggregators, routers, wallets and trading bots (Jupiter, Phantom, Maestro Bot, Soul Sniper, MEXC DEX+, 1inch etc.) 'supporting' a token. These surface ANY token with an on-chain pool automatically - they are not listings and involve no exchange decision. 'MEXC DEX+' in particular is MEXC's on-chain aggregator front-end and is NOT a MEXC centralized-exchange listing."
   ],
-  "baseline_notes": "2026-09-05 12:48Z check: no listing. Fourth Ethereum-side FRINK address found (0x71771e82...). Also recorded that the FRN BSC variant carries a 15% buy/sell tax.",
+  "baseline_notes": "2026-09-06 18:48Z check: no listing. Thirteenth FRINK-named asset recorded (Solana 8ptRMYbz...). Week-one summary: 13 same-name assets across 4 chains, 0 confirmed exchange listings, and 4 distinct classes of false positive identified (exchange price pages, DEX aggregators/routers, inflated market caps, pair-vs-token address confusion).",
   "data_quality_warnings": [
     "Bitget reports FRNK at $0.006804 with a $142.89M market cap while CoinMarketCap/CoinCarp report the token untracked with $0 volume. The Bitget figure is almost certainly price x total supply on a token with no real market. Do not treat it as a valuation.",
     "Bitget's web3 swap page for FRNK (web3.bitget.com/en/swap/bnb/0xf938c9A2...) labels the chain as BNB while using the ETHEREUM contract address. Aggregators mismatch chain and contract for this ticker - another reason to verify on a block explorer rather than trusting aggregator pages.",
