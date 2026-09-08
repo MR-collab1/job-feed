@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-08T13:20Z",
+  "last_checked": "2026-09-08T13:35Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -24,7 +24,8 @@
       ],
       "notes": "CoinCarp reports no active exchange availability. Aggregator venue claims conflict and are treated as unverified, NOT as confirmed live listings.",
       "created": "February 2020; contract verified on Etherscan 2020-04-12",
-      "episode_link": "CLOSEST IN TIME to the episode (aired 2020-02-23). 21,000,000 supply mirrors Bitcoin's cap. Contemporaneous cash-in."
+      "episode_link": "CLOSEST IN TIME to the episode (aired 2020-02-23). 21,000,000 supply mirrors Bitcoin's cap. Contemporaneous cash-in.",
+      "buyability": "NO liquidity pool found on any DEX. $0 price, $0 24h volume, 29 holders, Untracked. Appears genuinely unbuyable - no counterparty exists. The $3,331 pool reported near this token in search results actually belongs to 0x46493b80..., a different contract."
     },
     {
       "name": "FRINKCOIN",
@@ -130,12 +131,15 @@
       "ticker": "FRINK",
       "chain": "Ethereum",
       "address": "0x46493b80bef377b79bcbecda36042533f27d1170",
-      "address_type": "UNKNOWN - seen only as a DEXTools pair-explorer URL, so most likely a liquidity pair rather than a token contract",
-      "price_observed": "$0.0000402 (2026-09-04)",
+      "address_type": "RESOLVED: it IS a token contract. Etherscan serves it at /token/ with supply 1,000,000,000 and 461 holders. Corrects the earlier assumption that it was a liquidity pair.",
+      "price_observed": "$0.00000545 (CoinBrain, 2026-09-08)",
       "known_venues": [
         "Ethereum DEX pair (DEXTools)"
       ],
-      "notes": "Third Ethereum-side FRINK address. Pre-existing; a discovery, not a listing event."
+      "notes": "Third Ethereum-side FRINK address. Pre-existing; a discovery, not a listing event.",
+      "supply": "1,000,000,000",
+      "holders": "461",
+      "liquidity": "~$3,331 in 1 pool (~61% of its market cap)"
     },
     {
       "name": "FrinkCoin",
@@ -188,6 +192,7 @@
   "data_quality_warnings": [
     "Bitget reports FRNK at $0.006804 with a $142.89M market cap while CoinMarketCap/CoinCarp report the token untracked with $0 volume. The Bitget figure is almost certainly price x total supply on a token with no real market. Do not treat it as a valuation.",
     "Bitget's web3 swap page for FRNK (web3.bitget.com/en/swap/bnb/0xf938c9A2...) labels the chain as BNB while using the ETHEREUM contract address. Aggregators mismatch chain and contract for this ticker - another reason to verify on a block explorer rather than trusting aggregator pages.",
-    "DEXTools /pair-explorer/<addr> URLs expose PAIR addresses, not token contracts. Coinscan /tokens/eth/<addr> implies a token. The same address (0x8082db21...) appears under both, so at least one aggregator is mislabelling. Without explorer access this cannot be resolved - never present an address whose type is unresolved as a token contract."
+    "DEXTools /pair-explorer/<addr> URLs expose PAIR addresses, not token contracts. Coinscan /tokens/eth/<addr> implies a token. The same address (0x8082db21...) appears under both, so at least one aggregator is mislabelling. Without explorer access this cannot be resolved - never present an address whose type is unresolved as a token contract.",
+    "Search summaries conflate FRNK 0xf938c9a2 (21M supply, 29 holders, no pool) with FRINKCOIN 0x46493b80 (1B supply, 461 holders, ~$3.3K pool). Liquidity figures attributed to 'Frinkcoin' usually belong to the latter. Always attribute market data to a specific contract."
   ]
 }
