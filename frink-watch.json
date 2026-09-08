@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-06T18:48Z",
+  "last_checked": "2026-09-08T13:00Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -152,6 +152,19 @@
       "known_venues": [],
       "contract_confidence": "UNVERIFIED - from a Phantom token URL",
       "notes": "Thirteenth FRINK-named asset. Pre-existing; a discovery, not a listing."
+    },
+    {
+      "name": "FRINKCOIN",
+      "ticker": "FRINK",
+      "chain": "Ethereum",
+      "address": "0xed2ee398c30ee86f203ead6ef65915786ff9c4df",
+      "address_type": "AMBIGUOUS - DEXTools (/pair-explorer/), DEX Screener (/ethereum/<addr>) and DexView all address it as a FRINKCOIN/WETH Uniswap PAIR. Coinboom and CoinAlpha describe it as the token contract. Etherscan link resolves to /address/ not /token/, which does not disambiguate. UNRESOLVED - explorers egress-blocked.",
+      "known_venues": [
+        "Uniswap V2 (Ethereum)"
+      ],
+      "market_data": "~$0.0000186-0.0000817 depending on source/snapshot; ~$8.4K 24h volume; ~$10.9K liquidity; ~864 transactions as of Feb 2026",
+      "pool_created": "approx June 2025 (a snapshot dated 2025-06-09 described the pool as 3 days old)",
+      "notes": "FIFTH Ethereum-side FRINK address, supplied by the user. NOTABLE: this is the most ACTIVE Ethereum FRINK market found so far - real volume and liquidity, unlike FRNK 0xf938c9a2... which sits at $0. Timeline (pool ~June 2025) is consistent with a purchase made 'a few months ago'."
     }
   ],
   "notify_on": [
@@ -167,7 +180,7 @@
     "Inflated market-cap figures on aggregator pages (e.g. Bitget showing FRNK at $0.006804 / $142.89M mcap) that contradict $0 24h volume elsewhere. Market cap = price x supply and is meaningless without liquidity; a dead token can show a large mcap. Not a listing signal.",
     "CRITICAL FALSE POSITIVE: DEX aggregators, routers, wallets and trading bots (Jupiter, Phantom, Maestro Bot, Soul Sniper, MEXC DEX+, 1inch etc.) 'supporting' a token. These surface ANY token with an on-chain pool automatically - they are not listings and involve no exchange decision. 'MEXC DEX+' in particular is MEXC's on-chain aggregator front-end and is NOT a MEXC centralized-exchange listing."
   ],
-  "baseline_notes": "2026-09-06 18:48Z check: no listing. Thirteenth FRINK-named asset recorded (Solana 8ptRMYbz...). Week-one summary: 13 same-name assets across 4 chains, 0 confirmed exchange listings, and 4 distinct classes of false positive identified (exchange price pages, DEX aggregators/routers, inflated market caps, pair-vs-token address confusion).",
+  "baseline_notes": "2026-09-08: user supplied 0xed2ee398..., a fifth Ethereum-side FRINK address and the first with meaningful market activity (~$8.4K 24h volume, ~$10.9K liquidity, Uniswap V2). Token-vs-pair type unresolved. Not a new listing - the pool dates to ~June 2025.",
   "data_quality_warnings": [
     "Bitget reports FRNK at $0.006804 with a $142.89M market cap while CoinMarketCap/CoinCarp report the token untracked with $0 volume. The Bitget figure is almost certainly price x total supply on a token with no real market. Do not treat it as a valuation.",
     "Bitget's web3 swap page for FRNK (web3.bitget.com/en/swap/bnb/0xf938c9A2...) labels the chain as BNB while using the ETHEREUM contract address. Aggregators mismatch chain and contract for this ticker - another reason to verify on a block explorer rather than trusting aggregator pages.",
