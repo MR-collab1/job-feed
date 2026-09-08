@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-08T13:35Z",
+  "last_checked": "2026-09-08T19:00Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -194,5 +194,11 @@
     "Bitget's web3 swap page for FRNK (web3.bitget.com/en/swap/bnb/0xf938c9A2...) labels the chain as BNB while using the ETHEREUM contract address. Aggregators mismatch chain and contract for this ticker - another reason to verify on a block explorer rather than trusting aggregator pages.",
     "DEXTools /pair-explorer/<addr> URLs expose PAIR addresses, not token contracts. Coinscan /tokens/eth/<addr> implies a token. The same address (0x8082db21...) appears under both, so at least one aggregator is mislabelling. Without explorer access this cannot be resolved - never present an address whose type is unresolved as a token contract.",
     "Search summaries conflate FRNK 0xf938c9a2 (21M supply, 29 holders, no pool) with FRINKCOIN 0x46493b80 (1B supply, 461 holders, ~$3.3K pool). Liquidity figures attributed to 'Frinkcoin' usually belong to the latter. Always attribute market data to a specific contract."
-  ]
+  ],
+  "episode_timeline": {
+    "premise_made_public": "January 2020 - Fox released the episode title and synopsis; covered by The Springfield Shopper (news.simpsonswiki.com) in Jan 2020 under 'Professor Frink develops a cryptocurrency that makes him rich in February'",
+    "episode_aired": "2020-02-23",
+    "earliest_known_FRINK_token": "FRNK 0xf938c9a2... - 'February 2020', day-level precision unavailable from search; Etherscan verification 2020-04-12",
+    "conclusion": "NO FRINK-named token is known to predate the episode. Even if FRNK were minted 1-22 Feb 2020 (before broadcast), the premise was already public from January 2020, so it could not constitute foreknowledge or prediction. Every FRINK token post-dates public knowledge of the episode."
+  }
 }
