@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-08T13:00Z",
+  "last_checked": "2026-09-08T13:20Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -22,7 +22,9 @@
         "Figure Markets (unconfirmed)",
         "BYDFi (unconfirmed)"
       ],
-      "notes": "CoinCarp reports no active exchange availability. Aggregator venue claims conflict and are treated as unverified, NOT as confirmed live listings."
+      "notes": "CoinCarp reports no active exchange availability. Aggregator venue claims conflict and are treated as unverified, NOT as confirmed live listings.",
+      "created": "February 2020; contract verified on Etherscan 2020-04-12",
+      "episode_link": "CLOSEST IN TIME to the episode (aired 2020-02-23). 21,000,000 supply mirrors Bitcoin's cap. Contemporaneous cash-in."
     },
     {
       "name": "FRINKCOIN",
@@ -164,7 +166,9 @@
       ],
       "market_data": "~$0.0000186-0.0000817 depending on source/snapshot; ~$8.4K 24h volume; ~$10.9K liquidity; ~864 transactions as of Feb 2026",
       "pool_created": "approx June 2025 (a snapshot dated 2025-06-09 described the pool as 3 days old)",
-      "notes": "FIFTH Ethereum-side FRINK address, supplied by the user. NOTABLE: this is the most ACTIVE Ethereum FRINK market found so far - real volume and liquidity, unlike FRNK 0xf938c9a2... which sits at $0. Timeline (pool ~June 2025) is consistent with a purchase made 'a few months ago'."
+      "notes": "FIFTH Ethereum-side FRINK address, supplied by the user. NOTABLE: this is the most ACTIVE Ethereum FRINK market found so far - real volume and liquidity, unlike FRNK 0xf938c9a2... which sits at $0. Timeline (pool ~June 2025) is consistent with a purchase made 'a few months ago'.",
+      "created": "Contract verified on Etherscan 2025-06-09; Uniswap pool created within days",
+      "episode_link": "MOST EXPLICITLY MARKETED on the episode - promoted with 'The Simpsons predicted it'. Launched 5+ years AFTER the episode aired, so the episode is marketing, not origin."
     }
   ],
   "notify_on": [
