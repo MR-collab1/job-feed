@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-08T19:00Z",
+  "last_checked": "2026-09-08T19:15Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -139,7 +139,16 @@
       "notes": "Third Ethereum-side FRINK address. Pre-existing; a discovery, not a listing event.",
       "supply": "1,000,000,000",
       "holders": "461",
-      "liquidity": "~$3,331 in 1 pool (~61% of its market cap)"
+      "liquidity": "~$3,331 in 1 pool (~61% of its market cap)",
+      "compiler": "Solidity v0.8.14+commit.80d49f37, optimizer on, 200 runs",
+      "created_debunk": "Aggregators claim 'created February 2020' - IMPOSSIBLE. Solidity 0.8.14 was released May 2022, so this contract was deployed no earlier than mid-2022. The Feb 2020 date is conflation with FRNK 0xf938c9a2.",
+      "market_data_20260908": "$0.00000545; market cap ~$5.4K; 24h volume $0; liquidity $3,331 = ~61% of market cap; 461 holders; 1,000,000,000 supply",
+      "price_collapse": "DEXTools showed $0.0000402 on 2026-09-04; CoinBrain shows $0.00000545 on 2026-09-08 - roughly an 86% decline in four days (cross-source, so treat as indicative not exact)",
+      "risk_flags": [
+        "Liquidity is ~61% of market cap - abnormally high. Most of the token's notional value IS the pool, so an LP withdrawal takes it to near-zero instantly. This is the structural signature of a rug-pull setup.",
+        "$0 24h volume against $3.3K liquidity - no active market despite a pool existing.",
+        "Associated with frinkcoin.in, the same site as the BSC token 0x2d1a8026..., whose stated model is 'no DEX listing, no liquidity pools, no early trading'. That claim is contradicted by this Uniswap pool - either the sites are conflated by aggregators, or the project's own statements are false."
+      ]
     },
     {
       "name": "FrinkCoin",
