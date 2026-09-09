@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-09T00:48Z",
+  "last_checked": "2026-09-09T06:48Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -181,7 +181,10 @@
       "pool_created": "approx June 2025 (a snapshot dated 2025-06-09 described the pool as 3 days old)",
       "notes": "FIFTH Ethereum-side FRINK address, supplied by the user. NOTABLE: this is the most ACTIVE Ethereum FRINK market found so far - real volume and liquidity, unlike FRNK 0xf938c9a2... which sits at $0. Timeline (pool ~June 2025) is consistent with a purchase made 'a few months ago'.",
       "created": "Contract verified on Etherscan 2025-06-09; Uniswap pool created within days",
-      "episode_link": "MOST EXPLICITLY MARKETED on the episode - promoted with 'The Simpsons predicted it'. Launched 5+ years AFTER the episode aired, so the episode is marketing, not origin."
+      "episode_link": "MOST EXPLICITLY MARKETED on the episode - promoted with 'The Simpsons predicted it'. Launched 5+ years AFTER the episode aired, so the episode is marketing, not origin.",
+      "market_data_20260909": "Liquidity $10,838.21; 24h volume $8,720.68; market cap $18,602.68; price $0.000004057; 314 holders; 0% buy tax, 0% sell tax",
+      "tax": "0% on buys and 0% on sells - no punitive transfer tax, unlike the FRN variant's 15%",
+      "stability_note": "Liquidity and volume essentially unchanged vs 2026-09-04 (~$10.9K liq, ~$8.4K vol). Market cap now $18.6K; the earlier ~$67K figure was either a different snapshot or misattributed."
     },
     {
       "name": "Frinkcoin",
@@ -214,7 +217,8 @@
     "Bitget reports FRNK at $0.006804 with a $142.89M market cap while CoinMarketCap/CoinCarp report the token untracked with $0 volume. The Bitget figure is almost certainly price x total supply on a token with no real market. Do not treat it as a valuation.",
     "Bitget's web3 swap page for FRNK (web3.bitget.com/en/swap/bnb/0xf938c9A2...) labels the chain as BNB while using the ETHEREUM contract address. Aggregators mismatch chain and contract for this ticker - another reason to verify on a block explorer rather than trusting aggregator pages.",
     "DEXTools /pair-explorer/<addr> URLs expose PAIR addresses, not token contracts. Coinscan /tokens/eth/<addr> implies a token. The same address (0x8082db21...) appears under both, so at least one aggregator is mislabelling. Without explorer access this cannot be resolved - never present an address whose type is unresolved as a token contract.",
-    "Search summaries conflate FRNK 0xf938c9a2 (21M supply, 29 holders, no pool) with FRINKCOIN 0x46493b80 (1B supply, 461 holders, ~$3.3K pool). Liquidity figures attributed to 'Frinkcoin' usually belong to the latter. Always attribute market data to a specific contract."
+    "Search summaries conflate FRNK 0xf938c9a2 (21M supply, 29 holders, no pool) with FRINKCOIN 0x46493b80 (1B supply, 461 holders, ~$3.3K pool). Liquidity figures attributed to 'Frinkcoin' usually belong to the latter. Always attribute market data to a specific contract.",
+    "2026-09-09: a search summary reported '$0.00 24h volume, $2.67K market cap, 1 billion circulating supply' for 0xed2ee398. That was CONFLATION - the 1B supply belongs to 0x46493b80. Direct verification showed 0xed2ee398 stable at ~$10.8K liquidity and ~$8.7K volume. Always re-verify alarming metrics against a second query before acting on them."
   ],
   "episode_timeline": {
     "premise_made_public": "January 2020 - Fox released the episode title and synopsis; covered by The Springfield Shopper (news.simpsonswiki.com) in Jan 2020 under 'Professor Frink develops a cryptocurrency that makes him rich in February'",
