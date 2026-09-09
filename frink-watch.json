@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-08T19:15Z",
+  "last_checked": "2026-09-09T00:48Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -182,6 +182,18 @@
       "notes": "FIFTH Ethereum-side FRINK address, supplied by the user. NOTABLE: this is the most ACTIVE Ethereum FRINK market found so far - real volume and liquidity, unlike FRNK 0xf938c9a2... which sits at $0. Timeline (pool ~June 2025) is consistent with a purchase made 'a few months ago'.",
       "created": "Contract verified on Etherscan 2025-06-09; Uniswap pool created within days",
       "episode_link": "MOST EXPLICITLY MARKETED on the episode - promoted with 'The Simpsons predicted it'. Launched 5+ years AFTER the episode aired, so the episode is marketing, not origin."
+    },
+    {
+      "name": "Frinkcoin",
+      "ticker": "FRINK",
+      "chain": "Ethereum",
+      "contract": "0x57fe4fdb537cde27abfc28db34eb56333ed925a4",
+      "address_type": "CONFIRMED token contract - verified source code on Etherscan, Token Tracker shows 'ERC-20: Frinkcoin (FRINK)'. Read directly off Etherscan from a user screenshot, so this is the ONE address here confirmed from a primary source rather than a search summary.",
+      "creator": "0xA3B2Ec80...57879b5f0; reported as first funded via the Union Chain cross-chain bridge",
+      "created": "'1 yr 322 days ago' as of 2026-09-08, i.e. approximately 2024-10-21",
+      "known_venues": [],
+      "notes": "SIXTH Ethereum FRINK. Indexed by NO aggregator (DEXTools/CoinBrain/Coinscan/DEX Screener all returned nothing), which normally means no liquidity pool was ever created. Contract holds 0 ETH and $0 of tokens. Multichain portfolio $0, no addresses found. Deployer funded via a bridge rather than a KYC'd exchange withdrawal - an anonymity-preserving launch pattern.",
+      "correction_note": "I initially misclassified this as an EOA/wallet after the user said 'funded by union chain'. Etherscan shows CONTRACT CREATOR, not Funded By, so it is a contract; the Union Chain funding applies to the creator wallet."
     }
   ],
   "notify_on": [
@@ -197,7 +209,7 @@
     "Inflated market-cap figures on aggregator pages (e.g. Bitget showing FRNK at $0.006804 / $142.89M mcap) that contradict $0 24h volume elsewhere. Market cap = price x supply and is meaningless without liquidity; a dead token can show a large mcap. Not a listing signal.",
     "CRITICAL FALSE POSITIVE: DEX aggregators, routers, wallets and trading bots (Jupiter, Phantom, Maestro Bot, Soul Sniper, MEXC DEX+, 1inch etc.) 'supporting' a token. These surface ANY token with an on-chain pool automatically - they are not listings and involve no exchange decision. 'MEXC DEX+' in particular is MEXC's on-chain aggregator front-end and is NOT a MEXC centralized-exchange listing."
   ],
-  "baseline_notes": "2026-09-08: user supplied 0xed2ee398..., a fifth Ethereum-side FRINK address and the first with meaningful market activity (~$8.4K 24h volume, ~$10.9K liquidity, Uniswap V2). Token-vs-pair type unresolved. Not a new listing - the pool dates to ~June 2025.",
+  "baseline_notes": "2026-09-09 00:48Z check: no listing. Recorded a sixth Ethereum FRINK (0x57fe4fdb..., deployed ~Oct 2024) confirmed directly from Etherscan via user screenshot - unindexed by every aggregator, deployer bridge-funded.",
   "data_quality_warnings": [
     "Bitget reports FRNK at $0.006804 with a $142.89M market cap while CoinMarketCap/CoinCarp report the token untracked with $0 volume. The Bitget figure is almost certainly price x total supply on a token with no real market. Do not treat it as a valuation.",
     "Bitget's web3 swap page for FRNK (web3.bitget.com/en/swap/bnb/0xf938c9A2...) labels the chain as BNB while using the ETHEREUM contract address. Aggregators mismatch chain and contract for this ticker - another reason to verify on a block explorer rather than trusting aggregator pages.",
