@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-09T06:48Z",
+  "last_checked": "2026-09-11T09:00Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -197,6 +197,16 @@
       "known_venues": [],
       "notes": "SIXTH Ethereum FRINK. Indexed by NO aggregator (DEXTools/CoinBrain/Coinscan/DEX Screener all returned nothing), which normally means no liquidity pool was ever created. Contract holds 0 ETH and $0 of tokens. Multichain portfolio $0, no addresses found. Deployer funded via a bridge rather than a KYC'd exchange withdrawal - an anonymity-preserving launch pattern.",
       "correction_note": "I initially misclassified this as an EOA/wallet after the user said 'funded by union chain'. Etherscan shows CONTRACT CREATOR, not Funded By, so it is a contract; the Union Chain funding applies to the creator wallet."
+    },
+    {
+      "name": "Frink Token",
+      "ticker": "FRINK",
+      "chain": "Polygon PoS",
+      "site": "frinktoken.net",
+      "supply": "10,000,000,000",
+      "known_venues": [],
+      "notes": "SEVENTEENTH FRINK-named asset and a NEW CHAIN (Polygon) - first non-ETH/BSC/Solana FRINK found. Self-described as an experimental ERC-20 utility token for Web3 education, creator rewards and decentralised governance. Team/founder NOT publicly disclosed. Its own site carries a scam warning about impersonators and states there is no guarantee of success, utility or value. NO evidence of any link to Alan Eliasen or the Frink programming language.",
+      "found_via": "Search for Frink-language/crypto affiliation, 2026-09-11"
     }
   ],
   "notify_on": [
@@ -225,5 +235,12 @@
     "episode_aired": "2020-02-23",
     "earliest_known_FRINK_token": "FRNK 0xf938c9a2... - 'February 2020', day-level precision unavailable from search; Etherscan verification 2020-04-12",
     "conclusion": "NO FRINK-named token is known to predate the episode. Even if FRNK were minted 1-22 Feb 2020 (before broadcast), the premise was already public from January 2020, so it could not constitute foreknowledge or prediction. Every FRINK token post-dates public knowledge of the episode."
+  },
+  "frink_language_founder_watch": {
+    "subject": "Alan Eliasen - designer and implementer of the Frink programming language (frinklang.org), first released Dec 2001. Also authored several faster BigInteger algorithms in Java 8.",
+    "naming_link": "Eliasen named the LANGUAGE after Professor Frink from The Simpsons - the same character the episode's fictional coin is named for. So the language and the memecoins share a source, not a lineage.",
+    "finding_20260911": "NO EVIDENCE that Alan Eliasen has launched, endorsed, or been involved with any cryptocurrency. Multiple searches across his name, the language, and crypto/blockchain terms returned only his programming-language work. No token names him as founder.",
+    "no_disclaimer_found": "Could not locate any statement on frinklang.org either claiming or disclaiming affiliation with any FRINK token.",
+    "caution": "Absence of evidence from web search is not proof. But the pattern here is the opposite of a founder launch: tokens borrowing a name, with no named team."
   }
 }
