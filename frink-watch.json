@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-11T09:30Z",
+  "last_checked": "2026-09-11T09:45Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -218,7 +218,14 @@
         "Token allocation": "Project describes it as 'proposed but not fully implemented'"
       },
       "aggregator_coverage": "None found. No CoinMarketCap, CoinGecko, DEXTools or DEX Screener listing surfaced for the Polygon token; contract address not published in any indexed source.",
-      "assessment": "Every dated roadmap milestone after deployment is past due. The single most material near-term fact is the claimed liquidity lock expiring ~2026-11-25; if genuine, that is the date at which LP could be withdrawn."
+      "assessment": "Every dated roadmap milestone after deployment is past due. The single most material near-term fact is the claimed liquidity lock expiring ~2026-11-25; if genuine, that is the date at which LP could be withdrawn.",
+      "founder_claim": {
+        "name": "Alex Seo",
+        "sole_source": "A single LinkedIn profile on the Korean LinkedIn domain: kr.linkedin.com/in/alex-seo-39b76a338, headline 'Founder at Frink Token (FRINK)'",
+        "corroboration": "NONE FOUND. No press coverage, no conference appearance, no GitHub activity, no prior company or project, no verified social account tied to this name and this token. Other 'Alex Seo' profiles found (Toronto; eino.ai) appear to be different people.",
+        "nature_of_evidence": "SELF-ATTESTED. A LinkedIn headline is written by its owner; it is a claim, not third-party verification. No independent source links this person to the token.",
+        "note": "Corrects the earlier 'team undisclosed' characterisation - a founder name does exist publicly, but only via self-declaration."
+      }
     }
   ],
   "notify_on": [
