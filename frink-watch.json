@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-11T09:00Z",
+  "last_checked": "2026-09-11T09:30Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -206,7 +206,19 @@
       "supply": "10,000,000,000",
       "known_venues": [],
       "notes": "SEVENTEENTH FRINK-named asset and a NEW CHAIN (Polygon) - first non-ETH/BSC/Solana FRINK found. Self-described as an experimental ERC-20 utility token for Web3 education, creator rewards and decentralised governance. Team/founder NOT publicly disclosed. Its own site carries a scam warning about impersonators and states there is no guarantee of success, utility or value. NO evidence of any link to Alan Eliasen or the Frink programming language.",
-      "found_via": "Search for Frink-language/crypto affiliation, 2026-09-11"
+      "found_via": "Search for Frink-language/crypto affiliation, 2026-09-11",
+      "deployed": "2025-10-31 (smart contract deployment, per project roadmap)",
+      "liquidity_lock": "CLAIMED locked 12 months via Team Finance from 2025-11-25, therefore expiring ~2026-11-25 (~10 weeks from 2026-09-11). UNVERIFIED - see audit_contradiction.",
+      "audit_contradiction": "CONTRADICTORY SOURCES. One summary of frinktoken.net states the contract has NOT been audited, with an audit 'planned Q1 2026'. A second summary claims the platform is 'triple-audited by CertiK, Hacken, and Solidity Finance'. These cannot both be true. The 'triple-audited' phrasing is generic boilerplate common to unrelated token sites and is very likely summarizer contamination. Treat the token as UNAUDITED until a named audit report is produced.",
+      "roadmap_status": {
+        "Smart contract deployment": "Completed 2025-10-31",
+        "Security audit": "Planned Q1 2026 - OVERDUE by ~2 quarters, no evidence of completion",
+        "Creator Rewards System": "Planned Q1 2026 - OVERDUE by ~2 quarters, no evidence of delivery",
+        "Web3 Learning Platform": "Planned Q2 2026 - OVERDUE by ~1 quarter, no evidence of delivery",
+        "Token allocation": "Project describes it as 'proposed but not fully implemented'"
+      },
+      "aggregator_coverage": "None found. No CoinMarketCap, CoinGecko, DEXTools or DEX Screener listing surfaced for the Polygon token; contract address not published in any indexed source.",
+      "assessment": "Every dated roadmap milestone after deployment is past due. The single most material near-term fact is the claimed liquidity lock expiring ~2026-11-25; if genuine, that is the date at which LP could be withdrawn."
     }
   ],
   "notify_on": [
