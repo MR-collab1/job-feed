@@ -3,6 +3,7 @@
     python -m alcohol_audit report                 # full report as JSON
     python -m alcohol_audit report --indent 2      # pretty-printed
     python -m alcohol_audit deck audit.pptx        # build the slide deck
+    python -m alcohol_audit excel merged.xlsx      # write the merged workbook
     python -m alcohol_audit summary                # human-readable headlines
     python -m alcohol_audit score 8                # one CIWA score in detail
 
@@ -21,6 +22,7 @@ from pathlib import Path
 from . import analytics
 from .deck import build_deck
 from .etl import load_dataset
+from .export import export_merged_workbook
 
 
 def _date(value: str) -> dt.date:
@@ -91,8 +93,23 @@ def main(argv: list[str] | None = None) -> int:
     deck_cmd.add_argument("output", type=Path, help="Path to write the .pptx to.")
     score_cmd = commands.add_parser("score", help="Detail for one CIWA-Ar score.")
     score_cmd.add_argument("value", type=int)
+    excel_cmd = commands.add_parser(
+        "excel",
+        help="Write the merged source rows to one Excel sheet, NA for missing data.",
+    )
+    excel_cmd.add_argument("output", type=Path, help="Path to write the .xlsx to.")
 
     args = parser.parse_args(argv)
+
+    if args.command == "excel":
+        # The export is a faithful merge of the source rows, so it is not
+        # filtered by period: --from and --to do not apply to it.
+        path, counts = export_merged_workbook(args.output, args.data_dir)
+        print(f"Wrote {path}")
+        for label, value in counts.items():
+            print(f"  {label.replace('_', ' '):<34} {value}")
+        return 0
+
     rows = _rows(args)
 
     if args.command == "report":

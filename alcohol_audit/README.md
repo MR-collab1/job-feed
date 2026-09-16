@@ -77,8 +77,35 @@ python -m alcohol_audit summary                    # headline figures as text
 python -m alcohol_audit report --indent 2          # every insight as JSON
 python -m alcohol_audit score 18                   # one CIWA score in detail
 python -m alcohol_audit deck audit.pptx            # build the slide deck
+python -m alcohol_audit excel merged.xlsx          # merged workbook, NA for missing data
 python -m alcohol_audit --from 2026-01-01 --to 2026-01-31 summary
 ```
+
+## Merged Excel file
+
+`python -m alcohol_audit excel merged.xlsx` writes the flat, everything-in-one-sheet
+view of the two source files.
+
+Nothing is dropped. Every row carrying any content appears, including the
+section-heading row the auditors typed into the patient ID column, which is
+flagged in a `Record type` column rather than removed. The only rows not carried
+through are ones that were completely empty in the source. On the current data
+that is 130 rows: 129 attendances and 1 heading.
+
+Every empty cell reads `NA`. The placeholders the auditors used for "nothing
+here" (`-`, `N/A`, `?`) are written as `NA` too, so one token covers them all and
+the sheet can be filtered without tripping over five spellings. Text that carries
+meaning survives verbatim, including `case Notes missing` and `Not documented`.
+
+Column headers are taken from the source file word for word. Four provenance
+columns are appended: `Record type`, `In Audit_CIWA file`,
+`In AE presenting complaint Sheet3` and `Source of clinical answers`. A second
+sheet, `Merge Notes`, documents the method and reconciles the row counts with
+live formulas.
+
+One thing to know when reading it back: `pandas.read_excel` treats the literal
+string `NA` as a missing value by default, so those cells arrive as `NaN`. Pass
+`keep_default_na=False` to see them as the text `NA`.
 
 ## API
 
