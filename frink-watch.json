@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-16T00:30Z",
+  "last_checked": "2026-09-16T01:00Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -201,7 +201,7 @@
     {
       "name": "Frink Token",
       "ticker": "FRINK",
-      "chain": "Polygon PoS",
+      "chain": "Polygon PoS (chain ID 137)",
       "site": "frinktoken.net",
       "supply": "10,000,000,000",
       "known_venues": [],
@@ -225,7 +225,18 @@
         "corroboration": "NONE FOUND. No press coverage, no conference appearance, no GitHub activity, no prior company or project, no verified social account tied to this name and this token. Other 'Alex Seo' profiles found (Toronto; eino.ai) appear to be different people.",
         "nature_of_evidence": "SELF-ATTESTED. A LinkedIn headline is written by its owner; it is a claim, not third-party verification. No independent source links this person to the token.",
         "note": "Corrects the earlier 'team undisclosed' characterisation - a founder name does exist publicly, but only via self-declaration."
-      }
+      },
+      "contract": "0x822AC53a3037d328645B5aa7d6A07360AcC23433",
+      "source": "Read directly from the project GitHub repo frinktoken-official/frink-token - PRIMARY SOURCE, not a search summary",
+      "github": "github.com/frinktoken-official/frink-token - 28 commits, HTML/JS only, MIT licence, 0 stars, last updated 2026-08-22. Contains website + docs; NO Solidity contract source.",
+      "org_location": "South Korea (per GitHub org profile) - consistent with the Korean LinkedIn of the claimed founder Alex Seo",
+      "founder_wallet": "0x2432b1229b3e6a284f9a27024b158d2f1a589445",
+      "CRITICAL_concentration": "~99% OF TOTAL SUPPLY SITS IN THE FOUNDER'S WALLET (as of 2026-08-18, per the project's own whitepaper). The published liquidity pool holds only ~50.56M FRINK + 9.913 POL, about 0.5% of supply. This is the dominant risk and the whitepaper itself features it most prominently.",
+      "liquidity_lock_resolved": "Team Finance lock on QuickSwap V3 NFT position #177734, 2025-11-25 to 2026-11-26, covering 100% of PUBLISHED liquidity. The whitepaper states plainly that the lock does NOT stop the founder wallet moving the ~99% it holds. The 'triple-audited by CertiK/Hacken/Solidity Finance' phrase refers to TEAM FINANCE the platform, NOT to the FRINK contract - this resolves the earlier contradiction.",
+      "audit_resolved": "NO AUDIT. Whitepaper states: 'Professional Auditor (TBD)... Q1 2026 (missed)... Not started. No auditor contracted.' The project admits this openly.",
+      "roadmap_resolved": "Products WITHDRAWN by the project itself: creator rewards, Web3 learning platform, token voting/Snapshot/DAO, micro-tasks, DApp access tiers. Whitepaper calls them 'draft headings, not shipped products'. Current stated scope: token + website transfer/swap + locked LP only. 'No product commitments'.",
+      "governance": "No multisig. Founder EOA holds >99%. No automated vesting, burning or pausing. Vesting depends on manual team execution - stated trust/execution risk. No bug bounty despite initial plans.",
+      "credit_where_due": "The project's own whitepaper discloses the concentration, the missed audit, the withdrawn products and the lock's limits. That candour is unusual and materially better than the 16 memecoins - but it describes a high-risk asset rather than mitigating one."
     }
   ],
   "notify_on": [
