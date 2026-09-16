@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-16T00:00Z",
+  "last_checked": "2026-09-16T00:30Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -268,6 +268,13 @@
       "CRITICAL_FALSE_POSITIVE": "frinklang.org hosts files named cryptoProviders.frink and cryptoAES256.frink. These are CRYPTOGRAPHY samples - they enumerate Java Cryptography Architecture providers and demonstrate AES-256 encryption/decryption. They have NOTHING to do with cryptocurrency. This is the single most likely source of a false 'Frink language does crypto' association and must not be reported as crypto involvement.",
       "known_channels": "X/Twitter account @Frinklang exists (language account). OEIS wiki profile exists. No crypto content found on either.",
       "conclusion": "No evidence of any cryptocurrency work, whitepaper, token, or blockchain involvement by Alan Eliasen, and no team exists around the language."
+    },
+    "token_affiliation_deepdive_20260916": {
+      "question": "Does any token claim association with the Frink PROGRAMMING LANGUAGE (frinklang.org)?",
+      "answer": "NO. No token found claims technical, official or endorsed affiliation with the language. Multiple independent sources explicitly state the tokens and the language are unrelated and share the name only via the Simpsons character.",
+      "only_adjacency_found": "The FRINK Token (Polygon, frinktoken.net) has a GitHub repository tagged under the 'frink' TOPIC - the same topic tag used by Frink-language repos. This places the token's repo alongside language repos when browsing github.com/topics/frink. This is ADJACENCY BY TAG, not a claim of affiliation, but it is the one place where a browser could form a false impression.",
+      "marketing_claim_to_flag": "The project states '100% liquidity locked and no rug pull risk until November 25, 2026'. 'No rug pull risk' is OVERSTATED. A liquidity lock prevents LP withdrawal only; it does not prevent the team dumping held tokens, does not rule out mint or blacklist functions in an unaudited contract, and expires on that date. Treat the phrase as marketing, not a security guarantee.",
+      "conclusion": "No token is associated with the Frink programming language. The 17 FRINK-named assets and the language independently take their name from Professor Frink."
     }
   }
 }
