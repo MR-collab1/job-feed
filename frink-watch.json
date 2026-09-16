@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-16T01:30Z",
+  "last_checked": "2026-09-16T14:05Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -291,5 +291,21 @@
       "marketing_claim_to_flag": "The project states '100% liquidity locked and no rug pull risk until November 25, 2026'. 'No rug pull risk' is OVERSTATED. A liquidity lock prevents LP withdrawal only; it does not prevent the team dumping held tokens, does not rule out mint or blacklist functions in an unaudited contract, and expires on that date. Treat the phrase as marketing, not a security guarantee.",
       "conclusion": "No token is associated with the Frink programming language. The 17 FRINK-named assets and the language independently take their name from Professor Frink."
     }
-  }
+  },
+  "refresh_log": [
+    {
+      "date": "2026-09-16T14:05Z",
+      "scope": "both watches (FRINK/Frinkcoin listings + Alan Eliasen founder watch)",
+      "result": "NO CHANGE",
+      "checks": [
+        "Web search: FRINK/Frinkcoin new exchange listing Sept 2026 -> no dated exchange announcement; only recycled Kraken/Figure/BYDFi aggregator boilerplate (already on do_not_notify_on)",
+        "Web search: new FRINK contract launches (Solana/Base) -> only the pre-existing coingabbar 'Frink Coin Presale' page, presale window Dec 28 2025 - Apr 30 2026, still no TGE/DEX listing evidence",
+        "GitHub topic:frink (primary source) -> still 5 repos; frinktoken-official/frink-token unchanged since 2026-08-22; no new crypto repo",
+        "GitHub user search 'Alan Eliasen' -> 0 accounts, consistent with prior finding that he does not host on GitHub",
+        "frinklang.org / frinklang.com -> still EGRESS_BLOCKED, cannot read his blog or FAQ directly",
+        "Web search: Eliasen whitepaper/blockchain -> nothing; no crypto association found"
+      ],
+      "asset_count_unchanged": 16
+    }
+  ]
 }
