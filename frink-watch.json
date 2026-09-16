@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-11T09:45Z",
+  "last_checked": "2026-09-16T00:00Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -260,6 +260,14 @@
     "naming_link": "Eliasen named the LANGUAGE after Professor Frink from The Simpsons - the same character the episode's fictional coin is named for. So the language and the memecoins share a source, not a lineage.",
     "finding_20260911": "NO EVIDENCE that Alan Eliasen has launched, endorsed, or been involved with any cryptocurrency. Multiple searches across his name, the language, and crypto/blockchain terms returned only his programming-language work. No token names him as founder.",
     "no_disclaimer_found": "Could not locate any statement on frinklang.org either claiming or disclaiming affiliation with any FRINK token.",
-    "caution": "Absence of evidence from web search is not proof. But the pattern here is the opposite of a founder launch: tokens borrowing a name, with no named team."
+    "caution": "Absence of evidence from web search is not proof. But the pattern here is the opposite of a founder launch: tokens borrowing a name, with no named team.",
+    "deep_search_20260916": {
+      "whitepaper": "NONE FOUND. No paper authored by Eliasen on arXiv or SSRN relating to blockchain, cryptocurrency or distributed ledgers. Searches return only unrelated authors' blockchain papers.",
+      "team": "NO TEAM FOUND. Frink is consistently attributed to Alan Eliasen alone across Wikipedia, Rosetta Code, the Amazon Appstore listing and frinklang.org, since Dec 2001. It appears to be a solo project, so there is no 'team' to have crypto involvement.",
+      "wikipedia_blockchain_list": "He does NOT appear on Wikipedia's 'List of people in blockchain technology'.",
+      "CRITICAL_FALSE_POSITIVE": "frinklang.org hosts files named cryptoProviders.frink and cryptoAES256.frink. These are CRYPTOGRAPHY samples - they enumerate Java Cryptography Architecture providers and demonstrate AES-256 encryption/decryption. They have NOTHING to do with cryptocurrency. This is the single most likely source of a false 'Frink language does crypto' association and must not be reported as crypto involvement.",
+      "known_channels": "X/Twitter account @Frinklang exists (language account). OEIS wiki profile exists. No crypto content found on either.",
+      "conclusion": "No evidence of any cryptocurrency work, whitepaper, token, or blockchain involvement by Alan Eliasen, and no team exists around the language."
+    }
   }
 }
