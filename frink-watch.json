@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-16T01:00Z",
+  "last_checked": "2026-09-16T01:30Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -221,10 +221,14 @@
       "assessment": "Every dated roadmap milestone after deployment is past due. The single most material near-term fact is the claimed liquidity lock expiring ~2026-11-25; if genuine, that is the date at which LP could be withdrawn.",
       "founder_claim": {
         "name": "Alex Seo",
-        "sole_source": "A single LinkedIn profile on the Korean LinkedIn domain: kr.linkedin.com/in/alex-seo-39b76a338, headline 'Founder at Frink Token (FRINK)'",
-        "corroboration": "NONE FOUND. No press coverage, no conference appearance, no GitHub activity, no prior company or project, no verified social account tied to this name and this token. Other 'Alex Seo' profiles found (Toronto; eino.ai) appear to be different people.",
-        "nature_of_evidence": "SELF-ATTESTED. A LinkedIn headline is written by its owner; it is a claim, not third-party verification. No independent source links this person to the token.",
-        "note": "Corrects the earlier 'team undisclosed' characterisation - a founder name does exist publicly, but only via self-declaration."
+        "named_in_project_README": "YES - the repo README lists Alex Seo as a point of contact, linking to LinkedIn. Corrects the earlier open question about whether the project names him.",
+        "linkedin": "kr.linkedin.com/in/alex-seo-39b76a338 (Korean LinkedIn), headline 'Founder at Frink Token (FRINK)'",
+        "contact_email": "contact@frinktoken.net",
+        "org_location": "South Korea (GitHub org profile)",
+        "founder_wallet": "0x2432b1229b3e6a284f9a27024b158d2f1a589445 - holds ~99% of total supply",
+        "CIRCULARITY": "The evidence loop is closed and self-referential: the project README points to a LinkedIn profile, and that LinkedIn profile declares 'Founder at Frink Token'. Both endpoints are controlled by the same party. NO independent source anywhere in the loop.",
+        "corroboration_still_absent": "No press, no prior company or project, no conference appearance, no personal GitHub activity, no third-party reporting. Repo contributors page failed to load, so committer identities were not obtainable.",
+        "what_would_break_the_circle": "A prior employer or project verifiable independently; a conference talk or interview; commit history under a consistent identity predating the token; or any third-party source naming him."
       },
       "contract": "0x822AC53a3037d328645B5aa7d6A07360AcC23433",
       "source": "Read directly from the project GitHub repo frinktoken-official/frink-token - PRIMARY SOURCE, not a search summary",
