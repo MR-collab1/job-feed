@@ -1,0 +1,13 @@
+{
+  "name": "alcohol-audit-deck",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Slide deck generator for the A&E alcohol withdrawal CIWA audit",
+  "main": "build_deck.js",
+  "scripts": {
+    "build": "node build_deck.js"
+  },
+  "dependencies": {
+    "pptxgenjs": "^3.12.0"
+  }
+}

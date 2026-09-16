@@ -1,0 +1,14 @@
+# Source workbooks hold identifiable patient records and are never committed.
+data/*.xlsx
+data/*.xls
+data/*.csv
+
+# Generated outputs (aggregate, but rebuilt on demand rather than stored).
+out/
+*.pptx
+*.pdf
+
+node_modules/
+__pycache__/
+*.egg-info/
+.pytest_cache/
