@@ -49,12 +49,20 @@
   ],
   "is_sample": true,
   "run": {
-    "problems": [],
+    "problems": [
+      {
+        "optional": true,
+        "reason": "no column matched role 'category'; available columns: program year, country of prior nationality, conferrals",
+        "series": "citizenship_by_state"
+      }
+    ],
+    "required_available": 9,
+    "required_total": 9,
     "series_available": 9,
-    "series_total": 9,
+    "series_total": 10,
     "status": "ok"
   },
-  "schema_version": 3,
+  "schema_version": 4,
   "series": {
     "citizenship_by_prior_country": {
       "available": true,
@@ -156,6 +164,18 @@
       "subtitle": "Where new Australian citizens held citizenship before conferral",
       "title": "Citizenship conferrals by country of prior nationality",
       "total": 177700.0,
+      "unit": "people"
+    },
+    "citizenship_by_state": {
+      "available": false,
+      "id": "citizenship_by_state",
+      "note": "Home Affairs reports citizenship by residential state in some publications but does not consistently release it as a data file. This card appears only when a machine-readable table is found.",
+      "optional": true,
+      "reason": "no column matched role 'category'; available columns: program year, country of prior nationality, conferrals",
+      "shape": "ranked",
+      "source_ids": [],
+      "subtitle": "Where new Australian citizens were living when conferred",
+      "title": "Citizenship conferrals by state and territory",
       "unit": "people"
     },
     "citizenship_conferrals": {

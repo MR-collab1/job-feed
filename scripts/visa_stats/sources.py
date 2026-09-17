@@ -141,6 +141,11 @@ class SeriesSpec:
     top_n: int = 15
     drop_rows: tuple[str, ...] = AGGREGATE_ROWS
     note: str = ""
+    # An optional series is one we are not certain Home Affairs publishes in a
+    # machine-readable form. If it cannot be built it is left off the page
+    # entirely rather than shown as a broken card; the run report still says
+    # what was tried and why it failed.
+    optional: bool = False
 
 
 PERMANENT_PROGRAM_SLUGS = (
@@ -378,6 +383,34 @@ SPECS: tuple[SeriesSpec, ...] = (
                 sheet_pattern=r"conferral|citizenship",
                 roles=(PERIOD, CONFERRALS),
             ),
+        ),
+    ),
+    SeriesSpec(
+        id="citizenship_by_state",
+        title="Citizenship conferrals by state and territory",
+        subtitle="Where new Australian citizens were living when conferred",
+        shape="ranked",
+        unit="people",
+        optional=True,
+        parts=(
+            Part(
+                dataset_slugs=CITIZENSHIP_SLUGS,
+                search_terms="citizenship conferrals by state territory",
+                resource_patterns=(
+                    r"conferral.*(state|territory)",
+                    r"(state|territory).*conferral",
+                    r"citizenship.*(state|territory)",
+                    r"conferral",
+                ),
+                sheet_pattern=r"(conferral|citizen).*(state|territory)|state|territory",
+                roles=(STATE, CONFERRALS, Role("period", PERIOD.patterns, required=False)),
+            ),
+        ),
+        top_n=10,
+        note=(
+            "Home Affairs reports citizenship by residential state in some "
+            "publications but does not consistently release it as a data file. "
+            "This card appears only when a machine-readable table is found."
         ),
     ),
     SeriesSpec(

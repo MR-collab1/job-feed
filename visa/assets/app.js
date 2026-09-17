@@ -20,6 +20,7 @@
     grants_by_subclass:           { chart: 'ranked', wide: true },
     citizenship_conferrals:       { chart: 'line', wide: false },
     citizenship_by_prior_country: { chart: 'ranked', wide: false },
+    citizenship_by_state:         { chart: 'ranked', wide: false },
     pr_by_citizenship:            { chart: 'ranked', wide: false },
     pr_by_state:                  { chart: 'ranked', wide: false },
     pr_by_subclass:               { chart: 'ranked', wide: false },
@@ -36,7 +37,8 @@
     'grants_by_subclass',
     'student_by_citizenship',
     'citizenship_conferrals',
-    'citizenship_by_prior_country'
+    'citizenship_by_prior_country',
+    'citizenship_by_state'
   ];
 
   var esc = Charts.escapeHtml;
@@ -65,6 +67,7 @@
     renderRunBanner(payload);
     renderTiles(payload.headline || []);
     renderCards(payload);
+    renderNotFound(payload);
     renderSources(payload.sources || []);
   }
 
@@ -107,10 +110,12 @@
       return;
     }
 
-    if (!problems.length) { banner.hidden = true; return; }
+    var required = problems.filter(function (p) { return !p.optional; });
+    if (!required.length) { banner.hidden = true; return; }
 
     banner.hidden = false;
-    banner.innerHTML = '<div><strong>' + problems.length + ' of ' + run.series_total +
+    banner.innerHTML = '<div><strong>' + required.length + ' of ' +
+      (run.required_total || run.series_total) +
       ' series could not be rebuilt.</strong> Those cards are marked below. This usually ' +
       'means Home Affairs renamed or restructured a published file.</div>';
   }
@@ -148,7 +153,11 @@
     var series = payload.series || {};
 
     var ids = ORDER.filter(function (id) { return series[id]; })
-      .concat(Object.keys(series).filter(function (id) { return ORDER.indexOf(id) === -1; }));
+      .concat(Object.keys(series).filter(function (id) { return ORDER.indexOf(id) === -1; }))
+      .filter(function (id) {
+        var s = series[id];
+        return s.available || !s.optional;
+      });
 
     if (!ids.length) {
       host.innerHTML = '<div class="card is-wide"><div class="empty">' +
@@ -384,6 +393,26 @@
 
     return '<table class="data"><caption>' + esc(series.unit) +
       '</caption><thead>' + header + '</thead><tbody>' + body + '</tbody></table>';
+  }
+
+  function renderNotFound(payload) {
+    var host = document.getElementById('notFound');
+    var skipped = ((payload.run || {}).problems || []).filter(function (p) {
+      return p.optional;
+    });
+
+    if (!skipped.length) { host.hidden = true; return; }
+
+    host.hidden = false;
+    host.innerHTML = '<h2>Looked for, not published</h2>' +
+      '<p class="card-sub">These breakdowns are not currently available as a data ' +
+      'file from Home Affairs. The pipeline checks for them on every run and a card ' +
+      'will appear here if one is published.</p><ul>' +
+      skipped.map(function (problem) {
+        var series = (payload.series || {})[problem.series] || {};
+        return '<li>' + esc(series.title || problem.series) +
+          '<div class="meta">' + esc(problem.reason) + '</div></li>';
+      }).join('') + '</ul>';
   }
 
   function renderSources(sources) {

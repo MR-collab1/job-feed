@@ -24,6 +24,9 @@ Layout preview with invented numbers: `/visa/?demo=1`.
   category totals may not reconcile to a published grand total.
 - **Nothing is estimated or carried forward to fill a gap.** If a series cannot
   be built, its card says so and names the reason.
+- **Not every breakdown exists.** Home Affairs does not publish every
+  cross-tabulation as a data file. Where a breakdown is missing, the page says
+  so under "Looked for, not published" rather than approximating it.
 - **The subclass chart mixes reference periods.** Programs publish on different
   cycles, so each subclass is counted in the most recent year *its own program*
   published. The card subtitle shows the span, and the table view has a Period
@@ -92,6 +95,21 @@ from the last successful refresh.
 | Student visa grants by country of citizenship | ranked bars | Student visa program |
 | Australian citizenship conferrals | line over time | Australian / historical migration statistics |
 | **Citizenship conferrals by country of prior nationality** | ranked bars | Australian migration statistics |
+| Citizenship conferrals by state and territory | ranked bars | *optional — see below* |
+
+### Optional series
+
+A spec marked `optional=True` is one we are **not certain Home Affairs publishes
+as a data file**. If it cannot be built it is left off the page entirely rather
+than shown as a broken card, it does not count against the run status, and it is
+listed under "Looked for, not published" with the reason. The pipeline retries
+it on every run, so the card appears by itself if the department starts
+publishing the table.
+
+`citizenship_by_state` is the first of these. Home Affairs reports citizenship
+by residential state in some narrative publications and has released it under
+FOI, but no machine-readable state-by-state conferrals table has been confirmed
+on data.gov.au. The spec searches the citizenship datasets for one on every run.
 
 **Partner visas** (309/100, 820/801) have no standalone dataset on data.gov.au.
 They are reported inside the permanent migration program, so they appear in the

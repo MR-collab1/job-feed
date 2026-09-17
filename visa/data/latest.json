@@ -4,11 +4,13 @@
   "last_checked_at": null,
   "run": {
     "problems": [],
+    "required_available": 0,
+    "required_total": 9,
     "series_available": 0,
-    "series_total": 9,
+    "series_total": 10,
     "status": "pending"
   },
-  "schema_version": 3,
+  "schema_version": 4,
   "series": {},
   "sources": []
 }

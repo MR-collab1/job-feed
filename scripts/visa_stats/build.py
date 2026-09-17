@@ -19,7 +19,7 @@ from .tables import Table, TableError, parse_number
 
 log = logging.getLogger(__name__)
 
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 
 # (period, category, value, group) - group names the program that published the
 # row, and is empty for single-source series.
@@ -38,7 +38,9 @@ def build(specs: tuple[SeriesSpec, ...] = SPECS) -> dict:
             built, used = build_series(spec)
         except (FetchError, CatalogueError, ColumnError, TableError) as exc:
             log.warning("series %s unavailable: %s", spec.id, exc)
-            problems.append({"series": spec.id, "reason": str(exc)})
+            problems.append(
+                {"series": spec.id, "reason": str(exc), "optional": spec.optional}
+            )
             series[spec.id] = _unavailable(spec, str(exc))
             continue
 
@@ -47,13 +49,20 @@ def build(specs: tuple[SeriesSpec, ...] = SPECS) -> dict:
             sources[source["id"]] = source
 
     available = [s for s in series.values() if s.get("available")]
+    required_total = sum(1 for spec in specs if not spec.optional)
+    required_available = sum(
+        1 for spec in specs
+        if not spec.optional and series[spec.id].get("available")
+    )
     payload = {
         "schema_version": SCHEMA_VERSION,
         "generated_at": _now(),
         "run": {
-            "status": _status(len(available), len(specs)),
+            "status": _status(required_available, required_total),
             "series_available": len(available),
             "series_total": len(specs),
+            "required_available": required_available,
+            "required_total": required_total,
             "problems": problems,
         },
         "series": series,
@@ -400,6 +409,7 @@ def _unavailable(spec: SeriesSpec, reason: str) -> dict:
         "shape": spec.shape,
         "note": spec.note,
         "available": False,
+        "optional": spec.optional,
         "reason": reason,
         "source_ids": [],
     }

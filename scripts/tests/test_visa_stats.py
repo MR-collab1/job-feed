@@ -13,12 +13,14 @@ from __future__ import annotations
 import re
 import sys
 import unittest
+from unittest import mock
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from visa_stats import tables  # noqa: E402
 from visa_stats.build import _shape_ranked, _shape_time_by_category, build_headline  # noqa: E402
+from visa_stats.catalogue import CatalogueError  # noqa: E402
 from visa_stats.columns import ColumnError, Role, period_sort_key, resolve_roles  # noqa: E402
 from visa_stats.sources import (  # noqa: E402
     COUNTRY, GRANTS, PERIOD, SPECS, STREAM, SeriesSpec,
@@ -327,6 +329,77 @@ class FailureHandlingTests(unittest.TestCase):
 
         payload = {"run": {"status": "partial"}, "series": {}, "generated_at": "x"}
         self.assertIs(_preserve_on_total_failure(payload, {"series": {}}), payload)
+
+
+class OptionalSeriesTests(unittest.TestCase):
+    """A series we are not sure Home Affairs publishes must fail quietly."""
+
+    def setUp(self):
+        self.required = SeriesSpec(
+            id="req", title="Required", subtitle="", shape="ranked",
+            unit="x", parts=(), optional=False,
+        )
+        self.other = SeriesSpec(
+            id="req2", title="Also required", subtitle="", shape="ranked",
+            unit="x", parts=(), optional=False,
+        )
+        self.optional = SeriesSpec(
+            id="opt", title="Optional", subtitle="", shape="ranked",
+            unit="x", parts=(), optional=True,
+        )
+
+    def _build(self, specs, failing):
+        """Run build() with the network replaced by a canned outcome."""
+        from visa_stats import build as build_module
+
+        def fake_build_series(spec):
+            if spec.id in failing:
+                raise CatalogueError(f"no dataset found for {spec.id}")
+            return ({"available": True, "items": [], "source_ids": []}, [])
+
+        with mock.patch.object(build_module, "build_series", fake_build_series):
+            return build_module.build(specs)
+
+    def test_an_optional_failure_leaves_the_run_ok(self):
+        payload = self._build(
+            (self.required, self.other, self.optional), failing={"opt"}
+        )
+        self.assertEqual(payload["run"]["status"], "ok")
+        self.assertEqual(payload["run"]["required_available"], 2)
+        self.assertEqual(payload["run"]["required_total"], 2)
+
+    def test_a_required_failure_still_degrades_the_run(self):
+        payload = self._build(
+            (self.required, self.other, self.optional), failing={"req"}
+        )
+        self.assertEqual(payload["run"]["status"], "partial")
+
+    def test_every_required_series_failing_is_a_failed_run(self):
+        payload = self._build(
+            (self.required, self.other, self.optional), failing={"req", "req2", "opt"}
+        )
+        self.assertEqual(payload["run"]["status"], "failed")
+
+    def test_the_failure_is_still_reported_with_its_reason(self):
+        payload = self._build(
+            (self.required, self.other, self.optional), failing={"opt"}
+        )
+        problem = next(p for p in payload["run"]["problems"] if p["series"] == "opt")
+        self.assertTrue(problem["optional"])
+        self.assertIn("no dataset found", problem["reason"])
+
+    def test_the_series_is_marked_optional_so_the_page_can_skip_it(self):
+        payload = self._build(
+            (self.required, self.other, self.optional), failing={"opt"}
+        )
+        self.assertTrue(payload["series"]["opt"]["optional"])
+        self.assertFalse(payload["series"]["opt"]["available"])
+
+    def test_a_required_failure_is_not_marked_optional(self):
+        payload = self._build(
+            (self.required, self.other, self.optional), failing={"req"}
+        )
+        self.assertFalse(payload["series"]["req"]["optional"])
 
 
 class SpecIntegrityTests(unittest.TestCase):

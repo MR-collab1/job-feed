@@ -206,15 +206,43 @@ def main() -> int:
         ),
     }
 
+    # Shown as not-found on purpose: a state-wise citizenship table has not
+    # been confirmed as a Home Affairs data file, and the demo should show the
+    # honest degradation path rather than promise a card that may never exist.
+    missing = spec("citizenship_by_state")
+    series[missing.id] = {
+        "id": missing.id,
+        "title": missing.title,
+        "subtitle": missing.subtitle,
+        "unit": missing.unit,
+        "shape": missing.shape,
+        "note": missing.note,
+        "available": False,
+        "optional": True,
+        "reason": (
+            "no column matched role 'category'; available columns: "
+            "program year, country of prior nationality, conferrals"
+        ),
+        "source_ids": [],
+    }
+
     payload = {
         "schema_version": SCHEMA_VERSION,
         "generated_at": "2026-09-17T00:00:00+00:00",
         "is_sample": True,
         "run": {
             "status": "ok",
-            "series_available": len(series),
+            "series_available": sum(1 for v in series.values() if v.get("available")),
             "series_total": len(series),
-            "problems": [],
+            "required_available": sum(1 for v in series.values() if v.get("available")),
+            "required_total": sum(1 for v in series.values() if not v.get("optional")),
+            "problems": [
+                {
+                    "series": missing.id,
+                    "reason": series[missing.id]["reason"],
+                    "optional": True,
+                }
+            ],
         },
         "series": series,
         "headline": build_headline(series),
