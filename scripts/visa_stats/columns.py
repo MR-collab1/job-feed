@@ -126,6 +126,16 @@ def period_sort_key(label: str) -> tuple:
     return (1, 0, 0, text)
 
 
+def period_start_year(label: str) -> int | None:
+    """The calendar year a period label starts in, or None if unreadable.
+
+    "2023-24" and "2023/2024" start in 2023; "Jul 2024" and "2024" in 2024.
+    Used to trim history to a reporting window.
+    """
+    key = period_sort_key(label)
+    return None if key[0] else key[1]
+
+
 def tidy_period(label: str) -> str:
     """Render a period label consistently (en dashes to hyphens, trimmed)."""
     return re.sub(r"\s+", " ", (label or "").replace("–", "-")).strip()

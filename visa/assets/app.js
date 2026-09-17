@@ -23,6 +23,7 @@
     citizenship_by_state:         { chart: 'ranked', wide: false },
     pr_by_citizenship:            { chart: 'ranked', wide: false },
     pr_by_state:                  { chart: 'ranked', wide: false },
+    pr_by_state_over_time:        { chart: 'stacked', wide: true },
     pr_by_subclass:               { chart: 'ranked', wide: false },
     student_by_citizenship:       { chart: 'ranked', wide: false }
   };
@@ -32,6 +33,7 @@
     'pr_by_stream',
     'pr_by_citizenship',
     'pr_by_state',
+    'pr_by_state_over_time',
     'pr_by_subclass',
     'temp_grants_by_program',
     'grants_by_subclass',

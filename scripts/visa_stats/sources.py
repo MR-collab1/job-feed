@@ -96,6 +96,11 @@ CONFERRALS = Role(
     numeric=True,
 )
 
+# The dashboard reports from this program year onward. Home Affairs publishes
+# decades of history; anything earlier is trimmed so the charts cover the
+# current migration settings rather than compressing them against the 1990s.
+MIN_PROGRAM_YEAR = 2020
+
 # Rows that are totals or placeholders rather than real categories.
 AGGREGATE_ROWS = (
     r"^total\b",
@@ -141,6 +146,10 @@ class SeriesSpec:
     top_n: int = 15
     drop_rows: tuple[str, ...] = AGGREGATE_ROWS
     note: str = ""
+    # Distinct categories a time series may draw before the tail folds into
+    # "Other". Eight is the hard ceiling: the categorical palette has eight
+    # slots and a ninth hue cannot be told apart under colour-vision deficiency.
+    max_categories: int = 7
     # An optional series is one we are not certain Home Affairs publishes in a
     # machine-readable form. If it cannot be built it is left off the page
     # entirely rather than shown as a broken card; the run report still says
@@ -267,6 +276,30 @@ SPECS: tuple[SeriesSpec, ...] = (
             ),
         ),
         top_n=10,
+    ),
+    SeriesSpec(
+        id="pr_by_state_over_time",
+        title="Permanent Migration Program by state and territory over time",
+        subtitle="Places taken up in each state per program year",
+        shape="time_by_category",
+        unit="places",
+        parts=(
+            Part(
+                dataset_slugs=PERMANENT_PROGRAM_SLUGS + ("historical-migration-statistics",),
+                search_terms=PERMANENT_PROGRAM_SEARCH + " state territory by year",
+                resource_patterns=(r"state", r"territory", r"location"),
+                sheet_pattern=r"state|territory|location",
+                roles=(PERIOD, STATE, GRANTS),
+            ),
+        ),
+        # Australia has exactly eight states and territories, so show them all
+        # rather than folding the smallest into "Other".
+        max_categories=8,
+        note=(
+            "Program years run 1 July to 30 June. The territories are small "
+            "next to New South Wales and Victoria - use the table view to read "
+            "them exactly."
+        ),
     ),
     SeriesSpec(
         id="pr_by_subclass",

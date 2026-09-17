@@ -2,15 +2,18 @@
   "generated_at": null,
   "headline": [],
   "last_checked_at": null,
+  "reporting_window": {
+    "from_program_year": 2020
+  },
   "run": {
     "problems": [],
     "required_available": 0,
-    "required_total": 9,
+    "required_total": 10,
     "series_available": 0,
-    "series_total": 10,
+    "series_total": 11,
     "status": "pending"
   },
-  "schema_version": 4,
+  "schema_version": 5,
   "series": {},
   "sources": []
 }

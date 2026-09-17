@@ -12,14 +12,21 @@ import logging
 from collections import defaultdict
 
 from .catalogue import CatalogueError, Dataset, Resource, find_dataset, load_table, pick_resource
-from .columns import ColumnError, period_sort_key, resolve_roles, tidy_category, tidy_period
+from .columns import (
+    ColumnError,
+    period_sort_key,
+    period_start_year,
+    resolve_roles,
+    tidy_category,
+    tidy_period,
+)
 from .http import FetchError
-from .sources import SPECS, Part, SeriesSpec
+from .sources import MIN_PROGRAM_YEAR, SPECS, Part, SeriesSpec
 from .tables import Table, TableError, parse_number
 
 log = logging.getLogger(__name__)
 
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 
 # (period, category, value, group) - group names the program that published the
 # row, and is empty for single-source series.
@@ -57,6 +64,7 @@ def build(specs: tuple[SeriesSpec, ...] = SPECS) -> dict:
     payload = {
         "schema_version": SCHEMA_VERSION,
         "generated_at": _now(),
+        "reporting_window": {"from_program_year": MIN_PROGRAM_YEAR},
         "run": {
             "status": _status(required_available, required_total),
             "series_available": len(available),
@@ -130,6 +138,7 @@ def _extract_rows(
 
     drops = tuple(spec.drop_rows)
     group = part.label or ""
+    trimmed: dict[str, int] = defaultdict(int)
     output: list[Record] = []
 
     for row in table.rows:
@@ -141,6 +150,15 @@ def _extract_rows(
             continue
 
         period = tidy_period(row.get(period_col, "")) if period_col else ""
+        if period_col and period:
+            year = period_start_year(period)
+            if year is None:
+                trimmed["unreadable"] += 1
+                continue
+            if year < MIN_PROGRAM_YEAR:
+                trimmed["before_window"] += 1
+                continue
+
         if category_col:
             category = tidy_category(row.get(category_col, ""))
         else:
@@ -152,6 +170,12 @@ def _extract_rows(
             continue
 
         output.append((period, category, value, group))
+
+    if trimmed:
+        log.info(
+            "%s: trimmed %d rows before %d and %d with an unreadable period",
+            spec.id, trimmed["before_window"], MIN_PROGRAM_YEAR, trimmed["unreadable"],
+        )
 
     return output
 
@@ -186,7 +210,7 @@ def _shape_time_by_category(spec: SeriesSpec, records) -> dict:
         {c for _, c in totals},
         key=lambda c: -sum(v for (_, cat), v in totals.items() if cat == c),
     )
-    categories = _cap_categories(ranked, spec.top_n if spec.top_n < 8 else 7)
+    categories = _cap_categories(ranked, spec.max_categories)
 
     matrix = [
         [_fold(totals, period, category, ranked, categories) for period in periods]
@@ -292,7 +316,13 @@ def _reference_label(latest_by_group: dict[str, str]) -> str:
 
 
 def _cap_categories(ranked: list[str], limit: int) -> list[str]:
-    """Keep the largest categories; anything past the cap folds into 'Other'."""
+    """Keep the largest categories; anything past the cap folds into 'Other'.
+
+    The cap is never above eight: the categorical palette has eight validated
+    slots, and a ninth hue would be indistinguishable under colour-vision
+    deficiency. Folding the tail keeps the total intact.
+    """
+    limit = max(1, min(limit, 8))
     if len(ranked) <= limit:
         return ranked
     return ranked[:limit] + ["Other"]

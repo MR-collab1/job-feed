@@ -22,24 +22,25 @@ from visa_stats.build import (  # noqa: E402
     _shape_time_total,
     build_headline,
 )
-from visa_stats.sources import SPECS  # noqa: E402
+from visa_stats.sources import MIN_PROGRAM_YEAR, SPECS  # noqa: E402
 
 OUTPUT = Path(__file__).resolve().parents[1] / "visa" / "data" / "sample.json"
 
-YEARS = ["2019-20", "2020-21", "2021-22", "2022-23", "2023-24", "2024-25"]
+# The dashboard reports from 2020-21 onward, so the sample starts there too.
+YEARS = ["2020-21", "2021-22", "2022-23", "2023-24", "2024-25"]
 
 STREAMS = {
-    "Skilled": [95_800, 79_600, 79_600, 142_900, 132_200, 124_100],
-    "Family": [41_900, 77_400, 52_500, 52_500, 52_500, 55_300],
-    "Special Eligibility": [200, 100, 100, 110, 300, 400],
+    "Skilled": [79_600, 79_600, 142_900, 132_200, 124_100],
+    "Family": [77_400, 52_500, 52_500, 52_500, 55_300],
+    "Special Eligibility": [100, 100, 110, 300, 400],
 }
 
 TEMPORARY = {
-    "Visitor": [2_100_000, 90_000, 240_000, 2_600_000, 3_100_000, 3_250_000],
-    "Student": [383_000, 175_000, 188_000, 577_000, 527_000, 489_000],
-    "Temporary work (skilled)": [48_000, 22_000, 31_000, 80_000, 74_000, 68_000],
-    "Temporary graduate": [35_000, 40_000, 44_000, 94_000, 112_000, 98_000],
-    "Working holiday maker": [149_000, 28_000, 22_000, 180_000, 213_000, 196_000],
+    "Visitor": [90_000, 240_000, 2_600_000, 3_100_000, 3_250_000],
+    "Student": [175_000, 188_000, 577_000, 527_000, 489_000],
+    "Temporary work (skilled)": [22_000, 31_000, 80_000, 74_000, 68_000],
+    "Temporary graduate": [40_000, 44_000, 94_000, 112_000, 98_000],
+    "Working holiday maker": [28_000, 22_000, 180_000, 213_000, 196_000],
 }
 
 # Programs publish on different cycles, so the sample deliberately mixes
@@ -83,7 +84,7 @@ CITIZENSHIP_BY_PRIOR_COUNTRY = {
     "Bangladesh": 3_300, "Brazil": 2_900, "Indonesia": 2_700,
 }
 
-CONFERRALS = [204_000, 140_000, 120_000, 168_000, 191_000, 202_000]
+CONFERRALS = [140_000, 120_000, 168_000, 191_000, 202_000]
 
 PR_BY_COUNTRY = {
     "India": 48_213, "China": 27_004, "Philippines": 14_880,
@@ -100,6 +101,17 @@ STUDENTS_BY_COUNTRY = {
     "Indonesia": 12_700, "Thailand": 11_100, "Sri Lanka": 10_400,
     "Bangladesh": 9_600, "Japan": 8_900, "South Korea": 8_100, "Taiwan": 6_200,
     "Hong Kong": 5_400, "Kenya": 4_900, "Mongolia": 3_200, "Chile": 2_800,
+}
+
+PR_BY_STATE_OVER_TIME = {
+    "New South Wales": [48_200, 41_600, 66_900, 64_100, 62_400],
+    "Victoria": [42_800, 37_100, 59_400, 57_300, 55_900],
+    "Queensland": [23_100, 20_400, 33_800, 32_600, 31_200],
+    "Western Australia": [16_400, 14_900, 24_100, 23_500, 22_800],
+    "South Australia": [9_200, 8_100, 13_400, 13_000, 12_600],
+    "Australian Capital Territory": [4_300, 3_800, 6_300, 6_100, 5_900],
+    "Tasmania": [2_400, 2_100, 3_400, 3_200, 3_100],
+    "Northern Territory": [1_400, 1_200, 2_100, 2_000, 1_900],
 }
 
 PR_BY_STATE = {
@@ -174,6 +186,12 @@ def main() -> int:
         "pr_by_state": decorate(
             "pr_by_state", _shape_ranked(spec("pr_by_state"), ranked_records(PR_BY_STATE))
         ),
+        "pr_by_state_over_time": decorate(
+            "pr_by_state_over_time",
+            _shape_time_by_category(
+                spec("pr_by_state_over_time"), time_records(PR_BY_STATE_OVER_TIME)
+            ),
+        ),
         "pr_by_subclass": decorate(
             "pr_by_subclass",
             _shape_ranked(spec("pr_by_subclass"), ranked_records(PR_BY_SUBCLASS)),
@@ -229,6 +247,7 @@ def main() -> int:
     payload = {
         "schema_version": SCHEMA_VERSION,
         "generated_at": "2026-09-17T00:00:00+00:00",
+        "reporting_window": {"from_program_year": MIN_PROGRAM_YEAR},
         "is_sample": True,
         "run": {
             "status": "ok",

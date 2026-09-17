@@ -48,6 +48,9 @@
     }
   ],
   "is_sample": true,
+  "reporting_window": {
+    "from_program_year": 2020
+  },
   "run": {
     "problems": [
       {
@@ -56,13 +59,13 @@
         "series": "citizenship_by_state"
       }
     ],
-    "required_available": 9,
-    "required_total": 9,
-    "series_available": 9,
-    "series_total": 10,
+    "required_available": 10,
+    "required_total": 10,
+    "series_available": 10,
+    "series_total": 11,
     "status": "ok"
   },
-  "schema_version": 4,
+  "schema_version": 5,
   "series": {
     "citizenship_by_prior_country": {
       "available": true,
@@ -186,7 +189,6 @@
       "id": "citizenship_conferrals",
       "matrix": [
         [
-          204000.0,
           140000.0,
           120000.0,
           168000.0,
@@ -196,7 +198,6 @@
       ],
       "note": "",
       "periods": [
-        "2019-20",
         "2020-21",
         "2021-22",
         "2022-23",
@@ -543,6 +544,93 @@
       "total": 195800.0,
       "unit": "places"
     },
+    "pr_by_state_over_time": {
+      "available": true,
+      "categories": [
+        "New South Wales",
+        "Victoria",
+        "Queensland",
+        "Western Australia",
+        "South Australia",
+        "Australian Capital Territory",
+        "Tasmania",
+        "Northern Territory"
+      ],
+      "id": "pr_by_state_over_time",
+      "matrix": [
+        [
+          48200.0,
+          41600.0,
+          66900.0,
+          64100.0,
+          62400.0
+        ],
+        [
+          42800.0,
+          37100.0,
+          59400.0,
+          57300.0,
+          55900.0
+        ],
+        [
+          23100.0,
+          20400.0,
+          33800.0,
+          32600.0,
+          31200.0
+        ],
+        [
+          16400.0,
+          14900.0,
+          24100.0,
+          23500.0,
+          22800.0
+        ],
+        [
+          9200.0,
+          8100.0,
+          13400.0,
+          13000.0,
+          12600.0
+        ],
+        [
+          4300.0,
+          3800.0,
+          6300.0,
+          6100.0,
+          5900.0
+        ],
+        [
+          2400.0,
+          2100.0,
+          3400.0,
+          3200.0,
+          3100.0
+        ],
+        [
+          1400.0,
+          1200.0,
+          2100.0,
+          2000.0,
+          1900.0
+        ]
+      ],
+      "note": "Program years run 1 July to 30 June. The territories are small next to New South Wales and Victoria - use the table view to read them exactly.",
+      "periods": [
+        "2020-21",
+        "2021-22",
+        "2022-23",
+        "2023-24",
+        "2024-25"
+      ],
+      "shape": "time_by_category",
+      "source_ids": [
+        "sample/not-a-real-file"
+      ],
+      "subtitle": "Places taken up in each state per program year",
+      "title": "Permanent Migration Program by state and territory over time",
+      "unit": "places"
+    },
     "pr_by_stream": {
       "available": true,
       "categories": [
@@ -553,7 +641,6 @@
       "id": "pr_by_stream",
       "matrix": [
         [
-          95800.0,
           79600.0,
           79600.0,
           142900.0,
@@ -561,7 +648,6 @@
           124100.0
         ],
         [
-          41900.0,
           77400.0,
           52500.0,
           52500.0,
@@ -569,7 +655,6 @@
           55300.0
         ],
         [
-          200.0,
           100.0,
           100.0,
           110.0,
@@ -579,7 +664,6 @@
       ],
       "note": "Program years run 1 July to 30 June.",
       "periods": [
-        "2019-20",
         "2020-21",
         "2021-22",
         "2022-23",
@@ -789,7 +873,6 @@
       "id": "temp_grants_by_program",
       "matrix": [
         [
-          2100000.0,
           90000.0,
           240000.0,
           2600000.0,
@@ -797,7 +880,6 @@
           3250000.0
         ],
         [
-          383000.0,
           175000.0,
           188000.0,
           577000.0,
@@ -805,7 +887,6 @@
           489000.0
         ],
         [
-          149000.0,
           28000.0,
           22000.0,
           180000.0,
@@ -813,7 +894,6 @@
           196000.0
         ],
         [
-          35000.0,
           40000.0,
           44000.0,
           94000.0,
@@ -821,7 +901,6 @@
           98000.0
         ],
         [
-          48000.0,
           22000.0,
           31000.0,
           80000.0,
@@ -831,7 +910,6 @@
       ],
       "note": "Each program is published separately; grants are summed per program year.",
       "periods": [
-        "2019-20",
         "2020-21",
         "2021-22",
         "2022-23",

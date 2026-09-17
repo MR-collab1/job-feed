@@ -19,11 +19,15 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from visa_stats import tables  # noqa: E402
-from visa_stats.build import _shape_ranked, _shape_time_by_category, build_headline  # noqa: E402
+from visa_stats.build import (  # noqa: E402
+    _extract_rows, _shape_ranked, _shape_time_by_category, build_headline,
+)
 from visa_stats.catalogue import CatalogueError  # noqa: E402
-from visa_stats.columns import ColumnError, Role, period_sort_key, resolve_roles  # noqa: E402
+from visa_stats.columns import (  # noqa: E402
+    ColumnError, Role, period_sort_key, period_start_year, resolve_roles,
+)
 from visa_stats.sources import (  # noqa: E402
-    COUNTRY, GRANTS, PERIOD, SPECS, STREAM, SeriesSpec,
+    COUNTRY, GRANTS, MIN_PROGRAM_YEAR, PERIOD, SPECS, STREAM, Part, SeriesSpec,
 )
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
@@ -329,6 +333,103 @@ class FailureHandlingTests(unittest.TestCase):
 
         payload = {"run": {"status": "partial"}, "series": {}, "generated_at": "x"}
         self.assertIs(_preserve_on_total_failure(payload, {"series": {}}), payload)
+
+
+class ReportingWindowTests(unittest.TestCase):
+    """The dashboard reports from MIN_PROGRAM_YEAR onward."""
+
+    def setUp(self):
+        self.spec = SeriesSpec(
+            id="t", title="t", subtitle="", shape="time_by_category",
+            unit="places", parts=(),
+        )
+        self.part = Part(
+            dataset_slugs=("x",), search_terms="x", resource_patterns=(r"x",),
+            roles=(PERIOD, STREAM, GRANTS),
+        )
+        self.roles = {"period": "program year", "category": "stream", "value": "grants"}
+
+    def _rows(self, periods):
+        table = tables.Table(
+            headers=["program year", "stream", "grants"],
+            rows=[{"program year": p, "stream": "Skilled", "grants": "10"} for p in periods],
+        )
+        return _extract_rows(self.spec, self.part, table, self.roles)
+
+    def test_period_start_year_reads_the_common_label_shapes(self):
+        self.assertEqual(period_start_year("2023-24"), 2023)
+        self.assertEqual(period_start_year("2023\u201324"), 2023)
+        self.assertEqual(period_start_year("2024/2025"), 2024)
+        self.assertEqual(period_start_year("Jul 2024"), 2024)
+        self.assertIsNone(period_start_year("not a period"))
+
+    def test_years_before_the_window_are_dropped(self):
+        kept = [r[0] for r in self._rows(["2017-18", "2019-20", "2020-21", "2024-25"])]
+        self.assertEqual(kept, ["2020-21", "2024-25"])
+
+    def test_the_first_year_in_the_window_is_kept(self):
+        kept = [r[0] for r in self._rows([f"{MIN_PROGRAM_YEAR}-{MIN_PROGRAM_YEAR % 100 + 1}"])]
+        self.assertEqual(len(kept), 1)
+
+    def test_an_unreadable_period_is_dropped_rather_than_assumed_recent(self):
+        # Keeping it would let pre-window data through under an odd label.
+        self.assertEqual(self._rows(["mystery period"]), [])
+
+    def test_a_series_with_no_period_column_is_untouched(self):
+        part = Part(
+            dataset_slugs=("x",), search_terms="x", resource_patterns=(r"x",),
+            roles=(STREAM, GRANTS), label="Student",
+        )
+        table = tables.Table(
+            headers=["stream", "grants"], rows=[{"stream": "Skilled", "grants": "10"}]
+        )
+        rows = _extract_rows(self.spec, part, table, {"category": "stream", "value": "grants"})
+        self.assertEqual(len(rows), 1)
+
+
+class CategoryCapTests(unittest.TestCase):
+    def test_the_cap_comes_from_the_spec(self):
+        spec = SeriesSpec(
+            id="t", title="t", subtitle="", shape="time_by_category",
+            unit="x", parts=(), max_categories=3,
+        )
+        records = [("2024-25", f"C{i}", float(10 - i), "") for i in range(6)]
+        shaped = _shape_time_by_category(spec, records)
+        self.assertEqual(len(shaped["categories"]), 4)
+        self.assertEqual(shaped["categories"][-1], "Other")
+
+    def test_all_eight_states_survive_a_cap_of_eight(self):
+        spec = SeriesSpec(
+            id="t", title="t", subtitle="", shape="time_by_category",
+            unit="x", parts=(), max_categories=8,
+        )
+        records = [("2024-25", f"S{i}", float(10 - i), "") for i in range(8)]
+        shaped = _shape_time_by_category(spec, records)
+        self.assertEqual(len(shaped["categories"]), 8)
+        self.assertNotIn("Other", shaped["categories"])
+
+    def test_a_cap_above_eight_is_clamped_to_the_palette(self):
+        # A ninth categorical hue is not distinguishable under CVD.
+        spec = SeriesSpec(
+            id="t", title="t", subtitle="", shape="time_by_category",
+            unit="x", parts=(), max_categories=20,
+        )
+        records = [("2024-25", f"C{i}", float(30 - i), "") for i in range(15)]
+        shaped = _shape_time_by_category(spec, records)
+        self.assertEqual(len(shaped["categories"]), 9)  # 8 + Other
+
+    def test_the_folded_tail_preserves_the_total(self):
+        spec = SeriesSpec(
+            id="t", title="t", subtitle="", shape="time_by_category",
+            unit="x", parts=(), max_categories=3,
+        )
+        records = [("2024-25", f"C{i}", float(10 - i), "") for i in range(6)]
+        shaped = _shape_time_by_category(spec, records)
+        self.assertAlmostEqual(
+            sum(row[0] for row in shaped["matrix"]),
+            sum(v for _, _, v, _g in records),
+            places=6,
+        )
 
 
 class OptionalSeriesTests(unittest.TestCase):
