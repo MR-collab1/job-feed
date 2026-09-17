@@ -480,3 +480,68 @@ footer.page-foot a { color: inherit; }
   padding: 0.28rem 0.5rem;
   max-width: 15rem;
 }
+
+/* ---------- Table search & card actions ---------- */
+
+.table-search {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.table-search label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.table-search input {
+  font: inherit;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  background: var(--plane);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.3rem 0.55rem;
+  min-width: 11rem;
+}
+
+.table-search input:focus-visible,
+.filters select:focus-visible,
+.view-toggle button:focus-visible,
+.card-actions a:focus-visible,
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--series-1);
+  outline-offset: 2px;
+}
+
+.table-count {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.table-host { max-height: 26rem; overflow: auto; }
+.table-host table.data thead th {
+  position: sticky;
+  top: 0;
+  background: var(--surface-1);
+}
+
+.card-actions {
+  margin-top: 0.8rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--gridline);
+}
+
+.card-actions a {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.card-actions a:hover { color: var(--series-1); border-bottom-color: currentColor; }

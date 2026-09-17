@@ -13,7 +13,7 @@
     "series_total": 11,
     "status": "pending"
   },
-  "schema_version": 5,
+  "schema_version": 6,
   "series": {},
   "sources": []
 }

@@ -78,8 +78,12 @@
     var status = run.status || 'unknown';
     var checked = payload.last_checked_at || payload.generated_at;
 
+    var window_ = payload.reporting_window || {};
     document.getElementById('freshness').innerHTML = [
       field('Source', 'Australian Department of Home Affairs, via data.gov.au'),
+      window_.from_program_year
+        ? field('Covering', window_.from_program_year + '\u201321 to current')
+        : '',
       field('Data built', formatDateTime(payload.generated_at)),
       field('Last checked', formatDateTime(checked)),
       '<div><dt>Pipeline</dt><dd><span class="status-dot status-' + esc(status) + '"></span>' +
@@ -92,7 +96,11 @@
   }
 
   function statusText(status, run) {
-    var counts = run.series_available + '/' + run.series_total + ' series';
+    // Count against the series we expect to exist. An optional series that
+    // Home Affairs does not publish is not a missing one.
+    var have = run.required_available !== undefined ? run.required_available : run.series_available;
+    var total = run.required_total !== undefined ? run.required_total : run.series_total;
+    var counts = have + '/' + total + ' series';
     if (status === 'ok') return 'All series current (' + counts + ')';
     if (status === 'partial') return 'Some series unavailable (' + counts + ')';
     if (status === 'failed') return 'Last refresh failed';
@@ -224,6 +232,8 @@
     card.appendChild(tableHost);
 
     head.appendChild(buildToggle(chartHost, tableHost));
+    wireTableSearch(tableHost);
+    card.appendChild(buildDownload(series, chartType));
 
     if (series.note) {
       card.insertAdjacentHTML('beforeend',
@@ -238,8 +248,11 @@
     var parts = [series.subtitle];
     if (series.shape === 'ranked') {
       if (series.period) parts.push(series.period);
-      if (series.category_count && series.items.length < series.category_count) {
-        parts.push('Top ' + series.items.length + ' of ' + series.category_count);
+      // The folded "All other" row is not a category, and the table now
+      // carries every one — so say what the *chart* is showing.
+      var charted = series.items.filter(function (i) { return !i.is_tail; }).length;
+      if (series.category_count && charted < series.category_count) {
+        parts.push('chart shows top ' + charted + ' of ' + series.category_count);
       }
     }
     return parts.filter(Boolean).join(' · ');
@@ -354,27 +367,113 @@
     return toggle;
   }
 
+  /* Filter the table rows in place. The chart is untouched — it keeps showing
+     the published top-N, so filtering never changes what a bar means. */
+  function wireTableSearch(tableHost) {
+    var input = tableHost.querySelector('.table-search input');
+    if (!input) return;
+    var rows = Array.prototype.slice.call(tableHost.querySelectorAll('tbody tr'));
+    var count = tableHost.querySelector('.table-count');
+
+    function apply() {
+      var term = input.value.trim().toLowerCase();
+      var shown = 0;
+      rows.forEach(function (row) {
+        var hit = !term || row.dataset.label.indexOf(term) !== -1;
+        row.hidden = !hit;
+        if (hit) shown++;
+      });
+      count.textContent = term ? shown + ' of ' + rows.length : '';
+    }
+
+    input.addEventListener('input', apply);
+  }
+
+  function buildDownload(series, chartType) {
+    var wrap = document.createElement('div');
+    wrap.className = 'card-actions';
+    var link = document.createElement('a');
+    link.href = '#';
+    link.textContent = 'Download CSV';
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      var csv = toCsv(series, chartType);
+      var url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = series.id + '.csv';
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    });
+    wrap.appendChild(link);
+    return wrap;
+  }
+
+  function csvCell(value) {
+    var text = value === null || value === undefined ? '' : String(value);
+    return /[",\n]/.test(text) ? '"' + text.replace(/"/g, '""') + '"' : text;
+  }
+
+  function toCsv(series, chartType) {
+    var lines = [];
+    if (chartType === 'ranked') {
+      var rows = series.all_items && series.all_items.length ? series.all_items : series.items;
+      var grouped = rows.some(function (r) { return r.group; });
+      lines.push(['rank', 'category', grouped ? 'program' : null, 'period', series.unit, 'share']
+        .filter(Boolean).map(csvCell).join(','));
+      rows.forEach(function (row, i) {
+        lines.push([
+          row.rank || i + 1, row.label, grouped ? (row.group || '') : null,
+          row.period || series.period || '', row.value, row.share,
+        ].filter(function (v) { return v !== null; }).map(csvCell).join(','));
+      });
+    } else {
+      lines.push(['period'].concat(series.categories).map(csvCell).join(','));
+      series.periods.forEach(function (period, i) {
+        lines.push([period].concat(series.categories.map(function (_c, c) {
+          return series.matrix[c][i];
+        })).map(csvCell).join(','));
+      });
+    }
+    return lines.join('\n') + '\n';
+  }
+
   function buildTable(series, chartType) {
     if (chartType === 'ranked') {
+      // The chart shows a readable top-N; the table shows everything the
+      // pipeline published, so a reader can find their own country.
+      var rows = series.all_items && series.all_items.length
+        ? series.all_items
+        : series.items;
       // Only show the program/period columns when the series actually spans
       // more than one source, so single-source tables stay uncluttered.
-      var grouped = series.items.some(function (item) { return item.group; });
+      var grouped = rows.some(function (item) { return item.group; });
       var mixed = grouped && Object.keys(series.reference_periods || {}).length > 1;
+      var ranked = rows.length && rows[0].rank !== undefined;
 
-      var head = '<tr><th>Category</th>' +
+      var head = '<tr>' + (ranked ? '<th class="num">#</th>' : '') + '<th>Category</th>' +
         (grouped ? '<th>Program</th>' : '') +
         (mixed ? '<th>Period</th>' : '') +
         '<th class="num">' + esc(series.unit) + '</th><th class="num">Share</th></tr>';
 
-      var body = series.items.map(function (item) {
-        return '<tr><td>' + esc(item.label) + '</td>' +
+      var body = rows.map(function (item) {
+        return '<tr data-label="' + esc(String(item.label).toLowerCase()) + '">' +
+          (ranked ? '<td class="num">' + item.rank + '</td>' : '') +
+          '<td>' + esc(item.label) + '</td>' +
           (grouped ? '<td>' + esc(item.group || '—') + '</td>' : '') +
           (mixed ? '<td>' + esc(item.period || '—') + '</td>' : '') +
           '<td class="num">' + Charts.formatValue(item.value) + '</td>' +
           '<td class="num">' + (item.share * 100).toFixed(1) + '%</td></tr>';
       }).join('');
 
-      return '<table class="data"><caption>' + esc(series.period || '') +
+      var search = rows.length > 12
+        ? '<div class="table-search"><label>Find <input type="search" ' +
+          'placeholder="e.g. Nepal" autocomplete="off"></label>' +
+          '<span class="table-count"></span></div>'
+        : '';
+
+      return search + '<table class="data"><caption>' + esc(series.period || '') +
+        ' · ' + rows.length + ' categories' +
         '</caption><thead>' + head + '</thead><tbody>' + body + '</tbody></table>';
     }
 

@@ -65,9 +65,119 @@
     "series_total": 11,
     "status": "ok"
   },
-  "schema_version": 5,
+  "schema_version": 6,
   "series": {
     "citizenship_by_prior_country": {
+      "all_items": [
+        {
+          "label": "India",
+          "rank": 1,
+          "share": 0.23185,
+          "value": 41200.0
+        },
+        {
+          "label": "United Kingdom",
+          "rank": 2,
+          "share": 0.12831,
+          "value": 22800.0
+        },
+        {
+          "label": "China",
+          "rank": 3,
+          "share": 0.09229,
+          "value": 16400.0
+        },
+        {
+          "label": "Philippines",
+          "rank": 4,
+          "share": 0.08385,
+          "value": 14900.0
+        },
+        {
+          "label": "New Zealand",
+          "rank": 5,
+          "share": 0.07091,
+          "value": 12600.0
+        },
+        {
+          "label": "Nepal",
+          "rank": 6,
+          "share": 0.05515,
+          "value": 9800.0
+        },
+        {
+          "label": "Pakistan",
+          "rank": 7,
+          "share": 0.04727,
+          "value": 8400.0
+        },
+        {
+          "label": "Vietnam",
+          "rank": 8,
+          "share": 0.04446,
+          "value": 7900.0
+        },
+        {
+          "label": "South Africa",
+          "rank": 9,
+          "share": 0.0377,
+          "value": 6700.0
+        },
+        {
+          "label": "Sri Lanka",
+          "rank": 10,
+          "share": 0.03489,
+          "value": 6200.0
+        },
+        {
+          "label": "Iraq",
+          "rank": 11,
+          "share": 0.0287,
+          "value": 5100.0
+        },
+        {
+          "label": "Afghanistan",
+          "rank": 12,
+          "share": 0.02701,
+          "value": 4800.0
+        },
+        {
+          "label": "Malaysia",
+          "rank": 13,
+          "share": 0.0242,
+          "value": 4300.0
+        },
+        {
+          "label": "Iran",
+          "rank": 14,
+          "share": 0.02307,
+          "value": 4100.0
+        },
+        {
+          "label": "South Korea",
+          "rank": 15,
+          "share": 0.02026,
+          "value": 3600.0
+        },
+        {
+          "label": "Bangladesh",
+          "rank": 16,
+          "share": 0.01857,
+          "value": 3300.0
+        },
+        {
+          "label": "Brazil",
+          "rank": 17,
+          "share": 0.01632,
+          "value": 2900.0
+        },
+        {
+          "label": "Indonesia",
+          "rank": 18,
+          "share": 0.01519,
+          "value": 2700.0
+        }
+      ],
       "available": true,
       "category_count": 18,
       "id": "citizenship_by_prior_country",
@@ -213,6 +323,168 @@
       "unit": "people"
     },
     "grants_by_subclass": {
+      "all_items": [
+        {
+          "group": "Visitor",
+          "label": "600 Visitor",
+          "period": "2024-25",
+          "rank": 1,
+          "share": 0.70225,
+          "value": 3010000.0
+        },
+        {
+          "group": "Student",
+          "label": "500 Student",
+          "period": "2024-25",
+          "rank": 2,
+          "share": 0.11339,
+          "value": 486000.0
+        },
+        {
+          "group": "Visitor",
+          "label": "601 Electronic Travel Authority",
+          "period": "2024-25",
+          "rank": 3,
+          "share": 0.04433,
+          "value": 190000.0
+        },
+        {
+          "group": "Working holiday maker",
+          "label": "417 Working Holiday",
+          "period": "2024-25",
+          "rank": 4,
+          "share": 0.03056,
+          "value": 131000.0
+        },
+        {
+          "group": "Temporary graduate",
+          "label": "485 Temporary Graduate",
+          "period": "2023-24",
+          "rank": 5,
+          "share": 0.02613,
+          "value": 112000.0
+        },
+        {
+          "group": "Temporary work (skilled)",
+          "label": "482 Skills in Demand",
+          "period": "2023-24",
+          "rank": 6,
+          "share": 0.01656,
+          "value": 71000.0
+        },
+        {
+          "group": "Working holiday maker",
+          "label": "462 Work and Holiday",
+          "period": "2024-25",
+          "rank": 7,
+          "share": 0.01516,
+          "value": 65000.0
+        },
+        {
+          "group": "Visitor",
+          "label": "651 eVisitor",
+          "period": "2024-25",
+          "rank": 8,
+          "share": 0.0112,
+          "value": 48000.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "820/801 Partner (onshore)",
+          "period": "2024-25",
+          "rank": 9,
+          "share": 0.0074,
+          "value": 31700.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "189 Skilled Independent",
+          "period": "2024-25",
+          "rank": 10,
+          "share": 0.00709,
+          "value": 30400.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "190 Skilled Nominated",
+          "period": "2024-25",
+          "rank": 11,
+          "share": 0.00562,
+          "value": 24100.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "491 Skilled Work Regional",
+          "period": "2024-25",
+          "rank": 12,
+          "share": 0.00527,
+          "value": 22600.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "186 Employer Nomination",
+          "period": "2024-25",
+          "rank": 13,
+          "share": 0.00509,
+          "value": 21800.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "309/100 Partner (offshore)",
+          "period": "2024-25",
+          "rank": 14,
+          "share": 0.00488,
+          "value": 20900.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "143 Contributory Parent",
+          "period": "2024-25",
+          "rank": 15,
+          "share": 0.00159,
+          "value": 6800.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "858 Global Talent",
+          "period": "2024-25",
+          "rank": 16,
+          "share": 0.00093,
+          "value": 4000.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "187 Regional Sponsored",
+          "period": "2024-25",
+          "rank": 17,
+          "share": 0.00091,
+          "value": 3900.0
+        },
+        {
+          "group": "Temporary work (skilled)",
+          "label": "494 Regional Employer Sponsored",
+          "period": "2023-24",
+          "rank": 18,
+          "share": 0.00072,
+          "value": 3100.0
+        },
+        {
+          "group": "Student",
+          "label": "590 Student Guardian",
+          "period": "2024-25",
+          "rank": 19,
+          "share": 0.0007,
+          "value": 3000.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "804 Aged Parent",
+          "period": "2024-25",
+          "rank": 20,
+          "share": 0.00021,
+          "value": 900.0
+        }
+      ],
       "available": true,
       "category_count": 20,
       "id": "grants_by_subclass",
@@ -382,6 +654,122 @@
       "unit": "grants"
     },
     "pr_by_citizenship": {
+      "all_items": [
+        {
+          "label": "India",
+          "rank": 1,
+          "share": 0.30448,
+          "value": 48213.0
+        },
+        {
+          "label": "China",
+          "rank": 2,
+          "share": 0.17054,
+          "value": 27004.0
+        },
+        {
+          "label": "Philippines",
+          "rank": 3,
+          "share": 0.09397,
+          "value": 14880.0
+        },
+        {
+          "label": "United Kingdom",
+          "rank": 4,
+          "share": 0.07092,
+          "value": 11230.0
+        },
+        {
+          "label": "Nepal",
+          "rank": 5,
+          "share": 0.05971,
+          "value": 9455.0
+        },
+        {
+          "label": "Vietnam",
+          "rank": 6,
+          "share": 0.03854,
+          "value": 6102.0
+        },
+        {
+          "label": "Pakistan",
+          "rank": 7,
+          "share": 0.03367,
+          "value": 5331.0
+        },
+        {
+          "label": "Sri Lanka",
+          "rank": 8,
+          "share": 0.03145,
+          "value": 4980.0
+        },
+        {
+          "label": "South Africa",
+          "rank": 9,
+          "share": 0.02785,
+          "value": 4410.0
+        },
+        {
+          "label": "Iran",
+          "rank": 10,
+          "share": 0.02464,
+          "value": 3902.0
+        },
+        {
+          "label": "Malaysia",
+          "rank": 11,
+          "share": 0.02299,
+          "value": 3640.0
+        },
+        {
+          "label": "Indonesia",
+          "rank": 12,
+          "share": 0.0197,
+          "value": 3120.0
+        },
+        {
+          "label": "Thailand",
+          "rank": 13,
+          "share": 0.01819,
+          "value": 2880.0
+        },
+        {
+          "label": "Bangladesh",
+          "rank": 14,
+          "share": 0.01705,
+          "value": 2700.0
+        },
+        {
+          "label": "Brazil",
+          "rank": 15,
+          "share": 0.01585,
+          "value": 2510.0
+        },
+        {
+          "label": "Nigeria",
+          "rank": 16,
+          "share": 0.01453,
+          "value": 2300.0
+        },
+        {
+          "label": "Fiji",
+          "rank": 17,
+          "share": 0.01295,
+          "value": 2050.0
+        },
+        {
+          "label": "Ireland",
+          "rank": 18,
+          "share": 0.012,
+          "value": 1900.0
+        },
+        {
+          "label": "Zimbabwe",
+          "rank": 19,
+          "share": 0.01099,
+          "value": 1740.0
+        }
+      ],
       "available": true,
       "category_count": 19,
       "id": "pr_by_citizenship",
@@ -484,6 +872,56 @@
       "unit": "places"
     },
     "pr_by_state": {
+      "all_items": [
+        {
+          "label": "New South Wales",
+          "rank": 1,
+          "share": 0.31869,
+          "value": 62400.0
+        },
+        {
+          "label": "Victoria",
+          "rank": 2,
+          "share": 0.2855,
+          "value": 55900.0
+        },
+        {
+          "label": "Queensland",
+          "rank": 3,
+          "share": 0.15935,
+          "value": 31200.0
+        },
+        {
+          "label": "Western Australia",
+          "rank": 4,
+          "share": 0.11645,
+          "value": 22800.0
+        },
+        {
+          "label": "South Australia",
+          "rank": 5,
+          "share": 0.06435,
+          "value": 12600.0
+        },
+        {
+          "label": "Australian Capital Territory",
+          "rank": 6,
+          "share": 0.03013,
+          "value": 5900.0
+        },
+        {
+          "label": "Tasmania",
+          "rank": 7,
+          "share": 0.01583,
+          "value": 3100.0
+        },
+        {
+          "label": "Northern Territory",
+          "rank": 8,
+          "share": 0.0097,
+          "value": 1900.0
+        }
+      ],
       "available": true,
       "category_count": 8,
       "id": "pr_by_state",
@@ -679,6 +1117,80 @@
       "unit": "places"
     },
     "pr_by_subclass": {
+      "all_items": [
+        {
+          "label": "820/801 Partner (onshore)",
+          "rank": 1,
+          "share": 0.17839,
+          "value": 31700.0
+        },
+        {
+          "label": "189 Skilled Independent",
+          "rank": 2,
+          "share": 0.17107,
+          "value": 30400.0
+        },
+        {
+          "label": "190 Skilled Nominated",
+          "rank": 3,
+          "share": 0.13562,
+          "value": 24100.0
+        },
+        {
+          "label": "491 Skilled Work Regional",
+          "rank": 4,
+          "share": 0.12718,
+          "value": 22600.0
+        },
+        {
+          "label": "186 Employer Nomination",
+          "rank": 5,
+          "share": 0.12268,
+          "value": 21800.0
+        },
+        {
+          "label": "309/100 Partner (offshore)",
+          "rank": 6,
+          "share": 0.11761,
+          "value": 20900.0
+        },
+        {
+          "label": "801 Partner (second stage)",
+          "rank": 7,
+          "share": 0.0529,
+          "value": 9400.0
+        },
+        {
+          "label": "143 Contributory Parent",
+          "rank": 8,
+          "share": 0.03827,
+          "value": 6800.0
+        },
+        {
+          "label": "858 Global Talent",
+          "rank": 9,
+          "share": 0.02251,
+          "value": 4000.0
+        },
+        {
+          "label": "187 Regional Sponsored",
+          "rank": 10,
+          "share": 0.02195,
+          "value": 3900.0
+        },
+        {
+          "label": "132 Business Talent",
+          "rank": 11,
+          "share": 0.00675,
+          "value": 1200.0
+        },
+        {
+          "label": "804 Aged Parent",
+          "rank": 12,
+          "share": 0.00506,
+          "value": 900.0
+        }
+      ],
       "available": true,
       "category_count": 12,
       "id": "pr_by_subclass",
@@ -760,6 +1272,122 @@
       "unit": "places"
     },
     "student_by_citizenship": {
+      "all_items": [
+        {
+          "label": "India",
+          "rank": 1,
+          "share": 0.25911,
+          "value": 112400.0
+        },
+        {
+          "label": "China",
+          "rank": 2,
+          "share": 0.21715,
+          "value": 94200.0
+        },
+        {
+          "label": "Nepal",
+          "rank": 3,
+          "share": 0.08898,
+          "value": 38600.0
+        },
+        {
+          "label": "Philippines",
+          "rank": 4,
+          "share": 0.0687,
+          "value": 29800.0
+        },
+        {
+          "label": "Vietnam",
+          "rank": 5,
+          "share": 0.05556,
+          "value": 24100.0
+        },
+        {
+          "label": "Colombia",
+          "rank": 6,
+          "share": 0.04449,
+          "value": 19300.0
+        },
+        {
+          "label": "Pakistan",
+          "rank": 7,
+          "share": 0.03896,
+          "value": 16900.0
+        },
+        {
+          "label": "Brazil",
+          "rank": 8,
+          "share": 0.03504,
+          "value": 15200.0
+        },
+        {
+          "label": "Indonesia",
+          "rank": 9,
+          "share": 0.02928,
+          "value": 12700.0
+        },
+        {
+          "label": "Thailand",
+          "rank": 10,
+          "share": 0.02559,
+          "value": 11100.0
+        },
+        {
+          "label": "Sri Lanka",
+          "rank": 11,
+          "share": 0.02397,
+          "value": 10400.0
+        },
+        {
+          "label": "Bangladesh",
+          "rank": 12,
+          "share": 0.02213,
+          "value": 9600.0
+        },
+        {
+          "label": "Japan",
+          "rank": 13,
+          "share": 0.02052,
+          "value": 8900.0
+        },
+        {
+          "label": "South Korea",
+          "rank": 14,
+          "share": 0.01867,
+          "value": 8100.0
+        },
+        {
+          "label": "Taiwan",
+          "rank": 15,
+          "share": 0.01429,
+          "value": 6200.0
+        },
+        {
+          "label": "Hong Kong",
+          "rank": 16,
+          "share": 0.01245,
+          "value": 5400.0
+        },
+        {
+          "label": "Kenya",
+          "rank": 17,
+          "share": 0.0113,
+          "value": 4900.0
+        },
+        {
+          "label": "Mongolia",
+          "rank": 18,
+          "share": 0.00738,
+          "value": 3200.0
+        },
+        {
+          "label": "Chile",
+          "rank": 19,
+          "share": 0.00645,
+          "value": 2800.0
+        }
+      ],
       "available": true,
       "category_count": 19,
       "id": "student_by_citizenship",

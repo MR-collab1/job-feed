@@ -61,6 +61,16 @@ between releases ("Citizenship country" → "Country of citizenship"). Each seri
 declares an ordered list of patterns per role, so a rename degrades into a
 warning on one card instead of a crash.
 
+## Publishing
+
+GitHub Pages is already enabled on this repository, so the page goes live at
+`/visa/` as soon as this branch reaches the default branch.
+
+The daily workflow **cannot run before then**: GitHub only registers workflows
+that exist on the default branch, so `update-visa-stats.yml` is not dispatchable
+from a feature branch. Once merged, trigger it by hand from the Actions tab
+rather than waiting for the 19:00 UTC cron.
+
 ## Running it
 
 ```bash
@@ -96,6 +106,17 @@ from the last successful refresh.
 | Australian citizenship conferrals | line over time | Australian / historical migration statistics |
 | **Citizenship conferrals by country of prior nationality** | ranked bars | Australian migration statistics |
 | Citizenship conferrals by state and territory | ranked bars | *optional — see below* |
+
+### Finding a single country
+
+The chart shows a readable top-N, but the published payload carries every
+category (up to 300) in `all_items`. The table view renders the full list with a
+filter box, so a reader can type "Nepal" instead of scanning a top-15 bar chart.
+Filtering only hides table rows — the chart is untouched, so a bar never changes
+meaning under a filter.
+
+Every card also offers a CSV of exactly what it is showing: ranked series export
+the full ranked list, time series export the period × category matrix.
 
 ### Optional series
 

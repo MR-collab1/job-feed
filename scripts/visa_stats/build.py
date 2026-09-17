@@ -26,7 +26,7 @@ from .tables import Table, TableError, parse_number
 
 log = logging.getLogger(__name__)
 
-SCHEMA_VERSION = 5
+SCHEMA_VERSION = 6
 
 # (period, category, value, group) - group names the program that published the
 # row, and is empty for single-source series.
@@ -280,10 +280,33 @@ def _shape_ranked(spec: SeriesSpec, records: list[Record]) -> dict:
         "period": _reference_label(latest_by_group),
         "periods": periods,
         "items": items,
+        "all_items": _full_list(ranked, group_totals, latest_by_group, total),
         "total": total,
         "category_count": len(ranked),
         "reference_periods": reference_periods,
     }
+
+
+# The chart shows a readable top-N, but the table carries every category so a
+# reader can find their own country rather than only the largest fifteen.
+FULL_LIST_LIMIT = 300
+
+
+def _full_list(ranked, group_totals, latest_by_group, total) -> list[dict]:
+    rows = []
+    for rank, (label, value) in enumerate(ranked[:FULL_LIST_LIMIT], start=1):
+        row = {
+            "rank": rank,
+            "label": label,
+            "value": value,
+            "share": round(value / total, 5) if total else 0.0,
+        }
+        group = _dominant_group(group_totals[label])
+        if group:
+            row["group"] = group
+            row["period"] = latest_by_group.get(group, "")
+        rows.append(row)
+    return rows
 
 
 def _latest_period_per_group(records: list[Record]) -> dict[str, str]:

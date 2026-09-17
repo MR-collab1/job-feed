@@ -216,6 +216,55 @@ class TimeByCategoryShapeTests(unittest.TestCase):
         )
 
 
+class FullListTests(unittest.TestCase):
+    """The chart shows a top-N; the table needs every category."""
+
+    def setUp(self):
+        self.spec = SeriesSpec(
+            id="t", title="t", subtitle="", shape="ranked", unit="x",
+            parts=(), top_n=3,
+        )
+        self.records = [("2024-25", f"C{i}", float(100 - i), "") for i in range(10)]
+
+    def test_the_chart_list_is_capped_but_the_full_list_is_not(self):
+        shaped = _shape_ranked(self.spec, self.records)
+        self.assertEqual(len(shaped["items"]), 4)          # 3 + folded tail
+        self.assertEqual(len(shaped["all_items"]), 10)
+
+    def test_ranks_are_dense_and_start_at_one(self):
+        shaped = _shape_ranked(self.spec, self.records)
+        self.assertEqual([r["rank"] for r in shaped["all_items"]], list(range(1, 11)))
+
+    def test_the_full_list_is_ordered_by_value(self):
+        values = [r["value"] for r in _shape_ranked(self.spec, self.records)["all_items"]]
+        self.assertEqual(values, sorted(values, reverse=True))
+
+    def test_full_list_shares_sum_to_one(self):
+        shaped = _shape_ranked(self.spec, self.records)
+        self.assertAlmostEqual(sum(r["share"] for r in shaped["all_items"]), 1.0, places=3)
+
+    def test_the_full_list_carries_no_synthetic_tail_row(self):
+        labels = [r["label"] for r in _shape_ranked(self.spec, self.records)["all_items"]]
+        self.assertNotIn("All other", labels)
+
+    def test_an_unbounded_category_count_is_capped(self):
+        from visa_stats.build import FULL_LIST_LIMIT
+        records = [("2024-25", f"C{i}", float(1000 - i), "") for i in range(FULL_LIST_LIMIT + 40)]
+        shaped = _shape_ranked(self.spec, records)
+        self.assertEqual(len(shaped["all_items"]), FULL_LIST_LIMIT)
+        # The count still reports the truth, even though the list is trimmed.
+        self.assertEqual(shaped["category_count"], FULL_LIST_LIMIT + 40)
+
+    def test_the_full_list_carries_the_program_group(self):
+        records = [
+            ("2024-25", "600 Visitor", 30.0, "Visitor"),
+            ("2023-24", "500 Student", 10.0, "Student"),
+        ]
+        rows = _shape_ranked(self.spec, records)["all_items"]
+        self.assertEqual(rows[0]["group"], "Visitor")
+        self.assertEqual(rows[1]["period"], "2023-24")
+
+
 class GroupedRankedTests(unittest.TestCase):
     """A ranked series combining programs on different publishing cycles."""
 
