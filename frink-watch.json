@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-16T14:05Z",
+  "last_checked": "2026-09-17T13:40Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -56,12 +56,17 @@
     {
       "name": "Frink Coin",
       "ticker": "FRN",
-      "chain": "Solana",
+      "chain": "BSC (BEP-20) - CORRECTED from Solana",
       "known_venues": [
-        "CoinMooner (tracker only)"
+        "PancakeSwap / BSC DEX pair 0x4ed3e70f917c8496d523d46c58e344a206406481 (per DEXTools)",
+        "CoinMooner, CoinSniper, TheBitTimes (trackers only, not venues)"
       ],
       "notes": "Presale via coingabbar ended 2026-04-30 at 0.025205 USDT; stated plan to list on a Solana DEX. No confirmed listing yet. MATERIAL: a 15% buy/sell tax means ~30% round-trip loss before any price move. High-tax tokens are a common structure in exit scams and make profitable trading near-impossible at small size.",
-      "tax": "15% buy/sell tax on the BSC version (10% marketing, 5% liquidity) per project materials"
+      "tax": "15% buy/sell (10% marketing, 5% LP) = ~30% round-trip loss before any price move",
+      "contract": "0xd24b97A25A41A4B73C512fc75B2026ed6B70d9Bd",
+      "contract_confidence": "CONFIRMED by two independent sources on 2026-09-17: top100token.com/address/<addr> and thebittimes.com/token-FRN-BSC-<addr>. Both state BSC/BEP-20.",
+      "supply": "1,000,000 (note: 1 million, not 1 billion - unusually small)",
+      "correction_20260917": "Baseline previously recorded FRN as a SOLANA asset with \"no confirmed listing\", treating BSC as a secondary \"version\". That was wrong: the confirmed FRN contract is on BSC, and a live BNB DEX pair exists. The Solana presale (coingabbar, ended 2026-04-30) is a separate, still-unlaunched effort under the same name. NOT a new listing event - the BSC pair pre-existed this watch."
     },
     {
       "name": "FrinkCoin",
@@ -304,6 +309,19 @@
         "GitHub user search 'Alan Eliasen' -> 0 accounts, consistent with prior finding that he does not host on GitHub",
         "frinklang.org / frinklang.com -> still EGRESS_BLOCKED, cannot read his blog or FAQ directly",
         "Web search: Eliasen whitepaper/blockchain -> nothing; no crypto association found"
+      ],
+      "asset_count_unchanged": 16
+    },
+    {
+      "date": "2026-09-17T13:40Z",
+      "scope": "both watches",
+      "result": "NO NEW LISTING. One baseline correction recorded (FRN chain + contract).",
+      "checks": [
+        "Web search: FRINK/Frinkcoin exchange listing announcement -> none. Sources explicitly state FrinkCoin 'has yet to be listed on any cryptocurrency exchange (CEX or DEX)' for the frinkcoin.in project.",
+        "New site surfaced: frinkcoin.in -> EGRESS_BLOCKED, could not read. Already tracked as the site for BSC 0x2d1a8026...",
+        "Candidate new addresses checked against baseline: Solana Epcq3sCG... already tracked; BSC 0xd24b97A2... NOT tracked -> verified via two independent sources and added.",
+        "GitHub topic:frink -> still 5 repos; frink-token unchanged since 2026-08-22.",
+        "Alan Eliasen: no crypto, no token, no whitepaper. frinklang.org/.com still EGRESS_BLOCKED."
       ],
       "asset_count_unchanged": 16
     }
