@@ -111,7 +111,13 @@ AGGREGATE_ROWS = (
 
 @dataclass(frozen=True)
 class Part:
-    """One source table feeding a series."""
+    """One source table feeding a series.
+
+    ``label`` names the program this table covers. For a series with no
+    category column it becomes the category; for a subclass breakdown it is
+    carried through as the *group* a subclass belongs to, so a chart can say
+    which program subclass 500 sits in without spending a colour on it.
+    """
 
     dataset_slugs: tuple[str, ...]
     search_terms: str
@@ -143,6 +149,58 @@ PERMANENT_PROGRAM_SLUGS = (
 )
 
 PERMANENT_PROGRAM_SEARCH = "permanent migration program skilled family outcomes"
+
+VISITOR_SLUGS = ("visitor-visas-granted-pivot-table", "visitor-visas")
+
+CITIZENSHIP_SLUGS = (
+    "australian-migration-statistics",
+    "historical-migration-statistics",
+    "citizenship-statistics",
+)
+
+# Every program that publishes a subclass-level grant breakdown. Partner visas
+# have no standalone dataset - 309/820/100/801 are reported inside the
+# permanent migration program, which is why that program is in this list.
+SUBCLASS_PROGRAMS = (
+    ("Student", ("student-visas",), "student visa grants by subclass"),
+    ("Visitor", VISITOR_SLUGS, "visitor visa grants by subclass"),
+    (
+        "Temporary work (skilled)",
+        ("visa-temporary-work-skilled",),
+        "temporary work skilled visa grants subclass 457 482",
+    ),
+    (
+        "Temporary graduate",
+        ("temporary-graduate-visas",),
+        "temporary graduate visa grants subclass 485",
+    ),
+    (
+        "Working holiday maker",
+        ("visa-working-holiday-maker",),
+        "working holiday maker visa grants subclass 417 462",
+    ),
+    (
+        "Permanent migration",
+        PERMANENT_PROGRAM_SLUGS,
+        "permanent migration program visa subclass partner skilled",
+    ),
+)
+
+
+def _subclass_part(label, slugs, search_terms) -> "Part":
+    """A subclass breakdown for one visa program."""
+    return Part(
+        label=label,
+        dataset_slugs=slugs,
+        search_terms=search_terms,
+        resource_patterns=(r"subclass", r"grant", r"program"),
+        sheet_pattern=r"subclass|grant",
+        roles=(
+            SUBCLASS,
+            GRANTS,
+            Role("period", PERIOD.patterns, required=False),
+        ),
+    )
 
 
 SPECS: tuple[SeriesSpec, ...] = (
@@ -239,7 +297,7 @@ SPECS: tuple[SeriesSpec, ...] = (
             ),
             Part(
                 label="Visitor",
-                dataset_slugs=("visitor-visas", "visitor-visa-program"),
+                dataset_slugs=VISITOR_SLUGS,
                 search_terms="visitor visa program grants",
                 resource_patterns=(r"grant", r"program", r"visitor"),
                 sheet_pattern=r"grant|program",
@@ -250,6 +308,22 @@ SPECS: tuple[SeriesSpec, ...] = (
                 dataset_slugs=("visa-temporary-work-skilled",),
                 search_terms="temporary work skilled visa program grants",
                 resource_patterns=(r"grant", r"program", r"skilled"),
+                sheet_pattern=r"grant|program",
+                roles=(PERIOD, GRANTS),
+            ),
+            Part(
+                label="Temporary graduate",
+                dataset_slugs=("temporary-graduate-visas",),
+                search_terms="temporary graduate visa program grants subclass 485",
+                resource_patterns=(r"grant", r"program", r"graduate"),
+                sheet_pattern=r"grant|program",
+                roles=(PERIOD, GRANTS),
+            ),
+            Part(
+                label="Working holiday maker",
+                dataset_slugs=("visa-working-holiday-maker",),
+                search_terms="working holiday maker visa program grants",
+                resource_patterns=(r"grant", r"program", r"holiday"),
                 sheet_pattern=r"grant|program",
                 roles=(PERIOD, GRANTS),
             ),
@@ -274,6 +348,23 @@ SPECS: tuple[SeriesSpec, ...] = (
         top_n=15,
     ),
     SeriesSpec(
+        id="grants_by_subclass",
+        title="Visa grants by subclass",
+        subtitle="Across every program that publishes a subclass breakdown",
+        shape="ranked",
+        unit="grants",
+        parts=tuple(_subclass_part(*program) for program in SUBCLASS_PROGRAMS),
+        # Deliberately generous: the program filter can only narrow to what the
+        # published top-N retained, so a tight cap would hide small programs.
+        top_n=25,
+        note=(
+            "Subclasses are counted in the most recent program year each source "
+            "publishes, so programs on different release cycles may not share a "
+            "reference period. Partner subclasses are reported inside the "
+            "permanent migration program."
+        ),
+    ),
+    SeriesSpec(
         id="citizenship_conferrals",
         title="Australian citizenship conferrals",
         subtitle="People who became Australian citizens by conferral, per program year",
@@ -281,16 +372,40 @@ SPECS: tuple[SeriesSpec, ...] = (
         unit="people",
         parts=(
             Part(
-                dataset_slugs=(
-                    "citizenship-statistics",
-                    "australian-citizenship-statistics",
-                    "historical-migration-statistics",
-                ),
+                dataset_slugs=CITIZENSHIP_SLUGS,
                 search_terms="australian citizenship conferrals by year",
                 resource_patterns=(r"conferral", r"citizenship"),
                 sheet_pattern=r"conferral|citizenship",
                 roles=(PERIOD, CONFERRALS),
             ),
         ),
+    ),
+    SeriesSpec(
+        id="citizenship_by_prior_country",
+        title="Citizenship conferrals by country of prior nationality",
+        subtitle="Where new Australian citizens held citizenship before conferral",
+        shape="ranked",
+        unit="people",
+        parts=(
+            Part(
+                dataset_slugs=CITIZENSHIP_SLUGS,
+                search_terms="citizenship conferrals country of prior nationality",
+                resource_patterns=(r"conferral", r"prior nationality", r"citizenship"),
+                sheet_pattern=r"conferral|nationality|citizenship",
+                roles=(
+                    Role(
+                        name="category",
+                        patterns=(
+                            r"^country of (prior|former) (nationality|citizenship)$",
+                            r"(prior|former) (nationality|citizenship)",
+                            r"country of birth",
+                        ) + COUNTRY.patterns,
+                    ),
+                    CONFERRALS,
+                    Role("period", PERIOD.patterns, required=False),
+                ),
+            ),
+        ),
+        top_n=15,
     ),
 )

@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Australian Visa &amp; Permanent Residency Statistics</title>
 <meta name="description" content="Charts of Australian visa grants, permanent migration program outcomes and citizenship conferrals, built from Department of Home Affairs data published on data.gov.au and refreshed daily.">
+<meta name="color-scheme" content="dark light">
+<script>
+  // Runs before first paint: dark is the default, a stored choice wins.
+  try {
+    var t = localStorage.getItem("visa-theme");
+    if (t) document.documentElement.setAttribute("data-theme", t);
+  } catch (e) { /* private mode: keep the default */ }
+</script>
 <link rel="stylesheet" href="assets/styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='13'>📊</text></svg>">
 </head>

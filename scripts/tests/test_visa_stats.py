@@ -129,9 +129,9 @@ class PeriodOrderingTests(unittest.TestCase):
         )
 
 
-def _records(table, period_col, category_col, value_col):
+def _records(table, period_col, category_col, value_col, group=""):
     return [
-        (row[period_col], row[category_col], tables.parse_number(row[value_col]))
+        (row[period_col], row[category_col], tables.parse_number(row[value_col]), group)
         for row in table.rows
         if tables.parse_number(row[value_col]) is not None
     ]
@@ -191,7 +191,7 @@ class TimeByCategoryShapeTests(unittest.TestCase):
         self.assertEqual(shaped["categories"][0], "Skilled")
 
     def test_missing_period_category_pairs_become_zero_not_gaps(self):
-        records = [("2023-24", "Skilled", 10.0), ("2024-25", "Family", 5.0)]
+        records = [("2023-24", "Skilled", 10.0, ""), ("2024-25", "Family", 5.0, "")]
         shaped = _shape_time_by_category(self.spec, records)
         self.assertEqual(sorted(shaped["categories"]), ["Family", "Skilled"])
         for row in shaped["matrix"]:
@@ -199,15 +199,77 @@ class TimeByCategoryShapeTests(unittest.TestCase):
             self.assertIn(0.0, row)
 
     def test_categories_past_the_cap_fold_into_other(self):
-        records = [("2024-25", f"Cat{i}", float(20 - i)) for i in range(12)]
+        records = [("2024-25", f"Cat{i}", float(20 - i), "") for i in range(12)]
         shaped = _shape_time_by_category(self.spec, records)
         self.assertEqual(len(shaped["categories"]), 8)
         self.assertEqual(shaped["categories"][-1], "Other")
         self.assertAlmostEqual(
             sum(row[0] for row in shaped["matrix"]),
-            sum(v for _, _, v in records),
+            sum(v for _, _, v, _g in records),
             places=6,
         )
+
+
+class GroupedRankedTests(unittest.TestCase):
+    """A ranked series combining programs on different publishing cycles."""
+
+    def setUp(self):
+        self.spec = SeriesSpec(
+            id="t", title="t", subtitle="", shape="ranked", unit="grants",
+            parts=(), top_n=10,
+        )
+        # Visitor has published 2024-25; Student's latest release is 2023-24.
+        self.records = [
+            ("2024-25", "600 Visitor", 3_000.0, "Visitor"),
+            ("2023-24", "600 Visitor", 2_000.0, "Visitor"),
+            ("2023-24", "500 Student", 900.0, "Student"),
+            ("2022-23", "500 Student", 800.0, "Student"),
+        ]
+
+    def test_each_group_contributes_its_own_latest_period(self):
+        shaped = _shape_ranked(self.spec, self.records)
+        values = {i["label"]: i["value"] for i in shaped["items"]}
+        # A single global latest period would have dropped Student entirely.
+        self.assertEqual(values["600 Visitor"], 3_000.0)
+        self.assertEqual(values["500 Student"], 900.0)
+
+    def test_reference_periods_are_reported_per_group(self):
+        shaped = _shape_ranked(self.spec, self.records)
+        self.assertEqual(
+            shaped["reference_periods"], {"Visitor": "2024-25", "Student": "2023-24"}
+        )
+
+    def test_period_label_spans_the_range_when_groups_disagree(self):
+        shaped = _shape_ranked(self.spec, self.records)
+        self.assertEqual(shaped["period"], "2023-24 to 2024-25")
+
+    def test_period_label_is_a_single_year_when_groups_agree(self):
+        records = [
+            ("2024-25", "600 Visitor", 3_000.0, "Visitor"),
+            ("2024-25", "500 Student", 900.0, "Student"),
+        ]
+        self.assertEqual(_shape_ranked(self.spec, records)["period"], "2024-25")
+
+    def test_each_item_names_the_program_it_came_from(self):
+        shaped = _shape_ranked(self.spec, self.records)
+        groups = {i["label"]: i.get("group") for i in shaped["items"]}
+        self.assertEqual(groups["600 Visitor"], "Visitor")
+        self.assertEqual(groups["500 Student"], "Student")
+
+    def test_a_category_split_across_groups_is_attributed_to_the_larger(self):
+        records = [
+            ("2024-25", "485 Graduate", 100.0, "Temporary graduate"),
+            ("2024-25", "485 Graduate", 900.0, "Student"),
+        ]
+        item = _shape_ranked(self.spec, records)["items"][0]
+        self.assertEqual(item["value"], 1_000.0)
+        self.assertEqual(item["group"], "Student")
+
+    def test_single_source_series_report_no_groups(self):
+        records = [("2024-25", "India", 10.0, ""), ("2024-25", "China", 5.0, "")]
+        shaped = _shape_ranked(self.spec, records)
+        self.assertEqual(shaped["reference_periods"], {})
+        self.assertNotIn("group", shaped["items"][0])
 
 
 class HeadlineTests(unittest.TestCase):

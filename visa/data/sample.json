@@ -34,7 +34,7 @@
         "sample/not-a-real-file"
       ],
       "unit": "grants",
-      "value": 3807000.0
+      "value": 4101000.0
     },
     {
       "id": "conferrals",
@@ -50,12 +50,114 @@
   "is_sample": true,
   "run": {
     "problems": [],
-    "series_available": 7,
-    "series_total": 7,
+    "series_available": 9,
+    "series_total": 9,
     "status": "ok"
   },
-  "schema_version": 2,
+  "schema_version": 3,
   "series": {
+    "citizenship_by_prior_country": {
+      "available": true,
+      "category_count": 18,
+      "id": "citizenship_by_prior_country",
+      "items": [
+        {
+          "label": "India",
+          "share": 0.2319,
+          "value": 41200.0
+        },
+        {
+          "label": "United Kingdom",
+          "share": 0.1283,
+          "value": 22800.0
+        },
+        {
+          "label": "China",
+          "share": 0.0923,
+          "value": 16400.0
+        },
+        {
+          "label": "Philippines",
+          "share": 0.0838,
+          "value": 14900.0
+        },
+        {
+          "label": "New Zealand",
+          "share": 0.0709,
+          "value": 12600.0
+        },
+        {
+          "label": "Nepal",
+          "share": 0.0551,
+          "value": 9800.0
+        },
+        {
+          "label": "Pakistan",
+          "share": 0.0473,
+          "value": 8400.0
+        },
+        {
+          "label": "Vietnam",
+          "share": 0.0445,
+          "value": 7900.0
+        },
+        {
+          "label": "South Africa",
+          "share": 0.0377,
+          "value": 6700.0
+        },
+        {
+          "label": "Sri Lanka",
+          "share": 0.0349,
+          "value": 6200.0
+        },
+        {
+          "label": "Iraq",
+          "share": 0.0287,
+          "value": 5100.0
+        },
+        {
+          "label": "Afghanistan",
+          "share": 0.027,
+          "value": 4800.0
+        },
+        {
+          "label": "Malaysia",
+          "share": 0.0242,
+          "value": 4300.0
+        },
+        {
+          "label": "Iran",
+          "share": 0.0231,
+          "value": 4100.0
+        },
+        {
+          "label": "South Korea",
+          "share": 0.0203,
+          "value": 3600.0
+        },
+        {
+          "is_tail": true,
+          "label": "All other",
+          "share": 0.0501,
+          "value": 8900.0
+        }
+      ],
+      "note": "",
+      "period": "2024-25",
+      "periods": [
+        "2024-25"
+      ],
+      "reference_periods": {},
+      "shape": "ranked",
+      "source_ids": [
+        "sample/not-a-real-file"
+      ],
+      "subtitle": "Where new Australian citizens held citizenship before conferral",
+      "title": "Citizenship conferrals by country of prior nationality",
+      "total": 177700.0,
+      "unit": "people"
+    },
     "citizenship_conferrals": {
       "available": true,
       "categories": [
@@ -88,6 +190,175 @@
       "subtitle": "People who became Australian citizens by conferral, per program year",
       "title": "Australian citizenship conferrals",
       "unit": "people"
+    },
+    "grants_by_subclass": {
+      "available": true,
+      "category_count": 20,
+      "id": "grants_by_subclass",
+      "items": [
+        {
+          "group": "Visitor",
+          "label": "600 Visitor",
+          "period": "2024-25",
+          "share": 0.7023,
+          "value": 3010000.0
+        },
+        {
+          "group": "Student",
+          "label": "500 Student",
+          "period": "2024-25",
+          "share": 0.1134,
+          "value": 486000.0
+        },
+        {
+          "group": "Visitor",
+          "label": "601 Electronic Travel Authority",
+          "period": "2024-25",
+          "share": 0.0443,
+          "value": 190000.0
+        },
+        {
+          "group": "Working holiday maker",
+          "label": "417 Working Holiday",
+          "period": "2024-25",
+          "share": 0.0306,
+          "value": 131000.0
+        },
+        {
+          "group": "Temporary graduate",
+          "label": "485 Temporary Graduate",
+          "period": "2023-24",
+          "share": 0.0261,
+          "value": 112000.0
+        },
+        {
+          "group": "Temporary work (skilled)",
+          "label": "482 Skills in Demand",
+          "period": "2023-24",
+          "share": 0.0166,
+          "value": 71000.0
+        },
+        {
+          "group": "Working holiday maker",
+          "label": "462 Work and Holiday",
+          "period": "2024-25",
+          "share": 0.0152,
+          "value": 65000.0
+        },
+        {
+          "group": "Visitor",
+          "label": "651 eVisitor",
+          "period": "2024-25",
+          "share": 0.0112,
+          "value": 48000.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "820/801 Partner (onshore)",
+          "period": "2024-25",
+          "share": 0.0074,
+          "value": 31700.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "189 Skilled Independent",
+          "period": "2024-25",
+          "share": 0.0071,
+          "value": 30400.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "190 Skilled Nominated",
+          "period": "2024-25",
+          "share": 0.0056,
+          "value": 24100.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "491 Skilled Work Regional",
+          "period": "2024-25",
+          "share": 0.0053,
+          "value": 22600.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "186 Employer Nomination",
+          "period": "2024-25",
+          "share": 0.0051,
+          "value": 21800.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "309/100 Partner (offshore)",
+          "period": "2024-25",
+          "share": 0.0049,
+          "value": 20900.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "143 Contributory Parent",
+          "period": "2024-25",
+          "share": 0.0016,
+          "value": 6800.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "858 Global Talent",
+          "period": "2024-25",
+          "share": 0.0009,
+          "value": 4000.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "187 Regional Sponsored",
+          "period": "2024-25",
+          "share": 0.0009,
+          "value": 3900.0
+        },
+        {
+          "group": "Temporary work (skilled)",
+          "label": "494 Regional Employer Sponsored",
+          "period": "2023-24",
+          "share": 0.0007,
+          "value": 3100.0
+        },
+        {
+          "group": "Student",
+          "label": "590 Student Guardian",
+          "period": "2024-25",
+          "share": 0.0007,
+          "value": 3000.0
+        },
+        {
+          "group": "Permanent migration",
+          "label": "804 Aged Parent",
+          "period": "2024-25",
+          "share": 0.0002,
+          "value": 900.0
+        }
+      ],
+      "note": "Subclasses are counted in the most recent program year each source publishes, so programs on different release cycles may not share a reference period. Partner subclasses are reported inside the permanent migration program.",
+      "period": "2023-24 to 2024-25",
+      "periods": [
+        "2023-24",
+        "2024-25"
+      ],
+      "reference_periods": {
+        "Permanent migration": "2024-25",
+        "Student": "2024-25",
+        "Temporary graduate": "2023-24",
+        "Temporary work (skilled)": "2023-24",
+        "Visitor": "2024-25",
+        "Working holiday maker": "2024-25"
+      },
+      "shape": "ranked",
+      "source_ids": [
+        "sample/not-a-real-file"
+      ],
+      "subtitle": "Across every program that publishes a subclass breakdown",
+      "title": "Visa grants by subclass",
+      "total": 4286200.0,
+      "unit": "grants"
     },
     "pr_by_citizenship": {
       "available": true,
@@ -181,6 +452,7 @@
       "periods": [
         "2024-25"
       ],
+      "reference_periods": {},
       "shape": "ranked",
       "source_ids": [
         "sample/not-a-real-file"
@@ -241,6 +513,7 @@
       "periods": [
         "2024-25"
       ],
+      "reference_periods": {},
       "shape": "ranked",
       "source_ids": [
         "sample/not-a-real-file"
@@ -372,6 +645,7 @@
       "periods": [
         "2024-25"
       ],
+      "reference_periods": {},
       "shape": "ranked",
       "source_ids": [
         "sample/not-a-real-file"
@@ -473,6 +747,7 @@
       "periods": [
         "2024-25"
       ],
+      "reference_periods": {},
       "shape": "ranked",
       "source_ids": [
         "sample/not-a-real-file"
@@ -487,6 +762,8 @@
       "categories": [
         "Visitor",
         "Student",
+        "Working holiday maker",
+        "Temporary graduate",
         "Temporary work (skilled)"
       ],
       "id": "temp_grants_by_program",
@@ -506,6 +783,22 @@
           577000.0,
           527000.0,
           489000.0
+        ],
+        [
+          149000.0,
+          28000.0,
+          22000.0,
+          180000.0,
+          213000.0,
+          196000.0
+        ],
+        [
+          35000.0,
+          40000.0,
+          44000.0,
+          94000.0,
+          112000.0,
+          98000.0
         ],
         [
           48000.0,

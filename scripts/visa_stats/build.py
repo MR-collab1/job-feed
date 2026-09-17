@@ -19,7 +19,11 @@ from .tables import Table, TableError, parse_number
 
 log = logging.getLogger(__name__)
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
+
+# (period, category, value, group) - group names the program that published the
+# row, and is empty for single-source series.
+Record = tuple[str, str, float, str]
 
 
 def build(specs: tuple[SeriesSpec, ...] = SPECS) -> dict:
@@ -61,7 +65,7 @@ def build(specs: tuple[SeriesSpec, ...] = SPECS) -> dict:
 
 def build_series(spec: SeriesSpec) -> tuple[dict, list[dict]]:
     """Load every part of a spec and fold it into one chartable series."""
-    records: list[tuple[str, str, float]] = []  # (period, category, value)
+    records: list[Record] = []  # (period, category, value, group)
     sources: list[dict] = []
 
     for part in spec.parts:
@@ -94,7 +98,7 @@ def build_series(spec: SeriesSpec) -> tuple[dict, list[dict]]:
     return built, sources
 
 
-def _load_part(spec: SeriesSpec, part: Part) -> tuple[list[tuple[str, str, float]], dict]:
+def _load_part(spec: SeriesSpec, part: Part) -> tuple[list[Record], dict]:
     dataset = find_dataset(part.dataset_slugs, part.search_terms)
     resource = pick_resource(dataset, part.resource_patterns)
     table = load_table(resource, sheet_pattern=part.sheet_pattern)
@@ -109,14 +113,15 @@ def _load_part(spec: SeriesSpec, part: Part) -> tuple[list[tuple[str, str, float
 
 def _extract_rows(
     spec: SeriesSpec, part: Part, table: Table, roles: dict[str, str]
-) -> list[tuple[str, str, float]]:
-    """Pull (period, category, value) triples out of a resolved table."""
+) -> list[Record]:
+    """Pull (period, category, value, group) records out of a resolved table."""
     period_col = roles.get("period")
     category_col = roles.get("category")
     value_col = roles["value"]
 
     drops = tuple(spec.drop_rows)
-    output: list[tuple[str, str, float]] = []
+    group = part.label or ""
+    output: list[Record] = []
 
     for row in table.rows:
         if not _passes_filters(row, part.row_filters):
@@ -137,7 +142,7 @@ def _extract_rows(
         if period_col and (not period or _is_aggregate(period, drops)):
             continue
 
-        output.append((period, category, value))
+        output.append((period, category, value, group))
 
     return output
 
@@ -164,7 +169,7 @@ def _is_aggregate(label: str, drops: tuple[str, ...]) -> bool:
 def _shape_time_by_category(spec: SeriesSpec, records) -> dict:
     """periods x categories matrix, for stacked bars and multi-line charts."""
     totals: dict[tuple[str, str], float] = defaultdict(float)
-    for period, category, value in records:
+    for period, category, value, _group in records:
         totals[(period, category)] += value
 
     periods = sorted({p for p, _ in totals}, key=period_sort_key)
@@ -184,7 +189,7 @@ def _shape_time_by_category(spec: SeriesSpec, records) -> dict:
 def _shape_time_total(spec: SeriesSpec, records) -> dict:
     """One value per period."""
     totals: dict[str, float] = defaultdict(float)
-    for period, _, value in records:
+    for period, _category, value, _group in records:
         totals[period] += value
 
     periods = sorted(totals, key=period_sort_key)
@@ -195,22 +200,40 @@ def _shape_time_total(spec: SeriesSpec, records) -> dict:
     }
 
 
-def _shape_ranked(spec: SeriesSpec, records) -> dict:
-    """Top-N categories for the latest period present, with a folded tail."""
-    periods = sorted({p for p, _, _ in records if p}, key=period_sort_key)
-    latest = periods[-1] if periods else ""
+def _shape_ranked(spec: SeriesSpec, records: list[Record]) -> dict:
+    """Top-N categories for the latest period, with a folded tail.
+
+    "Latest" is resolved *per group*, because a series can combine programs on
+    different release cycles. Taking a single global latest period would drop
+    every program that has not published that year yet, which would look like a
+    collapse in the data rather than a difference in publishing schedules.
+    """
+    periods = sorted({p for p, _, _, _ in records if p}, key=period_sort_key)
+    latest_by_group = _latest_period_per_group(records)
 
     totals: dict[str, float] = defaultdict(float)
-    for period, category, value in records:
-        if latest and period != latest:
+    group_totals: dict[str, dict[str, float]] = defaultdict(lambda: defaultdict(float))
+
+    for period, category, value, group in records:
+        reference = latest_by_group.get(group, "")
+        if reference and period != reference:
             continue
         totals[category] += value
+        group_totals[category][group] += value
 
     ranked = sorted(totals.items(), key=lambda item: -item[1])
     head = ranked[: spec.top_n]
     tail = ranked[spec.top_n:]
 
-    items = [{"label": label, "value": value} for label, value in head]
+    items: list[dict] = []
+    for label, value in head:
+        item = {"label": label, "value": value}
+        group = _dominant_group(group_totals[label])
+        if group:
+            item["group"] = group
+            item["period"] = latest_by_group.get(group, "")
+        items.append(item)
+
     if tail:
         items.append({"label": "All other", "value": sum(v for _, v in tail), "is_tail": True})
 
@@ -218,13 +241,45 @@ def _shape_ranked(spec: SeriesSpec, records) -> dict:
     for item in items:
         item["share"] = round(item["value"] / total, 4) if total else 0.0
 
+    reference_periods = {g: p for g, p in latest_by_group.items() if g and p}
+
     return {
-        "period": latest,
+        "period": _reference_label(latest_by_group),
         "periods": periods,
         "items": items,
         "total": total,
         "category_count": len(ranked),
+        "reference_periods": reference_periods,
     }
+
+
+def _latest_period_per_group(records: list[Record]) -> dict[str, str]:
+    """The most recent period each group actually published."""
+    seen: dict[str, list[str]] = defaultdict(list)
+    for period, _category, _value, group in records:
+        if period:
+            seen[group].append(period)
+    return {
+        group: sorted(found, key=period_sort_key)[-1]
+        for group, found in seen.items()
+        if found
+    }
+
+
+def _dominant_group(totals: dict[str, float]) -> str:
+    """The group contributing most of a category's value."""
+    named = {g: v for g, v in totals.items() if g}
+    return max(named, key=named.get) if named else ""
+
+
+def _reference_label(latest_by_group: dict[str, str]) -> str:
+    """One period label when every group agrees, otherwise a range."""
+    found = sorted({p for p in latest_by_group.values() if p}, key=period_sort_key)
+    if not found:
+        return ""
+    if len(found) == 1:
+        return found[0]
+    return f"{found[0]} to {found[-1]}"
 
 
 def _cap_categories(ranked: list[str], limit: int) -> list[str]:

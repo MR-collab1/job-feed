@@ -15,23 +15,28 @@
 
   /* How each series is drawn. Anything not listed falls back to its shape. */
   var DISPLAY = {
-    pr_by_stream:           { chart: 'stacked', wide: true },
-    temp_grants_by_program: { chart: 'line', wide: true },
-    citizenship_conferrals: { chart: 'line', wide: false },
-    pr_by_citizenship:      { chart: 'ranked', wide: false },
-    pr_by_state:            { chart: 'ranked', wide: false },
-    pr_by_subclass:         { chart: 'ranked', wide: false },
-    student_by_citizenship: { chart: 'ranked', wide: false }
+    pr_by_stream:                 { chart: 'stacked', wide: true },
+    temp_grants_by_program:       { chart: 'line', wide: true },
+    grants_by_subclass:           { chart: 'ranked', wide: true },
+    citizenship_conferrals:       { chart: 'line', wide: false },
+    citizenship_by_prior_country: { chart: 'ranked', wide: false },
+    pr_by_citizenship:            { chart: 'ranked', wide: false },
+    pr_by_state:                  { chart: 'ranked', wide: false },
+    pr_by_subclass:               { chart: 'ranked', wide: false },
+    student_by_citizenship:       { chart: 'ranked', wide: false }
   };
 
+  /* Program overview first, then the subclass detail, then citizenship. */
   var ORDER = [
     'pr_by_stream',
     'pr_by_citizenship',
     'pr_by_state',
     'pr_by_subclass',
     'temp_grants_by_program',
+    'grants_by_subclass',
     'student_by_citizenship',
-    'citizenship_conferrals'
+    'citizenship_conferrals',
+    'citizenship_by_prior_country'
   ];
 
   var esc = Charts.escapeHtml;
@@ -183,13 +188,27 @@
 
     if (categories.length >= 2) card.appendChild(buildLegend(categories));
 
+    var groups = chartType === 'ranked' ? programsIn(series) : [];
+
     var chartHost = document.createElement('div');
     chartHost.className = 'chart-host';
-    card.appendChild(chartHost);
 
     var tableHost = document.createElement('div');
     tableHost.className = 'table-host';
     tableHost.hidden = true;
+
+    // Grants span visitor subclasses in the millions down to parent visas in
+    // the hundreds, so a program filter is what makes the small ones legible.
+    if (groups.length > 1) {
+      card.appendChild(buildProgramFilter(groups, function (program) {
+        var view = filterByProgram(series, program);
+        sub.textContent = subtitleFor(view);
+        tableHost.innerHTML = buildTable(view, chartType);
+        drawChart(chartHost, view, chartType);
+      }));
+    }
+
+    card.appendChild(chartHost);
     tableHost.innerHTML = buildTable(series, chartType);
     card.appendChild(tableHost);
 
@@ -206,9 +225,11 @@
 
   function subtitleFor(series) {
     var parts = [series.subtitle];
-    if (series.shape === 'ranked' && series.category_count) {
-      parts.push('Top ' + Math.min(series.items.length, series.category_count) +
-        ' of ' + series.category_count);
+    if (series.shape === 'ranked') {
+      if (series.period) parts.push(series.period);
+      if (series.category_count && series.items.length < series.category_count) {
+        parts.push('Top ' + series.items.length + ' of ' + series.category_count);
+      }
     }
     return parts.filter(Boolean).join(' · ');
   }
@@ -238,6 +259,53 @@
     };
     if (chartType === 'line') Charts.multiLine(host, options);
     else Charts.stackedBars(host, options);
+  }
+
+  function programsIn(series) {
+    var seen = [];
+    (series.items || []).forEach(function (item) {
+      if (item.group && seen.indexOf(item.group) === -1) seen.push(item.group);
+    });
+    return seen.sort();
+  }
+
+  function buildProgramFilter(groups, onChange) {
+    var row = document.createElement('div');
+    row.className = 'filters';
+    row.innerHTML = '<label>Program ' +
+      '<select><option value="">All programs</option>' +
+      groups.map(function (g) {
+        return '<option value="' + esc(g) + '">' + esc(g) + '</option>';
+      }).join('') +
+      '</select></label>';
+    row.querySelector('select').addEventListener('change', function (event) {
+      onChange(event.target.value);
+    });
+    return row;
+  }
+
+  /* Narrowing to one program re-bases the shares onto that program and drops
+     the cross-program tail row, which has no meaning inside a single program.
+     Values themselves never change, and bars are one colour, so nothing is
+     repainted by filtering. */
+  function filterByProgram(series, program) {
+    if (!program) return series;
+
+    var items = series.items.filter(function (item) { return item.group === program; });
+    var total = items.reduce(function (sum, item) { return sum + item.value; }, 0);
+
+    var view = Object.assign({}, series, {
+      items: items.map(function (item) {
+        return Object.assign({}, item, {
+          share: total ? item.value / total : 0
+        });
+      }),
+      total: total,
+      category_count: items.length,
+      period: (series.reference_periods || {})[program] || series.period,
+      subtitle: series.subtitle + ' — ' + program
+    });
+    return view;
   }
 
   function buildLegend(categories) {
@@ -277,14 +345,26 @@
 
   function buildTable(series, chartType) {
     if (chartType === 'ranked') {
+      // Only show the program/period columns when the series actually spans
+      // more than one source, so single-source tables stay uncluttered.
+      var grouped = series.items.some(function (item) { return item.group; });
+      var mixed = grouped && Object.keys(series.reference_periods || {}).length > 1;
+
+      var head = '<tr><th>Category</th>' +
+        (grouped ? '<th>Program</th>' : '') +
+        (mixed ? '<th>Period</th>' : '') +
+        '<th class="num">' + esc(series.unit) + '</th><th class="num">Share</th></tr>';
+
+      var body = series.items.map(function (item) {
+        return '<tr><td>' + esc(item.label) + '</td>' +
+          (grouped ? '<td>' + esc(item.group || '—') + '</td>' : '') +
+          (mixed ? '<td>' + esc(item.period || '—') + '</td>' : '') +
+          '<td class="num">' + Charts.formatValue(item.value) + '</td>' +
+          '<td class="num">' + (item.share * 100).toFixed(1) + '%</td></tr>';
+      }).join('');
+
       return '<table class="data"><caption>' + esc(series.period || '') +
-        '</caption><thead><tr><th>Category</th><th class="num">' +
-        esc(series.unit) + '</th><th class="num">Share</th></tr></thead><tbody>' +
-        series.items.map(function (item) {
-          return '<tr><td>' + esc(item.label) + '</td>' +
-            '<td class="num">' + Charts.formatValue(item.value) + '</td>' +
-            '<td class="num">' + (item.share * 100).toFixed(1) + '%</td></tr>';
-        }).join('') + '</tbody></table>';
+        '</caption><thead>' + head + '</thead><tbody>' + body + '</tbody></table>';
     }
 
     var header = '<tr><th>Period</th>' + series.categories.map(function (name) {
@@ -374,9 +454,8 @@
     });
 
     function current() {
-      var explicit = document.documentElement.getAttribute('data-theme');
-      if (explicit) return explicit;
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      // Dark is the default; only an explicit stamp moves off it.
+      return document.documentElement.getAttribute('data-theme') || 'dark';
     }
 
     function label() {

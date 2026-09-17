@@ -38,6 +38,49 @@ TEMPORARY = {
     "Visitor": [2_100_000, 90_000, 240_000, 2_600_000, 3_100_000, 3_250_000],
     "Student": [383_000, 175_000, 188_000, 577_000, 527_000, 489_000],
     "Temporary work (skilled)": [48_000, 22_000, 31_000, 80_000, 74_000, 68_000],
+    "Temporary graduate": [35_000, 40_000, 44_000, 94_000, 112_000, 98_000],
+    "Working holiday maker": [149_000, 28_000, 22_000, 180_000, 213_000, 196_000],
+}
+
+# Programs publish on different cycles, so the sample deliberately mixes
+# reference periods to exercise the per-program "latest year" handling.
+SUBCLASS_GRANTS = {
+    "Visitor": ("2024-25", {
+        "600 Visitor": 3_010_000,
+        "601 Electronic Travel Authority": 190_000,
+        "651 eVisitor": 48_000,
+    }),
+    "Student": ("2024-25", {"500 Student": 486_000, "590 Student Guardian": 3_000}),
+    "Working holiday maker": ("2024-25", {
+        "417 Working Holiday": 131_000,
+        "462 Work and Holiday": 65_000,
+    }),
+    "Temporary graduate": ("2023-24", {"485 Temporary Graduate": 112_000}),
+    "Temporary work (skilled)": ("2023-24", {
+        "482 Skills in Demand": 71_000,
+        "494 Regional Employer Sponsored": 3_100,
+    }),
+    "Permanent migration": ("2024-25", {
+        "820/801 Partner (onshore)": 31_700,
+        "189 Skilled Independent": 30_400,
+        "309/100 Partner (offshore)": 20_900,
+        "190 Skilled Nominated": 24_100,
+        "491 Skilled Work Regional": 22_600,
+        "186 Employer Nomination": 21_800,
+        "143 Contributory Parent": 6_800,
+        "858 Global Talent": 4_000,
+        "187 Regional Sponsored": 3_900,
+        "804 Aged Parent": 900,
+    }),
+}
+
+CITIZENSHIP_BY_PRIOR_COUNTRY = {
+    "India": 41_200, "United Kingdom": 22_800, "China": 16_400,
+    "Philippines": 14_900, "New Zealand": 12_600, "Nepal": 9_800,
+    "Pakistan": 8_400, "Vietnam": 7_900, "South Africa": 6_700,
+    "Sri Lanka": 6_200, "Iraq": 5_100, "Afghanistan": 4_800,
+    "Malaysia": 4_300, "Iran": 4_100, "South Korea": 3_600,
+    "Bangladesh": 3_300, "Brazil": 2_900, "Indonesia": 2_700,
 }
 
 CONFERRALS = [204_000, 140_000, 120_000, 168_000, 191_000, 202_000]
@@ -80,13 +123,22 @@ def spec(series_id):
     return next(s for s in SPECS if s.id == series_id)
 
 
-def ranked_records(mapping, year="2024-25"):
-    return [(year, label, float(value)) for label, value in mapping.items()]
+def ranked_records(mapping, year="2024-25", group=""):
+    return [(year, label, float(value), group) for label, value in mapping.items()]
+
+
+def grouped_records(mapping):
+    """mapping: {program: (period, {subclass: grants})} -> grouped records."""
+    return [
+        (period, label, float(value), program)
+        for program, (period, rows) in mapping.items()
+        for label, value in rows.items()
+    ]
 
 
 def time_records(mapping):
     return [
-        (year, label, float(values[i]))
+        (year, label, float(values[i]), label)
         for label, values in mapping.items()
         for i, year in enumerate(YEARS)
     ]
@@ -134,11 +186,22 @@ def main() -> int:
             "student_by_citizenship",
             _shape_ranked(spec("student_by_citizenship"), ranked_records(STUDENTS_BY_COUNTRY)),
         ),
+        "grants_by_subclass": decorate(
+            "grants_by_subclass",
+            _shape_ranked(spec("grants_by_subclass"), grouped_records(SUBCLASS_GRANTS)),
+        ),
+        "citizenship_by_prior_country": decorate(
+            "citizenship_by_prior_country",
+            _shape_ranked(
+                spec("citizenship_by_prior_country"),
+                ranked_records(CITIZENSHIP_BY_PRIOR_COUNTRY),
+            ),
+        ),
         "citizenship_conferrals": decorate(
             "citizenship_conferrals",
             _shape_time_total(
                 spec("citizenship_conferrals"),
-                [(year, "Conferrals", float(CONFERRALS[i])) for i, year in enumerate(YEARS)],
+                [(year, "Conferrals", float(CONFERRALS[i]), "") for i, year in enumerate(YEARS)],
             ),
         ),
     }

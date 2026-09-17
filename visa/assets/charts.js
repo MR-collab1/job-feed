@@ -124,6 +124,7 @@
 
   /* Re-render on container resize so the chart stays readable at any width. */
   function mount(host, draw) {
+    if (host.vizObserver) { host.vizObserver.disconnect(); host.vizObserver = null; }
     host.innerHTML = '';
     var tooltip = createTooltip(host);
     var frame = null;
@@ -147,6 +148,7 @@
         frame = requestAnimationFrame(render);
       });
       observer.observe(host);
+      host.vizObserver = observer;
     } else {
       global.addEventListener('resize', function () {
         if (frame) cancelAnimationFrame(frame);
@@ -418,14 +420,17 @@
         });
         hit.addEventListener('pointermove', function (event) {
           highlight(host, svg, '[data-row="' + i + '"]');
+          var rows = [
+            { name: options.unit || 'Count', color: fill, value: formatValue(item.value) },
+            { name: 'Share', value: (item.share * 100).toFixed(1) + '%' }
+          ];
+          if (item.group) rows.push({ name: 'Program', value: item.group });
+          if (item.period) rows.push({ name: 'Period', value: item.period });
           tooltip.show(
             clamp(margin.left + barW, 100, width - 100),
             event.offsetY - 10,
             item.label,
-            [
-              { name: options.unit || 'Count', color: fill, value: formatValue(item.value) },
-              { name: 'Share', value: (item.share * 100).toFixed(1) + '%' }
-            ]
+            rows
           );
         });
         hit.addEventListener('pointerleave', function () {

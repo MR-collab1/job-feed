@@ -5,10 +5,10 @@
   "run": {
     "problems": [],
     "series_available": 0,
-    "series_total": 7,
+    "series_total": 9,
     "status": "pending"
   },
-  "schema_version": 2,
+  "schema_version": 3,
   "series": {},
   "sources": []
 }
