@@ -1,0 +1,296 @@
+"""Declarative specs for every series the dashboard draws.
+
+Each spec says *where* the numbers live (candidate dataset slugs, a resource
+name pattern) and *what the columns mean* (role patterns), never which exact
+file or column. Adding a chart means adding a spec here - no new parsing code.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+
+from .columns import Role
+
+# ---------------------------------------------------------------------------
+# Reusable role definitions
+# ---------------------------------------------------------------------------
+
+PERIOD = Role(
+    name="period",
+    patterns=(
+        r"^(program|financial|migration)?\s*year$",
+        r"(program|financial|migration)\s*year",
+        r"year of (grant|arrival|settlement|conferral)",
+        r"^(fy|year|period)$",
+        r"year",
+    ),
+)
+
+COUNTRY = Role(
+    name="category",
+    patterns=(
+        r"^country of citizenship$",
+        r"citizenship country",
+        r"country of citizenship",
+        r"^citizenship$",
+        r"^country$",
+        r"nationality",
+        r"country",
+    ),
+)
+
+STREAM = Role(
+    name="category",
+    patterns=(
+        r"^(migration )?stream$",
+        r"^visa stream$",
+        r"^(program )?category$",
+        r"stream",
+        r"category",
+    ),
+)
+
+STATE = Role(
+    name="category",
+    patterns=(
+        r"state\s*/?\s*territory",
+        r"^state$",
+        r"intended (state|location)",
+        r"location",
+    ),
+)
+
+SUBCLASS = Role(
+    name="category",
+    patterns=(
+        r"visa subclass",
+        r"^subclass$",
+        r"subclass",
+        r"visa (type|name)",
+    ),
+)
+
+GRANTS = Role(
+    name="value",
+    patterns=(
+        r"^(visas? )?granted$",
+        r"^(number of )?(visa )?grants$",
+        r"^outcome$",
+        r"^places?$",
+        r"^(total|count|number|value)$",
+        r"grant",
+        r"outcome",
+        r"count",
+    ),
+    numeric=True,
+)
+
+CONFERRALS = Role(
+    name="value",
+    patterns=(
+        r"conferral",
+        r"^(number of )?(people|persons|clients)$",
+        r"^(total|count|number|value)$",
+        r"count",
+    ),
+    numeric=True,
+)
+
+# Rows that are totals or placeholders rather than real categories.
+AGGREGATE_ROWS = (
+    r"^total\b",
+    r"^all\b",
+    r"^grand total",
+    r"^sub[- ]?total",
+    r"^not (stated|recorded|specified|applicable)",
+    r"^unknown\b",
+    r"^other\b",
+    r"^n/?a$",
+)
+
+
+@dataclass(frozen=True)
+class Part:
+    """One source table feeding a series."""
+
+    dataset_slugs: tuple[str, ...]
+    search_terms: str
+    resource_patterns: tuple[str, ...]
+    roles: tuple[Role, ...]
+    sheet_pattern: str | None = None
+    label: str | None = None
+    row_filters: dict[str, str] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class SeriesSpec:
+    """A chartable series assembled from one or more source tables."""
+
+    id: str
+    title: str
+    subtitle: str
+    shape: str  # "time_by_category" | "ranked" | "time_total"
+    unit: str
+    parts: tuple[Part, ...]
+    top_n: int = 15
+    drop_rows: tuple[str, ...] = AGGREGATE_ROWS
+    note: str = ""
+
+
+PERMANENT_PROGRAM_SLUGS = (
+    "permanent-migration-program-skilled-family",
+    "australian-migration-statistics",
+)
+
+PERMANENT_PROGRAM_SEARCH = "permanent migration program skilled family outcomes"
+
+
+SPECS: tuple[SeriesSpec, ...] = (
+    SeriesSpec(
+        id="pr_by_stream",
+        title="Permanent Migration Program outcomes by stream",
+        subtitle="Places delivered each program year, split by migration stream",
+        shape="time_by_category",
+        unit="places",
+        parts=(
+            Part(
+                dataset_slugs=("historical-migration-statistics",) + PERMANENT_PROGRAM_SLUGS,
+                search_terms="migration program outcomes by stream program year",
+                resource_patterns=(
+                    r"stream",
+                    r"migration program",
+                    r"outcome",
+                ),
+                sheet_pattern=r"stream|program|outcome",
+                roles=(PERIOD, STREAM, GRANTS),
+            ),
+        ),
+        note="Program years run 1 July to 30 June.",
+    ),
+    SeriesSpec(
+        id="pr_by_citizenship",
+        title="Permanent Migration Program by country of citizenship",
+        subtitle="Places delivered in the most recent program year on record",
+        shape="ranked",
+        unit="places",
+        parts=(
+            Part(
+                dataset_slugs=PERMANENT_PROGRAM_SLUGS,
+                search_terms=PERMANENT_PROGRAM_SEARCH + " country of citizenship",
+                resource_patterns=(
+                    r"citizenship",
+                    r"country",
+                    r"nationality",
+                ),
+                sheet_pattern=r"citizenship|country",
+                roles=(COUNTRY, GRANTS, Role("period", PERIOD.patterns, required=False)),
+            ),
+        ),
+        top_n=15,
+    ),
+    SeriesSpec(
+        id="pr_by_state",
+        title="Permanent Migration Program by state and territory",
+        subtitle="Where permanent places were taken up, most recent program year",
+        shape="ranked",
+        unit="places",
+        parts=(
+            Part(
+                dataset_slugs=PERMANENT_PROGRAM_SLUGS,
+                search_terms=PERMANENT_PROGRAM_SEARCH + " state territory",
+                resource_patterns=(r"state", r"territory", r"location"),
+                sheet_pattern=r"state|territory|location",
+                roles=(STATE, GRANTS, Role("period", PERIOD.patterns, required=False)),
+            ),
+        ),
+        top_n=10,
+    ),
+    SeriesSpec(
+        id="pr_by_subclass",
+        title="Permanent Migration Program by visa subclass",
+        subtitle="Places delivered by subclass, most recent program year",
+        shape="ranked",
+        unit="places",
+        parts=(
+            Part(
+                dataset_slugs=PERMANENT_PROGRAM_SLUGS,
+                search_terms=PERMANENT_PROGRAM_SEARCH + " visa subclass",
+                resource_patterns=(r"subclass", r"visa type"),
+                sheet_pattern=r"subclass|visa",
+                roles=(SUBCLASS, GRANTS, Role("period", PERIOD.patterns, required=False)),
+            ),
+        ),
+        top_n=12,
+    ),
+    SeriesSpec(
+        id="temp_grants_by_program",
+        title="Temporary visa grants by program",
+        subtitle="Grants per program year across the major temporary visa programs",
+        shape="time_by_category",
+        unit="grants",
+        parts=(
+            Part(
+                label="Student",
+                dataset_slugs=("student-visas",),
+                search_terms="student visa program grants",
+                resource_patterns=(r"grant", r"program", r"student"),
+                sheet_pattern=r"grant|program",
+                roles=(PERIOD, GRANTS),
+            ),
+            Part(
+                label="Visitor",
+                dataset_slugs=("visitor-visas", "visitor-visa-program"),
+                search_terms="visitor visa program grants",
+                resource_patterns=(r"grant", r"program", r"visitor"),
+                sheet_pattern=r"grant|program",
+                roles=(PERIOD, GRANTS),
+            ),
+            Part(
+                label="Temporary work (skilled)",
+                dataset_slugs=("visa-temporary-work-skilled",),
+                search_terms="temporary work skilled visa program grants",
+                resource_patterns=(r"grant", r"program", r"skilled"),
+                sheet_pattern=r"grant|program",
+                roles=(PERIOD, GRANTS),
+            ),
+        ),
+        note="Each program is published separately; grants are summed per program year.",
+    ),
+    SeriesSpec(
+        id="student_by_citizenship",
+        title="Student visa grants by country of citizenship",
+        subtitle="Most recent program year on record",
+        shape="ranked",
+        unit="grants",
+        parts=(
+            Part(
+                dataset_slugs=("student-visas",),
+                search_terms="student visa grants country of citizenship",
+                resource_patterns=(r"citizenship", r"country", r"nationality"),
+                sheet_pattern=r"citizenship|country",
+                roles=(COUNTRY, GRANTS, Role("period", PERIOD.patterns, required=False)),
+            ),
+        ),
+        top_n=15,
+    ),
+    SeriesSpec(
+        id="citizenship_conferrals",
+        title="Australian citizenship conferrals",
+        subtitle="People who became Australian citizens by conferral, per program year",
+        shape="time_total",
+        unit="people",
+        parts=(
+            Part(
+                dataset_slugs=(
+                    "citizenship-statistics",
+                    "australian-citizenship-statistics",
+                    "historical-migration-statistics",
+                ),
+                search_terms="australian citizenship conferrals by year",
+                resource_patterns=(r"conferral", r"citizenship"),
+                sheet_pattern=r"conferral|citizenship",
+                roles=(PERIOD, CONFERRALS),
+            ),
+        ),
+    ),
+)

@@ -1,0 +1,321 @@
+"""Offline tests for the visa-statistics pipeline.
+
+These exercise the parts that break when Home Affairs changes a file: header
+detection under a preamble, column-name drift, suppressed counts, total rows,
+and the shaping that turns rows into chart payloads. Network access is never
+required - the fixtures stand in for downloaded resources.
+
+    python3 -m unittest discover -s scripts/tests -v
+"""
+
+from __future__ import annotations
+
+import re
+import sys
+import unittest
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from visa_stats import tables  # noqa: E402
+from visa_stats.build import _shape_ranked, _shape_time_by_category, build_headline  # noqa: E402
+from visa_stats.columns import ColumnError, Role, period_sort_key, resolve_roles  # noqa: E402
+from visa_stats.sources import (  # noqa: E402
+    COUNTRY, GRANTS, PERIOD, SPECS, STREAM, SeriesSpec,
+)
+
+FIXTURES = Path(__file__).resolve().parent / "fixtures"
+
+
+def load_fixture(name: str) -> tables.Table:
+    return tables.read_csv((FIXTURES / name).read_bytes())
+
+
+class HeaderDetectionTests(unittest.TestCase):
+    def test_skips_title_and_blank_preamble(self):
+        table = load_fixture("pr_by_citizenship.csv")
+        self.assertEqual(
+            table.headers, ["program year", "country of citizenship", "visas granted"]
+        )
+        self.assertTrue(table.notes, "preamble rows should be retained as notes")
+
+    def test_detects_semicolon_delimiter(self):
+        table = load_fixture("student_grants.csv")
+        self.assertEqual(table.headers, ["financial year", "visa grants"])
+        self.assertEqual(len(table), 3)
+
+    def test_rows_are_dicts_keyed_by_normalised_header(self):
+        table = load_fixture("pr_by_stream.csv")
+        self.assertEqual(table.rows[0]["stream"], "Skilled")
+        self.assertEqual(table.rows[0]["outcome"], "79,620")
+
+
+class HeaderNormalisationTests(unittest.TestCase):
+    def test_collapses_whitespace_case_and_footnote_markers(self):
+        for raw in ("Country of\nCitizenship ", "COUNTRY OF CITIZENSHIP", "Country of Citizenship[1]"):
+            self.assertEqual(tables.normalise_header(raw), "country of citizenship")
+
+    def test_duplicate_headers_are_made_unique(self):
+        grid = [["Year", "Grants", "Grants"], ["2024-25", "1", "2"]]
+        table = tables._table_from_grid(grid, sheet=None)
+        self.assertEqual(table.headers, ["year", "grants", "grants 2"])
+        self.assertEqual(table.rows[0]["grants 2"], "2")
+
+
+class NumberParsingTests(unittest.TestCase):
+    def test_parses_thousands_separators_and_percentages(self):
+        self.assertEqual(tables.parse_number("48,213"), 48213.0)
+        self.assertEqual(tables.parse_number("1 234"), 1234.0)
+        self.assertEqual(tables.parse_number("45.6%"), 45.6)
+        self.assertEqual(tables.parse_number("(120)"), -120.0)
+
+    def test_suppressed_and_missing_counts_are_unknown_not_zero(self):
+        # "<5" means "withheld for privacy" - reading it as 5 would invent data.
+        for token in ("<5", "", "n/a", "np", "-", ".."):
+            self.assertIsNone(tables.parse_number(token), token)
+
+
+class ColumnResolutionTests(unittest.TestCase):
+    def test_resolves_roles_across_naming_variants(self):
+        table = load_fixture("pr_by_citizenship.csv")
+        roles = resolve_roles(table, (PERIOD, COUNTRY, GRANTS))
+        self.assertEqual(roles["period"], "program year")
+        self.assertEqual(roles["category"], "country of citizenship")
+        self.assertEqual(roles["value"], "visas granted")
+
+    def test_each_role_claims_a_distinct_column(self):
+        table = load_fixture("pr_by_stream.csv")
+        roles = resolve_roles(table, (PERIOD, STREAM, GRANTS))
+        self.assertEqual(len(set(roles.values())), 3)
+
+    def test_missing_required_role_raises_with_available_columns(self):
+        table = load_fixture("student_grants.csv")
+        with self.assertRaises(ColumnError) as caught:
+            resolve_roles(table, (PERIOD, COUNTRY, GRANTS))
+        self.assertIn("visa grants", str(caught.exception))
+
+    def test_optional_role_is_simply_absent(self):
+        table = load_fixture("student_grants.csv")
+        roles = resolve_roles(
+            table, (PERIOD, Role("category", COUNTRY.patterns, required=False), GRANTS)
+        )
+        self.assertNotIn("category", roles)
+        self.assertEqual(roles["value"], "visa grants")
+
+    def test_falls_back_to_the_only_numeric_column(self):
+        grid = [["Financial year", "Places delivered"], ["2024-25", "1,000"]]
+        table = tables._table_from_grid(grid, sheet=None)
+        roles = resolve_roles(table, (PERIOD, GRANTS))
+        self.assertEqual(roles["value"], "places delivered")
+
+
+class PeriodOrderingTests(unittest.TestCase):
+    def test_program_years_sort_chronologically_despite_en_dashes(self):
+        labels = ["2023–24", "2021-22", "2022/23"]
+        self.assertEqual(
+            sorted(labels, key=period_sort_key), ["2021-22", "2022/23", "2023–24"]
+        )
+
+    def test_month_labels_sort_within_a_year(self):
+        labels = ["Dec 2024", "Jul 2024", "Jan 2025"]
+        self.assertEqual(
+            sorted(labels, key=period_sort_key), ["Jul 2024", "Dec 2024", "Jan 2025"]
+        )
+
+    def test_unparseable_labels_sort_last_rather_than_vanish(self):
+        self.assertEqual(
+            sorted(["zzz unknown", "2024-25"], key=period_sort_key),
+            ["2024-25", "zzz unknown"],
+        )
+
+
+def _records(table, period_col, category_col, value_col):
+    return [
+        (row[period_col], row[category_col], tables.parse_number(row[value_col]))
+        for row in table.rows
+        if tables.parse_number(row[value_col]) is not None
+    ]
+
+
+class RankedShapeTests(unittest.TestCase):
+    def setUp(self):
+        table = load_fixture("pr_by_citizenship.csv")
+        raw = _records(table, "program year", "country of citizenship", "visas granted")
+        # Aggregate rows are dropped upstream in _extract_rows; mirror that here.
+        self.records = [r for r in raw if r[1] not in {"Total", "Not stated"}]
+        self.spec = SeriesSpec(
+            id="t", title="t", subtitle="", shape="ranked", unit="places", parts=(), top_n=3
+        )
+
+    def test_uses_only_the_latest_period(self):
+        shaped = _shape_ranked(self.spec, self.records)
+        self.assertEqual(shaped["period"], "2024-25")
+        self.assertEqual(shaped["periods"], ["2023-24", "2024-25"])
+
+    def test_top_n_then_folds_the_tail(self):
+        shaped = _shape_ranked(self.spec, self.records)
+        labels = [i["label"] for i in shaped["items"]]
+        self.assertEqual(labels[:3], ["India", "China", "Philippines"])
+        self.assertEqual(labels[-1], "All other")
+        self.assertTrue(shaped["items"][-1]["is_tail"])
+
+    def test_tail_preserves_the_total(self):
+        shaped = _shape_ranked(self.spec, self.records)
+        self.assertAlmostEqual(
+            sum(i["value"] for i in shaped["items"]), shaped["total"], places=6
+        )
+
+    def test_shares_sum_to_one(self):
+        shaped = _shape_ranked(self.spec, self.records)
+        self.assertAlmostEqual(sum(i["share"] for i in shaped["items"]), 1.0, places=3)
+
+
+class TimeByCategoryShapeTests(unittest.TestCase):
+    def setUp(self):
+        table = load_fixture("pr_by_stream.csv")
+        raw = _records(table, "program year", "stream", "outcome")
+        self.records = [r for r in raw if r[1] != "Grand total"]
+        self.spec = SeriesSpec(
+            id="t", title="t", subtitle="", shape="time_by_category",
+            unit="places", parts=(), top_n=7,
+        )
+
+    def test_matrix_is_categories_by_periods_in_chronological_order(self):
+        shaped = _shape_time_by_category(self.spec, self.records)
+        self.assertEqual(shaped["periods"], ["2021–22", "2022–23", "2023–24"])
+        self.assertEqual(len(shaped["matrix"]), len(shaped["categories"]))
+        self.assertTrue(all(len(row) == 3 for row in shaped["matrix"]))
+
+    def test_categories_are_ordered_by_total_size(self):
+        shaped = _shape_time_by_category(self.spec, self.records)
+        self.assertEqual(shaped["categories"][0], "Skilled")
+
+    def test_missing_period_category_pairs_become_zero_not_gaps(self):
+        records = [("2023-24", "Skilled", 10.0), ("2024-25", "Family", 5.0)]
+        shaped = _shape_time_by_category(self.spec, records)
+        self.assertEqual(sorted(shaped["categories"]), ["Family", "Skilled"])
+        for row in shaped["matrix"]:
+            self.assertEqual(len(row), 2)
+            self.assertIn(0.0, row)
+
+    def test_categories_past_the_cap_fold_into_other(self):
+        records = [("2024-25", f"Cat{i}", float(20 - i)) for i in range(12)]
+        shaped = _shape_time_by_category(self.spec, records)
+        self.assertEqual(len(shaped["categories"]), 8)
+        self.assertEqual(shaped["categories"][-1], "Other")
+        self.assertAlmostEqual(
+            sum(row[0] for row in shaped["matrix"]),
+            sum(v for _, _, v in records),
+            places=6,
+        )
+
+
+class HeadlineTests(unittest.TestCase):
+    def test_computes_total_and_year_on_year_change(self):
+        series = {
+            "pr_by_stream": {
+                "available": True,
+                "periods": ["2023-24", "2024-25"],
+                "matrix": [[100.0, 150.0], [50.0, 50.0]],
+                "source_ids": ["a"],
+            }
+        }
+        tile = build_headline(series)[0]
+        self.assertEqual(tile["value"], 200.0)
+        self.assertEqual(tile["period"], "2024-25")
+        self.assertEqual(tile["change_pct"], 33.3)
+
+    def test_unavailable_series_produce_no_tiles(self):
+        self.assertEqual(build_headline({"pr_by_stream": {"available": False}}), [])
+
+    def test_top_country_tile_skips_the_folded_tail(self):
+        series = {
+            "pr_by_citizenship": {
+                "available": True,
+                "period": "2024-25",
+                "items": [
+                    {"label": "India", "value": 10.0, "share": 0.5},
+                    {"label": "All other", "value": 10.0, "share": 0.5, "is_tail": True},
+                ],
+                "source_ids": [],
+            }
+        }
+        tile = build_headline(series)[0]
+        self.assertEqual(tile["caption"], "India")
+
+
+class FailureHandlingTests(unittest.TestCase):
+    def test_a_failed_run_keeps_previously_published_series(self):
+        from build_visa_stats import _preserve_on_total_failure
+
+        previous = {
+            "series": {"pr_by_stream": {"available": True, "periods": ["2024-25"]}},
+            "generated_at": "2026-09-01T00:00:00+00:00",
+        }
+        failed = {"run": {"status": "failed", "problems": []}, "generated_at": "2026-09-17T00:00:00+00:00"}
+
+        merged = _preserve_on_total_failure(failed, previous)
+        self.assertTrue(merged["series"]["pr_by_stream"]["available"])
+        self.assertEqual(merged["generated_at"], "2026-09-01T00:00:00+00:00")
+        self.assertEqual(merged["last_checked_at"], "2026-09-17T00:00:00+00:00")
+        self.assertTrue(merged["run"]["retained_previous"])
+
+    def test_a_partial_run_is_written_through_unchanged(self):
+        from build_visa_stats import _preserve_on_total_failure
+
+        payload = {"run": {"status": "partial"}, "series": {}, "generated_at": "x"}
+        self.assertIs(_preserve_on_total_failure(payload, {"series": {}}), payload)
+
+
+class SpecIntegrityTests(unittest.TestCase):
+    """The specs are pure data, so guard them the way data gets guarded."""
+
+    def test_ids_are_unique(self):
+        ids = [spec.id for spec in SPECS]
+        self.assertEqual(len(ids), len(set(ids)))
+
+    def test_every_spec_has_parts_a_known_shape_and_a_value_role(self):
+        for spec in SPECS:
+            with self.subTest(spec=spec.id):
+                self.assertTrue(spec.parts, "spec has no source parts")
+                self.assertIn(spec.shape, {"ranked", "time_by_category", "time_total"})
+                for part in spec.parts:
+                    roles = {role.name for role in part.roles}
+                    self.assertIn("value", roles)
+                    self.assertTrue(part.dataset_slugs)
+                    self.assertTrue(part.resource_patterns)
+
+    def test_role_and_drop_patterns_compile(self):
+        for spec in SPECS:
+            for pattern in spec.drop_rows:
+                re.compile(pattern)
+            for part in spec.parts:
+                for role in part.roles:
+                    for pattern in role.patterns:
+                        with self.subTest(spec=spec.id, role=role.name, pattern=pattern):
+                            re.compile(pattern)
+
+    def test_a_multi_part_spec_labels_every_part(self):
+        # Parts without a category column rely on their label for the series name.
+        for spec in SPECS:
+            if len(spec.parts) < 2:
+                continue
+            for part in spec.parts:
+                with self.subTest(spec=spec.id):
+                    has_category = any(r.name == "category" for r in part.roles)
+                    self.assertTrue(part.label or has_category)
+
+    def test_the_page_knows_how_to_draw_every_spec(self):
+        """A new spec with no card config would render but never be ordered."""
+        app = (Path(__file__).resolve().parents[2] / "visa" / "assets" / "app.js").read_text()
+        display = set(re.findall(r"^\s{4}(\w+):\s*\{ chart:", app, re.MULTILINE))
+        order = set(re.findall(r"'(\w+)'", app[app.index("var ORDER"):app.index("];", app.index("var ORDER"))]))
+
+        for spec in SPECS:
+            with self.subTest(spec=spec.id):
+                self.assertIn(spec.id, display, "missing from DISPLAY in app.js")
+                self.assertIn(spec.id, order, "missing from ORDER in app.js")
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Australian Visa &amp; Permanent Residency Statistics</title>
+<meta name="description" content="Charts of Australian visa grants, permanent migration program outcomes and citizenship conferrals, built from Department of Home Affairs data published on data.gov.au and refreshed daily.">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='13'>📊</text></svg>">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap masthead-row">
+    <div>
+      <h1>Australian visa &amp; permanent residency statistics</h1>
+      <p>
+        Visa grants, permanent migration program outcomes and citizenship conferrals,
+        built from Department of Home Affairs data published on data.gov.au.
+        Checked every day; the charts change whenever Home Affairs publishes.
+      </p>
+    </div>
+    <button type="button" id="themeToggle" class="theme-toggle">Dark theme</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="banner is-demo" id="demoBanner" hidden>
+    <div>
+      <strong>Sample data — these are not real statistics.</strong>
+      You are viewing <code>?demo=1</code>, which loads made-up numbers so the layout
+      can be reviewed before the pipeline has run.
+      <a href="./">Switch to the published data</a>.
+    </div>
+  </div>
+
+  <div class="banner" id="runBanner" hidden></div>
+
+  <dl class="freshness" id="freshness"></dl>
+
+  <section class="tiles" id="tiles" aria-label="Headline figures"></section>
+
+  <div class="cards" id="cards"></div>
+
+  <section class="sources">
+    <h2>Sources</h2>
+    <p class="card-sub">
+      Every figure above is traceable to one of these published files. Follow a link to
+      the dataset on data.gov.au to read the department's own notes, definitions and
+      caveats before quoting a number.
+    </p>
+    <ul id="sourceList"></ul>
+  </section>
+
+  <footer class="page-foot">
+    <p>
+      This is an independent reuse of Australian public-sector open data. It is not
+      affiliated with, endorsed by, or an official channel of the Department of Home
+      Affairs. Figures are counts of visas <em>granted</em> in a period, not applications
+      lodged, people arrived, or the current stock of visa holders.
+    </p>
+    <p>
+      Home Affairs publishes these statistics on a monthly to annual cycle depending on
+      the dataset, so the underlying numbers do not change daily even though this site
+      checks for new releases daily. Counts below a small threshold are suppressed at the
+      source for privacy and are treated here as unknown, not zero, so category totals may
+      not sum to a published grand total.
+    </p>
+    <p>
+      Source data is licensed by the Commonwealth of Australia under
+      <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>
+      via <a href="https://data.gov.au/data/organization/immi" target="_blank" rel="noopener">data.gov.au</a>.
+      Raw JSON behind this page: <a href="data/latest.json">data/latest.json</a>.
+      See also the <a href="../">Tableau / BI job feed</a> in this repository.
+    </p>
+  </footer>
+
+</main>
+
+<script src="assets/charts.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

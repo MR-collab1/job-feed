@@ -1,0 +1,14 @@
+{
+  "generated_at": null,
+  "headline": [],
+  "last_checked_at": null,
+  "run": {
+    "problems": [],
+    "series_available": 0,
+    "series_total": 7,
+    "status": "pending"
+  },
+  "schema_version": 2,
+  "series": {},
+  "sources": []
+}
