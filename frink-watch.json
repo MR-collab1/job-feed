@@ -48,7 +48,12 @@
           "uses deprecated 'constant' rather than 'view'"
         ]
       },
-      "cross_chain_note": "Same address 0xf938c9a2... is indexed on BOTH Etherscan and BscScan, and served by poocoin.app (BSC-only) and Bitget web3 /swap/bnb/. This is address reuse, NOT a bridged asset: an EVM CREATE address is keccak256(rlp(deployer, nonce))[12:], so the same deployer key at the same nonce yields the same address on every EVM chain. The contract has NO bridge or cross-chain logic, so the ETH and BSC deployments are disjoint ledgers with independent prices. NOT a new listing."
+      "cross_chain_note": "Same address 0xf938c9a2... is indexed on BOTH Etherscan and BscScan, and served by poocoin.app (BSC-only) and Bitget web3 /swap/bnb/. This is address reuse, NOT a bridged asset: an EVM CREATE address is keccak256(rlp(deployer, nonce))[12:], so the same deployer key at the same nonce yields the same address on every EVM chain. The contract has NO bridge or cross-chain logic, so the ETH and BSC deployments are disjoint ledgers with independent prices. NOT a new listing.",
+      "source_availability": {
+        "explorer_verified": "YES - verified on Etherscan 2020-04-12, compiler v0.4.24+commit.e67f0147.",
+        "licence": "MIT, declared in the source header ('(c) by Moritz Neto with BokkyPooBah / Bok Consulting Pty Ltd Au 2017. The MIT Licence.')",
+        "note": "Verified AND permissively licensed - open source in both senses."
+      }
     },
     {
       "name": "FRINKCOIN",
@@ -317,7 +322,14 @@
         "significance": "This is the SAME address hardcoded in the Ethereum constructor to receive 100% of supply. One wallet is the treasury on BOTH chains."
       },
       "operator_inference": "The shared treasury wallet plus the shared contract address together establish the same operator behind both deployments. A CREATE address is keccak256(rlp(deployer, nonce))[12:], so reproducing 0xf938c9a2... on BSC required the same deployer EOA at the same nonce - i.e. control of that key. The address reuse is deliberate, not coincidental.",
-      "risk_reassessment": "Code is clean (ownerless, no mint/burn/pause) but that does NOT make the token safe. Immutability prevents INFLATION; it does nothing about a 61% holder SELLING. With BSC liquidity reported as N/A and price $0.00, the overhang is either unsellable (no pool) or catastrophic (tiny pool). Risk has moved from the code to the cap table."
+      "risk_reassessment": "Code is clean (ownerless, no mint/burn/pause) but that does NOT make the token safe. Immutability prevents INFLATION; it does nothing about a 61% holder SELLING. With BSC liquidity reported as N/A and price $0.00, the overhang is either unsellable (no pool) or catastrophic (tiny pool). Risk has moved from the code to the cap table.",
+      "source_availability": {
+        "explorer_verified": "LIKELY NOT. The user retrieved runtime BYTECODE rather than Solidity, which is what BscScan serves when a contract is unverified. Not yet confirmed - check whether BscScan shows a 'Contract Source Code Verified' banner or only a Bytecode tab.",
+        "compiler_version_caveat": "solc 0.8.1 here was decoded from the CBOR metadata trailer INSIDE the bytecode, NOT read off a verified source page. Do not treat a known compiler version as proof of verification for this contract.",
+        "ipfs_metadata_cid": "QmS3ZerSVA9eaaCVfu8XgXnqKCMmHUrgRACrWgd7oPWgFo",
+        "cid_derivation": "CBOR trailer key 'ipfs' -> multihash 0x1220 + sha2-256 digest 370e2831adc752824a59d77ed9fa264ef8e5b4682574536d38568d3ed8c500fe -> base58 -> CIDv0. If the deployer pinned it, this resolves to the full solc metadata JSON including original sources. ipfs.io is EGRESS_BLOCKED here, so unretrieved.",
+        "effective_transparency": "Even unverified, the contract is NOT opaque: revert strings and storage layout identify it as stock OpenZeppelin ERC20 v4.x, and the 11-selector dispatcher was fully enumerated. Absence of mint/burn/pause/owner was established from bytecode directly, without needing source."
+      }
     }
   ],
   "notify_on": [
@@ -343,7 +355,8 @@
     "Search summaries conflate FRNK 0xf938c9a2 (21M supply, 29 holders, no pool) with FRINKCOIN 0x46493b80 (1B supply, 461 holders, ~$3.3K pool). Liquidity figures attributed to 'Frinkcoin' usually belong to the latter. Always attribute market data to a specific contract.",
     "2026-09-09: a search summary reported '$0.00 24h volume, $2.67K market cap, 1 billion circulating supply' for 0xed2ee398. That was CONFLATION - the 1B supply belongs to 0x46493b80. Direct verification showed 0xed2ee398 stable at ~$10.8K liquidity and ~$8.7K volume. Always re-verify alarming metrics against a second query before acting on them.",
     "SUMMARIZER ERROR 2026-09-25: a search summary claimed 0xb943B74B... is 'the contract address where FRNK was deployed'. It is NOT. The contract is 0xf938c9a2... (Etherscan). 0xb943B7... is the wallet that received 100% of supply in the constructor. The error comes from parroting the template's stale 'Deployed to:' header comment.",
-    "CONFIRMED 2026-09-25 at bytecode level: aggregators (Bitget web3 /swap/bnb/, poocoin, CoinMarketCap) present ETH FRNK and BSC FRNK at 0xf938c9a2... as ONE asset and may merge their price/volume/market-cap figures. They are different contracts with different decimals (8 vs 18) and different compilers (0.4.24 vs 0.8.1). Any blended figure across the two is meaningless."
+    "CONFIRMED 2026-09-25 at bytecode level: aggregators (Bitget web3 /swap/bnb/, poocoin, CoinMarketCap) present ETH FRNK and BSC FRNK at 0xf938c9a2... as ONE asset and may merge their price/volume/market-cap figures. They are different contracts with different decimals (8 vs 18) and different compilers (0.4.24 vs 0.8.1). Any blended figure across the two is meaningless.",
+    "METHOD NOTE: a known compiler version only implies explorer verification when it was READ OFF a verified source page. It can also be decoded from the CBOR metadata trailer of unverified bytecode (as done for BSC FRNK). Do not conflate the two."
   ],
   "episode_timeline": {
     "premise_made_public": "January 2020 - Fox released the episode title and synopsis; covered by The Springfield Shopper (news.simpsonswiki.com) in Jan 2020 under 'Professor Frink develops a cryptocurrency that makes him rich in February'",
