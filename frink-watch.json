@@ -111,6 +111,27 @@
         "FALLBACK_ABI_TRAP": "The ABI advertises the fallback as payable:true, but the source body is revert(). Any tool or reader working from the ABI alone would wrongly conclude the contract accepts ETH. It does not. This is why the stablecoin assessment relied on the source body rather than the ABI flag.",
         "code_quality_wart": "safeAdd/safeSub/safeMul/safeDiv are declared public rather than internal, so four pure math helpers are exposed as external functions. Harmless, but it bloats the ABI and wasted deployment gas - another sign of unmodified template code.",
         "confirms_bsc_diff": "Independently confirms the earlier bytecode-derived ABI diff: increaseAllowance/decreaseAllowance absent here but present on BSC; owner/newOwner/transferOwnership/acceptOwnership/approveAndCall/transferAnyERC20Token present here but absent on BSC."
+      },
+      "sourcemap_verification_20260925": {
+        "provenance": "User supplied the runtime source map and metadata hash. THIRD independent artifact for this contract (after Solidity source and ABI).",
+        "result": "CONSISTENT with the pasted source. Sorting the source-map byte offsets reproduces the source's declaration order EXACTLY, contract by contract.",
+        "declaration_order_recovered": {
+          "SafeMath": "safeAdd 695, safeSub 817, safeMul 939, safeDiv 1075",
+          "ERC20Interface + ApproveAndCallFallBack": "gap 1190-2793 with NO entries - correct, both are pure interfaces with no bodies",
+          "Owned": "owner 2793, newOwner 2820, transferOwnership 3083, acceptOwnership 3191",
+          "Frinkcoin state vars": "symbol 3716, name 3743, decimals 3769, _totalSupply 3797",
+          "Frinkcoin functions": "totalSupply 4629, balanceOf 4970, transfer 5443, approve 6233, transferFrom 6977, allowance 7623, approveAndCall 8134, fallback 8686, transferAnyERC20Token 8940"
+        },
+        "contract_body_span": "3655:5472:0 -> the Frinkcoin contract occupies bytes 3655..9127 of the source file.",
+        "single_file": "Every entry carries file index 0. One flattened source file, no imports - consistent with copied template code.",
+        "FALLBACK_PROOF": "Entry 8686:8 is the fallback body: EIGHT bytes, exactly the length of 'revert()'. Byte-precise confirmation that the fallback does nothing but revert, independently corroborating that the ABI's payable:true is misleading.",
+        "runtime_map_note": "No entry for the constructor (gap 3821-4629). Correct for a RUNTIME source map - constructor code lives in the deployment bytecode only."
+      },
+      "metadata_hash": {
+        "value": "bzzr://ca06a4a389bd08be1914747f8b97dc4f113c4981d64c1ce5dd5e0b6a9fce9a60",
+        "scheme": "SWARM (bzzr), not IPFS. Solidity embedded Swarm hashes in metadata before ~0.6 and switched to IPFS after, so this independently corroborates the 0.4.24 compiler.",
+        "retrievability": "EFFECTIVELY DEAD. The original Swarm network never achieved durable persistence and these hashes are almost universally unresolvable today. Unlike the BSC contract's IPFS CID (QmS3ZerSVA9eaaCVfu8XgXnqKCMmHUrgRACrWgd7oPWgFo), which may still resolve, this metadata is realistically unrecoverable.",
+        "practical_impact": "None - the source is already verified on Etherscan, so nothing depends on this pointer."
       }
     },
     {
