@@ -66,7 +66,15 @@
       "self_description": "'A social coin' (aggregator profile) - which sits oddly beside the 'means of exchange with the real economy' pitch.",
       "price_history": "All-time high $0.00712 on 2020-10-26 (~8 months after launch) = peak market cap ~$149,520 on 21,000,000 supply. It DID trade once; it does not now.",
       "absent_project_infrastructure": "CoinCarp reports no official website submitted, no GitHub organisation, and no public repository. No whitepaper located. Etherscan's tracker references 'frinkcoin.best'.",
-      "purpose_vs_reality": "The stated thesis REQUIRES circulation. Observed after 6.5 years: $0 liquidity, no CEX or DEX listing, 29 holders, no site, no repo, no whitepaper. The project's own success condition is unmet on every axis."
+      "purpose_vs_reality": "The stated thesis REQUIRES circulation. Observed after 6.5 years: $0 liquidity, no CEX or DEX listing, 29 holders, no site, no repo, no whitepaper. The project's own success condition is unmet on every axis.",
+      "bok_consulting_attribution": {
+        "header_line": "(c) by Moritz Neto with BokkyPooBah / Bok Consulting Pty Ltd Au 2017. The MIT Licence.",
+        "who": "BokkyPooBah = Bok Khoo, director of Bok Consulting Pty Ltd (Australia). Real and well-regarded: actuary and quantitative developer, ~28 years industry experience, working on Ethereum since 2015, known smart-contract auditor, author of widely used libraries (DateTime, RedBlackTree) and of the TokenTrader / Token Teleportation contracts.",
+        "what_it_means": "NOTHING about FRNK. It is the MIT copyright notice of the ERC20 TEMPLATE the deployer copied. The MIT licence REQUIRES retaining the notice, so its presence is licence compliance - not authorship, endorsement, involvement, review or audit of FRNK.",
+        "scale_of_reuse": "GitHub code search for the exact phrase 'with BokkyPooBah / Bok Consulting Pty Ltd Au' in Solidity returns 25,536 files (verified 2026-09-25 via GitHub API). Top hit is bitfwdcommunity/ICO-tutorial - the template's origin is teaching material for 'how to issue your own token'.",
+        "staleness_evidence": "The header says 2017; FRNK was deployed February 2020. Like the '// Deployed to :' line (which names the supply recipient, not the contract), it is unedited template text. Two independent stale artifacts in the same header show the deployer did not modify the boilerplate.",
+        "misreading_risk": "Because Bok Consulting is a genuine auditing firm, this line is easily mistaken for a credibility signal or an audit. There is no audit of FRNK, and no relationship between Bok Consulting and this token."
+      }
     },
     {
       "name": "FRINKCOIN",
@@ -358,7 +366,8 @@
     "Inflated market-cap figures on aggregator pages (e.g. Bitget showing FRNK at $0.006804 / $142.89M mcap) that contradict $0 24h volume elsewhere. Market cap = price x supply and is meaningless without liquidity; a dead token can show a large mcap. Not a listing signal.",
     "CRITICAL FALSE POSITIVE: DEX aggregators, routers, wallets and trading bots (Jupiter, Phantom, Maestro Bot, Soul Sniper, MEXC DEX+, 1inch etc.) 'supporting' a token. These surface ANY token with an on-chain pool automatically - they are not listings and involve no exchange decision. 'MEXC DEX+' in particular is MEXC's on-chain aggregator front-end and is NOT a MEXC centralized-exchange listing.",
     "Same contract address appearing on a second chain's explorer (e.g. FRNK 0xf938c9a2... on both Etherscan and BscScan). EVM addresses are deterministic from deployer+nonce, so cross-chain address reuse is trivial and means nothing. Not a bridge, not a listing, and prices on the two chains are unlinked.",
-    "Aggregator boilerplate listing a token as 'available on' a long DEX roster (PancakeSwap v2, Mdex, BSCswap, Anyswap, BSCStation, CheeseSwap, O3swap, Bscex, Autofarm, ApeSwap, BakerySwap, Biswap, 1inch, ParaSwap, Pionex...). This is generated for any BEP-20 because routers CAN route it if a pool exists. Reported liquidity for FRNK on BSC is N/A. Not listings."
+    "Aggregator boilerplate listing a token as 'available on' a long DEX roster (PancakeSwap v2, Mdex, BSCswap, Anyswap, BSCStation, CheeseSwap, O3swap, Bscex, Autofarm, ApeSwap, BakerySwap, Biswap, 1inch, ParaSwap, Pionex...). This is generated for any BEP-20 because routers CAN route it if a pool exists. Reported liquidity for FRNK on BSC is N/A. Not listings.",
+    "The '(c) by Moritz Neto with BokkyPooBah / Bok Consulting Pty Ltd Au' header in any FRINK-named contract. It is MIT template attribution present in 25,536 GitHub Solidity files and implies NO audit, endorsement or involvement by Bok Consulting."
   ],
   "baseline_notes": "2026-09-09 00:48Z check: no listing. Recorded a sixth Ethereum FRINK (0x57fe4fdb..., deployed ~Oct 2024) confirmed directly from Etherscan via user screenshot - unindexed by every aggregator, deployer bridge-funded.",
   "data_quality_warnings": [
