@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-17T13:40Z",
+  "last_checked": "2026-09-25T00:00Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -25,7 +25,30 @@
       "notes": "CoinCarp reports no active exchange availability. Aggregator venue claims conflict and are treated as unverified, NOT as confirmed live listings.",
       "created": "February 2020; contract verified on Etherscan 2020-04-12",
       "episode_link": "CLOSEST IN TIME to the episode (aired 2020-02-23). 21,000,000 supply mirrors Bitcoin's cap. Contemporaneous cash-in.",
-      "buyability": "NO liquidity pool found on any DEX. $0 price, $0 24h volume, 29 holders, Untracked. Appears genuinely unbuyable - no counterparty exists. The $3,331 pool reported near this token in search results actually belongs to 0x46493b80..., a different contract."
+      "buyability": "NO liquidity pool found on any DEX. $0 price, $0 24h volume, 29 holders, Untracked. Appears genuinely unbuyable - no counterparty exists. The $3,331 pool reported near this token in search results actually belongs to 0x46493b80..., a different contract.",
+      "source_code_review_20260925": {
+        "provenance": "User pasted the verified Solidity source. PRIMARY SOURCE - second asset in this file confirmed from primary rather than search summary.",
+        "template": "BokkyPooBah / Bok Consulting 'Moritz Neto' ERC20 template, 2017 vintage. Widely copy-pasted boilerplate, not bespoke code.",
+        "compiler": "^0.4.24 (Etherscan reports v0.4.24+commit.e67f0147) - consistent with the Feb 2020 creation date, unlike 0x46493b80 whose 0.8.14 compiler disproved its claimed 2020 date.",
+        "supply_math": "_totalSupply = 2100000000000000 with decimals = 8 -> exactly 21,000,000 whole tokens. Confirms the Bitcoin-cap mirror.",
+        "genesis_allocation": "100% of supply hardcoded to 0xb943B74B93485B9Cb47E614C54e946D7c16ad2c8 in the constructor. Total concentration at genesis in a single wallet.",
+        "owner_vs_recipient": "owner = msg.sender (deployer, set in Owned constructor); supply recipient is a separate hardcoded literal. They may or may not be the same party.",
+        "absent_by_design": [
+          "no mint function - supply is fixed and cannot be inflated",
+          "no transfer tax / fee-on-transfer",
+          "no blacklist or whitelist",
+          "no pause / freeze",
+          "no proxy or upgrade path - logic is immutable",
+          "no bridge, no cross-chain messaging, no lock/mint hooks"
+        ],
+        "assessment": "Mechanically CLEAN. None of the honeypot or rug primitives are present. Its risk is not the code - it is zero liquidity and 100% genesis concentration.",
+        "minor_defects": [
+          "transfer() has no zero-address check - tokens can be burned to 0x0 by mistake",
+          "classic ERC20 approve() race condition (acknowledged in the source comments)",
+          "uses deprecated 'constant' rather than 'view'"
+        ]
+      },
+      "cross_chain_note": "Same address 0xf938c9a2... is indexed on BOTH Etherscan and BscScan, and served by poocoin.app (BSC-only) and Bitget web3 /swap/bnb/. This is address reuse, NOT a bridged asset: an EVM CREATE address is keccak256(rlp(deployer, nonce))[12:], so the same deployer key at the same nonce yields the same address on every EVM chain. The contract has NO bridge or cross-chain logic, so the ETH and BSC deployments are disjoint ledgers with independent prices. NOT a new listing."
     },
     {
       "name": "FRINKCOIN",
@@ -259,7 +282,8 @@
     "Presale marketing or 'top memecoin' listicles with no listing event",
     "CRITICAL FALSE POSITIVE: exchange 'price pages' (coinbase.com/price/..., bitget.com/price/..., binance.com/price/...). These exist for thousands of assets the exchange does NOT list for trading and are auto-generated. A price page is NEVER evidence of a listing. Only a dated announcement from the exchange's own newsroom/announcements feed counts.",
     "Inflated market-cap figures on aggregator pages (e.g. Bitget showing FRNK at $0.006804 / $142.89M mcap) that contradict $0 24h volume elsewhere. Market cap = price x supply and is meaningless without liquidity; a dead token can show a large mcap. Not a listing signal.",
-    "CRITICAL FALSE POSITIVE: DEX aggregators, routers, wallets and trading bots (Jupiter, Phantom, Maestro Bot, Soul Sniper, MEXC DEX+, 1inch etc.) 'supporting' a token. These surface ANY token with an on-chain pool automatically - they are not listings and involve no exchange decision. 'MEXC DEX+' in particular is MEXC's on-chain aggregator front-end and is NOT a MEXC centralized-exchange listing."
+    "CRITICAL FALSE POSITIVE: DEX aggregators, routers, wallets and trading bots (Jupiter, Phantom, Maestro Bot, Soul Sniper, MEXC DEX+, 1inch etc.) 'supporting' a token. These surface ANY token with an on-chain pool automatically - they are not listings and involve no exchange decision. 'MEXC DEX+' in particular is MEXC's on-chain aggregator front-end and is NOT a MEXC centralized-exchange listing.",
+    "Same contract address appearing on a second chain's explorer (e.g. FRNK 0xf938c9a2... on both Etherscan and BscScan). EVM addresses are deterministic from deployer+nonce, so cross-chain address reuse is trivial and means nothing. Not a bridge, not a listing, and prices on the two chains are unlinked."
   ],
   "baseline_notes": "2026-09-09 00:48Z check: no listing. Recorded a sixth Ethereum FRINK (0x57fe4fdb..., deployed ~Oct 2024) confirmed directly from Etherscan via user screenshot - unindexed by every aggregator, deployer bridge-funded.",
   "data_quality_warnings": [
@@ -267,7 +291,8 @@
     "Bitget's web3 swap page for FRNK (web3.bitget.com/en/swap/bnb/0xf938c9A2...) labels the chain as BNB while using the ETHEREUM contract address. Aggregators mismatch chain and contract for this ticker - another reason to verify on a block explorer rather than trusting aggregator pages.",
     "DEXTools /pair-explorer/<addr> URLs expose PAIR addresses, not token contracts. Coinscan /tokens/eth/<addr> implies a token. The same address (0x8082db21...) appears under both, so at least one aggregator is mislabelling. Without explorer access this cannot be resolved - never present an address whose type is unresolved as a token contract.",
     "Search summaries conflate FRNK 0xf938c9a2 (21M supply, 29 holders, no pool) with FRINKCOIN 0x46493b80 (1B supply, 461 holders, ~$3.3K pool). Liquidity figures attributed to 'Frinkcoin' usually belong to the latter. Always attribute market data to a specific contract.",
-    "2026-09-09: a search summary reported '$0.00 24h volume, $2.67K market cap, 1 billion circulating supply' for 0xed2ee398. That was CONFLATION - the 1B supply belongs to 0x46493b80. Direct verification showed 0xed2ee398 stable at ~$10.8K liquidity and ~$8.7K volume. Always re-verify alarming metrics against a second query before acting on them."
+    "2026-09-09: a search summary reported '$0.00 24h volume, $2.67K market cap, 1 billion circulating supply' for 0xed2ee398. That was CONFLATION - the 1B supply belongs to 0x46493b80. Direct verification showed 0xed2ee398 stable at ~$10.8K liquidity and ~$8.7K volume. Always re-verify alarming metrics against a second query before acting on them.",
+    "SUMMARIZER ERROR 2026-09-25: a search summary claimed 0xb943B74B... is 'the contract address where FRNK was deployed'. It is NOT. The contract is 0xf938c9a2... (Etherscan). 0xb943B7... is the wallet that received 100% of supply in the constructor. The error comes from parroting the template's stale 'Deployed to:' header comment."
   ],
   "episode_timeline": {
     "premise_made_public": "January 2020 - Fox released the episode title and synopsis; covered by The Springfield Shopper (news.simpsonswiki.com) in Jan 2020 under 'Professor Frink develops a cryptocurrency that makes him rich in February'",
