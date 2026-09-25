@@ -53,7 +53,20 @@
         "explorer_verified": "YES - verified on Etherscan 2020-04-12, compiler v0.4.24+commit.e67f0147.",
         "licence": "MIT, declared in the source header ('(c) by Moritz Neto with BokkyPooBah / Bok Consulting Pty Ltd Au 2017. The MIT Licence.')",
         "note": "Verified AND permissively licensed - open source in both senses."
-      }
+      },
+      "project_description": {
+        "text": "FRNK aims to complete the blockchain-based cryptocurrency ecosystem by actual application and diffusion as a means of exchanging with the real economy, which is the next step of the decentralized distributed ledger hypothesis proposed in Bitcoin, and to complete the verification of the hypothesis.",
+        "source": "Aggregator OVERVIEW panel (Bitget/CoinMarketCap-style), user-supplied screenshot. Project-submitted copy, so it is the project's own words.",
+        "content_analysis": "No mechanism, sector, product, partner or user named. Reduces to 'FRNK will be used in the real economy'. Every clause is aspiration or a restatement of Bitcoin's existing premise.",
+        "bitcoin_framing_error": "Bitcoin did not propose a 'hypothesis' awaiting verification - it has run continuously since January 2009. Framing it as unverified, with FRNK to 'complete the verification', is grandiose framing around no claim.",
+        "NO_SIMPSONS_REFERENCE": "CRITICAL: the description never mentions The Simpsons, Professor Frink, or memes. It reads as an earnest payments/social-coin pitch."
+      },
+      "episode_link_REVISED_20260925": "SOFTENS my earlier 'contemporaneous cash-in' characterisation. That was an inference from name + date + 21M supply, not from any project statement. The project's own copy invokes BITCOIN explicitly and the episode not at all - so the 21,000,000 supply is better explained as a Bitcoin homage than a Simpsons joke. Timing remains genuinely ambiguous: the episode aired 2020-02-23 and the contract was created 'February 2020', which could fall either side. Unresolved: (a) cash-in dressed in earnest language, (b) unrelated project with a name collision, (c) named for something else. Do not assert the cash-in reading as established.",
+      "jurisdiction": "Ukraine (per aggregator profile). NOT Korea - an earlier hunch from the non-native English was wrong and was not asserted.",
+      "self_description": "'A social coin' (aggregator profile) - which sits oddly beside the 'means of exchange with the real economy' pitch.",
+      "price_history": "All-time high $0.00712 on 2020-10-26 (~8 months after launch) = peak market cap ~$149,520 on 21,000,000 supply. It DID trade once; it does not now.",
+      "absent_project_infrastructure": "CoinCarp reports no official website submitted, no GitHub organisation, and no public repository. No whitepaper located. Etherscan's tracker references 'frinkcoin.best'.",
+      "purpose_vs_reality": "The stated thesis REQUIRES circulation. Observed after 6.5 years: $0 liquidity, no CEX or DEX listing, 29 holders, no site, no repo, no whitepaper. The project's own success condition is unmet on every axis."
     },
     {
       "name": "FRINKCOIN",
