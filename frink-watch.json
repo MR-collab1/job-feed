@@ -74,6 +74,23 @@
         "scale_of_reuse": "GitHub code search for the exact phrase 'with BokkyPooBah / Bok Consulting Pty Ltd Au' in Solidity returns 25,536 files (verified 2026-09-25 via GitHub API). Top hit is bitfwdcommunity/ICO-tutorial - the template's origin is teaching material for 'how to issue your own token'.",
         "staleness_evidence": "The header says 2017; FRNK was deployed February 2020. Like the '// Deployed to :' line (which names the supply recipient, not the contract), it is unedited template text. Two independent stale artifacts in the same header show the deployer did not modify the boilerplate.",
         "misreading_risk": "Because Bok Consulting is a genuine auditing firm, this line is easily mistaken for a credibility signal or an audit. There is no audit of FRNK, and no relationship between Bok Consulting and this token."
+      },
+      "stablecoin_assessment_20260925": {
+        "question": "Is FRNK a USD-pegged stable instrument?",
+        "answer": "NO - architecturally impossible, on both the Ethereum and BSC deployments.",
+        "missing_primitives": [
+          "no mint (cannot expand supply on deposit)",
+          "no burn (cannot contract on redemption)",
+          "cannot hold reserves - ETH fallback is payable but reverts; BSC is non-payable",
+          "no redemption function",
+          "no oracle or USD price feed",
+          "no administering issuer (BSC fully ownerless; ETH owner can only sweep foreign ERC20s)",
+          "no proxy or upgrade path, so none of the above can ever be added"
+        ],
+        "design_contradiction": "A hard-capped 21,000,000 supply is Bitcoin-style scarcity - the deliberate OPPOSITE of the elastic supply every peg requires. The project's own copy cites Bitcoin as its lineage, confirming the intent was scarcity, not stability.",
+        "empirical_disproof": "ATH $0.00712 (2020-10-26) is 140x BELOW a $1 peg. Peak market cap $149,520 against the $21,000,000 that full backing would require - 99.29% unbacked at its best moment, then a collapse to ~$0. A pegged instrument does not have an all-time high.",
+        "text_does_not_claim_it": "The OVERVIEW says 'means of exchanging with the real economy' - medium of exchange, one of money's three functions. It never mentions USD, a peg, reserves, redemption or stability.",
+        "conflation_warning": "Bok Khoo's professional bio describes bringing 'traditional fiat financial instruments' to Ethereum. That is BOK'S work, not FRNK's. The only link between them is the MIT template header - the exact misreading flagged in bok_consulting_attribution."
       }
     },
     {
@@ -350,6 +367,23 @@
         "ipfs_metadata_cid": "QmS3ZerSVA9eaaCVfu8XgXnqKCMmHUrgRACrWgd7oPWgFo",
         "cid_derivation": "CBOR trailer key 'ipfs' -> multihash 0x1220 + sha2-256 digest 370e2831adc752824a59d77ed9fa264ef8e5b4682574536d38568d3ed8c500fe -> base58 -> CIDv0. If the deployer pinned it, this resolves to the full solc metadata JSON including original sources. ipfs.io is EGRESS_BLOCKED here, so unretrieved.",
         "effective_transparency": "Even unverified, the contract is NOT opaque: revert strings and storage layout identify it as stock OpenZeppelin ERC20 v4.x, and the 11-selector dispatcher was fully enumerated. Absence of mint/burn/pause/owner was established from bytecode directly, without needing source."
+      },
+      "stablecoin_assessment_20260925": {
+        "question": "Is FRNK a USD-pegged stable instrument?",
+        "answer": "NO - architecturally impossible, on both the Ethereum and BSC deployments.",
+        "missing_primitives": [
+          "no mint (cannot expand supply on deposit)",
+          "no burn (cannot contract on redemption)",
+          "cannot hold reserves - ETH fallback is payable but reverts; BSC is non-payable",
+          "no redemption function",
+          "no oracle or USD price feed",
+          "no administering issuer (BSC fully ownerless; ETH owner can only sweep foreign ERC20s)",
+          "no proxy or upgrade path, so none of the above can ever be added"
+        ],
+        "design_contradiction": "A hard-capped 21,000,000 supply is Bitcoin-style scarcity - the deliberate OPPOSITE of the elastic supply every peg requires. The project's own copy cites Bitcoin as its lineage, confirming the intent was scarcity, not stability.",
+        "empirical_disproof": "ATH $0.00712 (2020-10-26) is 140x BELOW a $1 peg. Peak market cap $149,520 against the $21,000,000 that full backing would require - 99.29% unbacked at its best moment, then a collapse to ~$0. A pegged instrument does not have an all-time high.",
+        "text_does_not_claim_it": "The OVERVIEW says 'means of exchanging with the real economy' - medium of exchange, one of money's three functions. It never mentions USD, a peg, reserves, redemption or stability.",
+        "conflation_warning": "Bok Khoo's professional bio describes bringing 'traditional fiat financial instruments' to Ethereum. That is BOK'S work, not FRNK's. The only link between them is the MIT template header - the exact misreading flagged in bok_consulting_attribution."
       }
     }
   ],
