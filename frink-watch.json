@@ -304,7 +304,20 @@
       "payable": "Non-payable: CALLVALUE/ISZERO guard at the entry point rejects BNB on every function. No fallback.",
       "not_readable_from_runtime": "Total supply, name and symbol are set in the CONSTRUCTOR, which is not part of runtime bytecode. Cannot confirm the BSC supply is 21,000,000 from this paste alone.",
       "price_linkage": "NONE. No bridge, no mint, no cross-chain messaging on either side. The two deployments are disjoint ledgers. Arbitrage is impossible, so ETH and BSC prices cannot converge.",
-      "notes": "NOT a new listing. Address reuse is deterministic (CREATE address = keccak256(rlp(deployer, nonce))[12:]), so the same deployer key at the same nonce yields the same address on every EVM chain."
+      "notes": "NOT a new listing. Address reuse is deterministic (CREATE address = keccak256(rlp(deployer, nonce))[12:]), so the same deployer key at the same nonce yields the same address on every EVM chain.",
+      "supply": "21,000,000,000 (21 BILLION) - 1,000x the Ethereum FRNK supply of 21,000,000. The BSC version ABANDONS the Bitcoin-cap mirror.",
+      "holders": "101 (vs 29 on Ethereum)",
+      "supply_confidence": "SINGLE SOURCE (one search summary quoting BscScan). Not independently corroborated; explorers are egress-blocked. The same summary reported the Ethereum figures correctly (21,000,000 / 29 holders), which is mild support that it is distinguishing the two rather than conflating them.",
+      "concentration_20260925": {
+        "holder": "0xb943B74B93485B9Cb47E614C54e946D7c16ad2c8",
+        "share": "61% of total supply",
+        "tokens": "approximately 12,810,000,000 FRNK",
+        "float": "approximately 8,190,000,000 tokens (39%) distributed",
+        "source": "USER-OBSERVED on BscScan. Primary source.",
+        "significance": "This is the SAME address hardcoded in the Ethereum constructor to receive 100% of supply. One wallet is the treasury on BOTH chains."
+      },
+      "operator_inference": "The shared treasury wallet plus the shared contract address together establish the same operator behind both deployments. A CREATE address is keccak256(rlp(deployer, nonce))[12:], so reproducing 0xf938c9a2... on BSC required the same deployer EOA at the same nonce - i.e. control of that key. The address reuse is deliberate, not coincidental.",
+      "risk_reassessment": "Code is clean (ownerless, no mint/burn/pause) but that does NOT make the token safe. Immutability prevents INFLATION; it does nothing about a 61% holder SELLING. With BSC liquidity reported as N/A and price $0.00, the overhang is either unsellable (no pool) or catastrophic (tiny pool). Risk has moved from the code to the cap table."
     }
   ],
   "notify_on": [
@@ -319,7 +332,8 @@
     "CRITICAL FALSE POSITIVE: exchange 'price pages' (coinbase.com/price/..., bitget.com/price/..., binance.com/price/...). These exist for thousands of assets the exchange does NOT list for trading and are auto-generated. A price page is NEVER evidence of a listing. Only a dated announcement from the exchange's own newsroom/announcements feed counts.",
     "Inflated market-cap figures on aggregator pages (e.g. Bitget showing FRNK at $0.006804 / $142.89M mcap) that contradict $0 24h volume elsewhere. Market cap = price x supply and is meaningless without liquidity; a dead token can show a large mcap. Not a listing signal.",
     "CRITICAL FALSE POSITIVE: DEX aggregators, routers, wallets and trading bots (Jupiter, Phantom, Maestro Bot, Soul Sniper, MEXC DEX+, 1inch etc.) 'supporting' a token. These surface ANY token with an on-chain pool automatically - they are not listings and involve no exchange decision. 'MEXC DEX+' in particular is MEXC's on-chain aggregator front-end and is NOT a MEXC centralized-exchange listing.",
-    "Same contract address appearing on a second chain's explorer (e.g. FRNK 0xf938c9a2... on both Etherscan and BscScan). EVM addresses are deterministic from deployer+nonce, so cross-chain address reuse is trivial and means nothing. Not a bridge, not a listing, and prices on the two chains are unlinked."
+    "Same contract address appearing on a second chain's explorer (e.g. FRNK 0xf938c9a2... on both Etherscan and BscScan). EVM addresses are deterministic from deployer+nonce, so cross-chain address reuse is trivial and means nothing. Not a bridge, not a listing, and prices on the two chains are unlinked.",
+    "Aggregator boilerplate listing a token as 'available on' a long DEX roster (PancakeSwap v2, Mdex, BSCswap, Anyswap, BSCStation, CheeseSwap, O3swap, Bscex, Autofarm, ApeSwap, BakerySwap, Biswap, 1inch, ParaSwap, Pionex...). This is generated for any BEP-20 because routers CAN route it if a pool exists. Reported liquidity for FRNK on BSC is N/A. Not listings."
   ],
   "baseline_notes": "2026-09-09 00:48Z check: no listing. Recorded a sixth Ethereum FRINK (0x57fe4fdb..., deployed ~Oct 2024) confirmed directly from Etherscan via user screenshot - unindexed by every aggregator, deployer bridge-funded.",
   "data_quality_warnings": [
