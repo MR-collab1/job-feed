@@ -91,6 +91,26 @@
         "empirical_disproof": "ATH $0.00712 (2020-10-26) is 140x BELOW a $1 peg. Peak market cap $149,520 against the $21,000,000 that full backing would require - 99.29% unbacked at its best moment, then a collapse to ~$0. A pegged instrument does not have an all-time high.",
         "text_does_not_claim_it": "The OVERVIEW says 'means of exchanging with the real economy' - medium of exchange, one of money's three functions. It never mentions USD, a peg, reserves, redemption or stability.",
         "conflation_warning": "Bok Khoo's professional bio describes bringing 'traditional fiat financial instruments' to Ethereum. That is BOK'S work, not FRNK's. The only link between them is the MIT template header - the exact misreading flagged in bok_consulting_attribution."
+      },
+      "abi_verification_20260925": {
+        "provenance": "User supplied the deployed ABI. Cross-checked against the Solidity source they supplied earlier.",
+        "result": "EXACT MATCH in both directions. 20 functions, 3 events, 1 constructor, 1 fallback. Nothing in the ABI that is absent from the source; nothing in the source missing from the ABI. No hidden or undocumented functions.",
+        "dangerous_primitives_absent": [
+          "mint",
+          "burn",
+          "pause",
+          "blacklist",
+          "setFee",
+          "setTax",
+          "upgradeTo",
+          "withdraw",
+          "renounceOwnership"
+        ],
+        "constructor_takes_no_arguments": "Supply (2,100,000,000,000,000) and recipient (0xb943B7...) are hardcoded literals in the bytecode, not deploy-time parameters. Nothing about the genesis allocation was configurable.",
+        "TWO_SUPPLY_GETTERS": "The contract exposes BOTH totalSupply() and the public state variable _totalSupply(). They return DIFFERENT values once any tokens reach 0x0: totalSupply() returns _totalSupply - balances[address(0)], while _totalSupply() returns the raw stored constant. A data source reading _totalSupply() will report a higher figure than one reading totalSupply(). PLAUSIBLE CONTRIBUTOR to the persistent supply disagreements across aggregators for this token - though note the 21,000,000 vs 21,000,000,000 gap is the ETH/BSC split, not this.",
+        "FALLBACK_ABI_TRAP": "The ABI advertises the fallback as payable:true, but the source body is revert(). Any tool or reader working from the ABI alone would wrongly conclude the contract accepts ETH. It does not. This is why the stablecoin assessment relied on the source body rather than the ABI flag.",
+        "code_quality_wart": "safeAdd/safeSub/safeMul/safeDiv are declared public rather than internal, so four pure math helpers are exposed as external functions. Harmless, but it bloats the ABI and wasted deployment gas - another sign of unmodified template code.",
+        "confirms_bsc_diff": "Independently confirms the earlier bytecode-derived ABI diff: increaseAllowance/decreaseAllowance absent here but present on BSC; owner/newOwner/transferOwnership/acceptOwnership/approveAndCall/transferAnyERC20Token present here but absent on BSC."
       }
     },
     {
