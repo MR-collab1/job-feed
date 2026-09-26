@@ -1,0 +1,78 @@
+name: Update visa statistics
+
+# Home Affairs publishes on a monthly-to-annual cycle, so this checks daily and
+# commits only when the published figures actually change.
+on:
+  schedule:
+    # 19:00 UTC ≈ 05:00 AEST / 06:00 AEDT the following morning.
+    - cron: '0 19 * * *'
+  workflow_dispatch:
+    inputs:
+      only:
+        description: 'Build a single series id (blank builds all)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: visa-stats
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip requests openpyxl
+
+      # Guard the parsing logic before it is pointed at live files.
+      - name: Run pipeline tests
+        run: python -m unittest discover -s scripts/tests -t scripts
+
+      - name: Rebuild dashboard data
+        id: build
+        run: |
+          python scripts/build_visa_stats.py \
+            ${{ inputs.only && format('--only {0}', inputs.only) || '' }} \
+            | tee "$GITHUB_STEP_SUMMARY"
+        continue-on-error: true
+
+      - name: Commit if the published figures changed
+        run: |
+          if git diff --quiet -- visa/data/latest.json; then
+            echo "No change in published figures." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add visa/data/latest.json
+          git commit -m "Visa statistics refresh: $(date -u +%Y-%m-%d)"
+          for attempt in 1 2 3 4; do
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+              echo "Pushed updated figures." >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            echo "Push failed (attempt $attempt); refreshing and retrying."
+            sleep $((2 ** attempt))
+            git pull --rebase origin "${GITHUB_REF_NAME}" || true
+          done
+          echo "::error::Could not push refreshed figures after 4 attempts."
+          exit 1
+
+      # A failed fetch is visible in the job summary but must not mask a real
+      # break in the pipeline itself, so surface the builder's exit code last.
+      - name: Report build outcome
+        if: steps.build.outcome == 'failure'
+        run: |
+          echo "::warning::The builder could not rebuild any series. \
+          The dashboard is still serving the last successful refresh."

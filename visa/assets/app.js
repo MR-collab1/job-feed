@@ -1,0 +1,595 @@
+/* Dashboard shell: loads the published JSON and renders tiles, charts,
+ * table views and provenance.
+ *
+ * Every number on the page comes from visa/data/latest.json, which is written
+ * by scripts/build_visa_stats.py. When a series could not be built the card
+ * says so and names the reason — nothing is estimated, interpolated or
+ * carried over to fill a gap.
+ */
+
+(function () {
+  'use strict';
+
+  var DATA_URL = 'data/latest.json';
+  var DEMO_URL = 'data/sample.json';
+
+  /* How each series is drawn. Anything not listed falls back to its shape. */
+  var DISPLAY = {
+    pr_by_stream:                 { chart: 'stacked', wide: true },
+    temp_grants_by_program:       { chart: 'line', wide: true },
+    grants_by_subclass:           { chart: 'ranked', wide: true },
+    citizenship_conferrals:       { chart: 'line', wide: false },
+    citizenship_by_prior_country: { chart: 'ranked', wide: false },
+    citizenship_by_state:         { chart: 'ranked', wide: false },
+    pr_by_citizenship:            { chart: 'ranked', wide: false },
+    pr_by_state:                  { chart: 'ranked', wide: false },
+    pr_by_state_over_time:        { chart: 'stacked', wide: true },
+    pr_by_subclass:               { chart: 'ranked', wide: false },
+    student_by_citizenship:       { chart: 'ranked', wide: false }
+  };
+
+  /* Program overview first, then the subclass detail, then citizenship. */
+  var ORDER = [
+    'pr_by_stream',
+    'pr_by_citizenship',
+    'pr_by_state',
+    'pr_by_state_over_time',
+    'pr_by_subclass',
+    'temp_grants_by_program',
+    'grants_by_subclass',
+    'student_by_citizenship',
+    'citizenship_conferrals',
+    'citizenship_by_prior_country',
+    'citizenship_by_state'
+  ];
+
+  var esc = Charts.escapeHtml;
+
+  document.addEventListener('DOMContentLoaded', function () {
+    setupTheme();
+    var demo = new URLSearchParams(location.search).has('demo');
+    load(demo ? DEMO_URL : DATA_URL, demo);
+  });
+
+  function load(url, isDemo) {
+    fetch(url, { cache: 'no-cache' })
+      .then(function (response) {
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return response.json();
+      })
+      .then(function (payload) { render(payload, isDemo); })
+      .catch(function (error) { renderLoadFailure(url, error); });
+  }
+
+  /* ------------------------------------------------------------------ render */
+
+  function render(payload, isDemo) {
+    document.getElementById('demoBanner').hidden = !isDemo;
+    renderFreshness(payload);
+    renderRunBanner(payload);
+    renderTiles(payload.headline || []);
+    renderCards(payload);
+    renderNotFound(payload);
+    renderSources(payload.sources || []);
+  }
+
+  function renderFreshness(payload) {
+    var run = payload.run || {};
+    var status = run.status || 'unknown';
+    var checked = payload.last_checked_at || payload.generated_at;
+
+    var window_ = payload.reporting_window || {};
+    document.getElementById('freshness').innerHTML = [
+      field('Source', 'Australian Department of Home Affairs, via data.gov.au'),
+      window_.from_program_year
+        ? field('Covering', window_.from_program_year + '\u201321 to current')
+        : '',
+      field('Data built', formatDateTime(payload.generated_at)),
+      field('Last checked', formatDateTime(checked)),
+      '<div><dt>Pipeline</dt><dd><span class="status-dot status-' + esc(status) + '"></span>' +
+        esc(statusText(status, run)) + '</dd></div>'
+    ].join('');
+  }
+
+  function field(label, value) {
+    return '<div><dt>' + esc(label) + '</dt><dd>' + esc(value) + '</dd></div>';
+  }
+
+  function statusText(status, run) {
+    // Count against the series we expect to exist. An optional series that
+    // Home Affairs does not publish is not a missing one.
+    var have = run.required_available !== undefined ? run.required_available : run.series_available;
+    var total = run.required_total !== undefined ? run.required_total : run.series_total;
+    var counts = have + '/' + total + ' series';
+    if (status === 'ok') return 'All series current (' + counts + ')';
+    if (status === 'partial') return 'Some series unavailable (' + counts + ')';
+    if (status === 'failed') return 'Last refresh failed';
+    return 'Awaiting first run';
+  }
+
+  function renderRunBanner(payload) {
+    var run = payload.run || {};
+    var banner = document.getElementById('runBanner');
+    var problems = run.problems || [];
+
+    if (run.retained_previous) {
+      banner.hidden = false;
+      banner.innerHTML = '<div><strong>Showing the last successful refresh.</strong> ' +
+        'Today\'s run could not reach the source, so the figures below are unchanged ' +
+        'from ' + esc(formatDateTime(payload.generated_at)) + ' rather than blanked.</div>';
+      return;
+    }
+
+    var required = problems.filter(function (p) { return !p.optional; });
+    if (!required.length) { banner.hidden = true; return; }
+
+    banner.hidden = false;
+    banner.innerHTML = '<div><strong>' + required.length + ' of ' +
+      (run.required_total || run.series_total) +
+      ' series could not be rebuilt.</strong> Those cards are marked below. This usually ' +
+      'means Home Affairs renamed or restructured a published file.</div>';
+  }
+
+  function renderTiles(tiles) {
+    var host = document.getElementById('tiles');
+    if (!tiles.length) { host.innerHTML = ''; return; }
+
+    host.innerHTML = tiles.map(function (tile) {
+      var meta = [];
+      if (tile.caption) meta.push(esc(tile.caption));
+      if (tile.share !== undefined) meta.push((tile.share * 100).toFixed(1) + '% of total');
+      if (tile.period) meta.push(esc(tile.period));
+
+      var delta = '';
+      if (tile.change_pct !== undefined) {
+        var up = tile.change_pct >= 0;
+        delta = ' <span class="tile-delta ' + (up ? 'up' : 'down') + '">' +
+          (up ? '▲' : '▼') + ' ' + Math.abs(tile.change_pct).toFixed(1) + '%</span>' +
+          ' <span>vs ' + esc(tile.compare_period || 'previous') + '</span>';
+      }
+
+      return '<article class="tile">' +
+        '<p class="tile-label">' + esc(tile.label) + '</p>' +
+        '<p class="tile-value">' + Charts.formatValue(tile.value) +
+          '<span class="tile-unit">' + esc(tile.unit || '') + '</span></p>' +
+        '<p class="tile-meta">' + meta.join(' · ') + delta + '</p>' +
+        '</article>';
+    }).join('');
+  }
+
+  function renderCards(payload) {
+    var host = document.getElementById('cards');
+    host.innerHTML = '';
+    var series = payload.series || {};
+
+    var ids = ORDER.filter(function (id) { return series[id]; })
+      .concat(Object.keys(series).filter(function (id) { return ORDER.indexOf(id) === -1; }))
+      .filter(function (id) {
+        var s = series[id];
+        return s.available || !s.optional;
+      });
+
+    if (!ids.length) {
+      host.innerHTML = '<div class="card is-wide"><div class="empty">' +
+        'No series have been published yet. Run ' +
+        '<code>python3 scripts/build_visa_stats.py</code> or wait for the daily workflow.' +
+        '</div></div>';
+      return;
+    }
+
+    ids.forEach(function (id) { host.appendChild(buildCard(series[id], id)); });
+  }
+
+  function buildCard(series, id) {
+    var display = DISPLAY[id] || {};
+    var card = document.createElement('section');
+    card.className = 'card' + (display.wide ? ' is-wide' : '');
+
+    var head = document.createElement('div');
+    head.className = 'card-head';
+    head.innerHTML = '<h2>' + esc(series.title) + '</h2>';
+    card.appendChild(head);
+
+    var sub = document.createElement('p');
+    sub.className = 'card-sub';
+    sub.textContent = subtitleFor(series);
+    card.appendChild(sub);
+
+    if (!series.available) {
+      card.insertAdjacentHTML('beforeend',
+        '<div class="empty"><p>This series could not be built from the current ' +
+        'published files.</p><code>' + esc(series.reason || 'unknown reason') + '</code></div>');
+      return card;
+    }
+
+    var chartType = display.chart || defaultChart(series.shape);
+    var categories = chartType === 'ranked' ? [] : (series.categories || []);
+
+    if (categories.length >= 2) card.appendChild(buildLegend(categories));
+
+    var groups = chartType === 'ranked' ? programsIn(series) : [];
+
+    var chartHost = document.createElement('div');
+    chartHost.className = 'chart-host';
+
+    var tableHost = document.createElement('div');
+    tableHost.className = 'table-host';
+    tableHost.hidden = true;
+
+    // Grants span visitor subclasses in the millions down to parent visas in
+    // the hundreds, so a program filter is what makes the small ones legible.
+    if (groups.length > 1) {
+      card.appendChild(buildProgramFilter(groups, function (program) {
+        var view = filterByProgram(series, program);
+        sub.textContent = subtitleFor(view);
+        tableHost.innerHTML = buildTable(view, chartType);
+        drawChart(chartHost, view, chartType);
+      }));
+    }
+
+    card.appendChild(chartHost);
+    tableHost.innerHTML = buildTable(series, chartType);
+    card.appendChild(tableHost);
+
+    head.appendChild(buildToggle(chartHost, tableHost));
+    wireTableSearch(tableHost);
+    card.appendChild(buildDownload(series, chartType));
+
+    if (series.note) {
+      card.insertAdjacentHTML('beforeend',
+        '<p class="tile-meta">' + esc(series.note) + '</p>');
+    }
+
+    drawChart(chartHost, series, chartType);
+    return card;
+  }
+
+  function subtitleFor(series) {
+    var parts = [series.subtitle];
+    if (series.shape === 'ranked') {
+      if (series.period) parts.push(series.period);
+      // The folded "All other" row is not a category, and the table now
+      // carries every one — so say what the *chart* is showing.
+      var charted = series.items.filter(function (i) { return !i.is_tail; }).length;
+      if (series.category_count && charted < series.category_count) {
+        parts.push('chart shows top ' + charted + ' of ' + series.category_count);
+      }
+    }
+    return parts.filter(Boolean).join(' · ');
+  }
+
+  function defaultChart(shape) {
+    if (shape === 'ranked') return 'ranked';
+    if (shape === 'time_total') return 'line';
+    return 'stacked';
+  }
+
+  function drawChart(host, series, chartType) {
+    if (chartType === 'ranked') {
+      Charts.rankedBars(host, {
+        items: series.items,
+        unit: series.unit,
+        ariaLabel: series.title
+      });
+      return;
+    }
+
+    var options = {
+      periods: series.periods,
+      categories: series.categories,
+      matrix: series.matrix,
+      unit: series.unit,
+      ariaLabel: series.title
+    };
+    if (chartType === 'line') Charts.multiLine(host, options);
+    else Charts.stackedBars(host, options);
+  }
+
+  function programsIn(series) {
+    var seen = [];
+    (series.items || []).forEach(function (item) {
+      if (item.group && seen.indexOf(item.group) === -1) seen.push(item.group);
+    });
+    return seen.sort();
+  }
+
+  function buildProgramFilter(groups, onChange) {
+    var row = document.createElement('div');
+    row.className = 'filters';
+    row.innerHTML = '<label>Program ' +
+      '<select><option value="">All programs</option>' +
+      groups.map(function (g) {
+        return '<option value="' + esc(g) + '">' + esc(g) + '</option>';
+      }).join('') +
+      '</select></label>';
+    row.querySelector('select').addEventListener('change', function (event) {
+      onChange(event.target.value);
+    });
+    return row;
+  }
+
+  /* Narrowing to one program re-bases the shares onto that program and drops
+     the cross-program tail row, which has no meaning inside a single program.
+     Values themselves never change, and bars are one colour, so nothing is
+     repainted by filtering. */
+  function filterByProgram(series, program) {
+    if (!program) return series;
+
+    var items = series.items.filter(function (item) { return item.group === program; });
+    var total = items.reduce(function (sum, item) { return sum + item.value; }, 0);
+
+    var view = Object.assign({}, series, {
+      items: items.map(function (item) {
+        return Object.assign({}, item, {
+          share: total ? item.value / total : 0
+        });
+      }),
+      total: total,
+      category_count: items.length,
+      period: (series.reference_periods || {})[program] || series.period,
+      subtitle: series.subtitle + ' — ' + program
+    });
+    return view;
+  }
+
+  function buildLegend(categories) {
+    var legend = document.createElement('div');
+    legend.className = 'legend';
+    legend.innerHTML = categories.map(function (name, index) {
+      return '<span class="legend-item">' +
+        '<span class="legend-swatch" style="background:' + Charts.seriesColor(index) + '"></span>' +
+        esc(name) + '</span>';
+    }).join('');
+    return legend;
+  }
+
+  /* A table view for every chart: it carries the exact values, and it is the
+     documented relief for series colours that sit below 3:1 on the light
+     surface. */
+  function buildToggle(chartHost, tableHost) {
+    var toggle = document.createElement('div');
+    toggle.className = 'view-toggle';
+    toggle.innerHTML =
+      '<button type="button" aria-pressed="true">Chart</button>' +
+      '<button type="button" aria-pressed="false">Table</button>';
+
+    var buttons = toggle.querySelectorAll('button');
+    buttons[0].addEventListener('click', function () { switchTo(true); });
+    buttons[1].addEventListener('click', function () { switchTo(false); });
+
+    function switchTo(showChart) {
+      chartHost.hidden = !showChart;
+      tableHost.hidden = showChart;
+      buttons[0].setAttribute('aria-pressed', String(showChart));
+      buttons[1].setAttribute('aria-pressed', String(!showChart));
+    }
+
+    return toggle;
+  }
+
+  /* Filter the table rows in place. The chart is untouched — it keeps showing
+     the published top-N, so filtering never changes what a bar means. */
+  function wireTableSearch(tableHost) {
+    var input = tableHost.querySelector('.table-search input');
+    if (!input) return;
+    var rows = Array.prototype.slice.call(tableHost.querySelectorAll('tbody tr'));
+    var count = tableHost.querySelector('.table-count');
+
+    function apply() {
+      var term = input.value.trim().toLowerCase();
+      var shown = 0;
+      rows.forEach(function (row) {
+        var hit = !term || row.dataset.label.indexOf(term) !== -1;
+        row.hidden = !hit;
+        if (hit) shown++;
+      });
+      count.textContent = term ? shown + ' of ' + rows.length : '';
+    }
+
+    input.addEventListener('input', apply);
+  }
+
+  function buildDownload(series, chartType) {
+    var wrap = document.createElement('div');
+    wrap.className = 'card-actions';
+    var link = document.createElement('a');
+    link.href = '#';
+    link.textContent = 'Download CSV';
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      var csv = toCsv(series, chartType);
+      var url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = series.id + '.csv';
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    });
+    wrap.appendChild(link);
+    return wrap;
+  }
+
+  function csvCell(value) {
+    var text = value === null || value === undefined ? '' : String(value);
+    return /[",\n]/.test(text) ? '"' + text.replace(/"/g, '""') + '"' : text;
+  }
+
+  function toCsv(series, chartType) {
+    var lines = [];
+    if (chartType === 'ranked') {
+      var rows = series.all_items && series.all_items.length ? series.all_items : series.items;
+      var grouped = rows.some(function (r) { return r.group; });
+      lines.push(['rank', 'category', grouped ? 'program' : null, 'period', series.unit, 'share']
+        .filter(Boolean).map(csvCell).join(','));
+      rows.forEach(function (row, i) {
+        lines.push([
+          row.rank || i + 1, row.label, grouped ? (row.group || '') : null,
+          row.period || series.period || '', row.value, row.share,
+        ].filter(function (v) { return v !== null; }).map(csvCell).join(','));
+      });
+    } else {
+      lines.push(['period'].concat(series.categories).map(csvCell).join(','));
+      series.periods.forEach(function (period, i) {
+        lines.push([period].concat(series.categories.map(function (_c, c) {
+          return series.matrix[c][i];
+        })).map(csvCell).join(','));
+      });
+    }
+    return lines.join('\n') + '\n';
+  }
+
+  function buildTable(series, chartType) {
+    if (chartType === 'ranked') {
+      // The chart shows a readable top-N; the table shows everything the
+      // pipeline published, so a reader can find their own country.
+      var rows = series.all_items && series.all_items.length
+        ? series.all_items
+        : series.items;
+      // Only show the program/period columns when the series actually spans
+      // more than one source, so single-source tables stay uncluttered.
+      var grouped = rows.some(function (item) { return item.group; });
+      var mixed = grouped && Object.keys(series.reference_periods || {}).length > 1;
+      var ranked = rows.length && rows[0].rank !== undefined;
+
+      var head = '<tr>' + (ranked ? '<th class="num">#</th>' : '') + '<th>Category</th>' +
+        (grouped ? '<th>Program</th>' : '') +
+        (mixed ? '<th>Period</th>' : '') +
+        '<th class="num">' + esc(series.unit) + '</th><th class="num">Share</th></tr>';
+
+      var body = rows.map(function (item) {
+        return '<tr data-label="' + esc(String(item.label).toLowerCase()) + '">' +
+          (ranked ? '<td class="num">' + item.rank + '</td>' : '') +
+          '<td>' + esc(item.label) + '</td>' +
+          (grouped ? '<td>' + esc(item.group || '—') + '</td>' : '') +
+          (mixed ? '<td>' + esc(item.period || '—') + '</td>' : '') +
+          '<td class="num">' + Charts.formatValue(item.value) + '</td>' +
+          '<td class="num">' + (item.share * 100).toFixed(1) + '%</td></tr>';
+      }).join('');
+
+      var search = rows.length > 12
+        ? '<div class="table-search"><label>Find <input type="search" ' +
+          'placeholder="e.g. Nepal" autocomplete="off"></label>' +
+          '<span class="table-count"></span></div>'
+        : '';
+
+      return search + '<table class="data"><caption>' + esc(series.period || '') +
+        ' · ' + rows.length + ' categories' +
+        '</caption><thead>' + head + '</thead><tbody>' + body + '</tbody></table>';
+    }
+
+    var header = '<tr><th>Period</th>' + series.categories.map(function (name) {
+      return '<th class="num">' + esc(name) + '</th>';
+    }).join('') + '<th class="num">Total</th></tr>';
+
+    var body = series.periods.map(function (period, i) {
+      var total = 0;
+      var cells = series.categories.map(function (_name, c) {
+        var value = series.matrix[c][i] || 0;
+        total += value;
+        return '<td class="num">' + Charts.formatValue(value) + '</td>';
+      }).join('');
+      return '<tr><td>' + esc(period) + '</td>' + cells +
+        '<td class="num">' + Charts.formatValue(total) + '</td></tr>';
+    }).join('');
+
+    return '<table class="data"><caption>' + esc(series.unit) +
+      '</caption><thead>' + header + '</thead><tbody>' + body + '</tbody></table>';
+  }
+
+  function renderNotFound(payload) {
+    var host = document.getElementById('notFound');
+    var skipped = ((payload.run || {}).problems || []).filter(function (p) {
+      return p.optional;
+    });
+
+    if (!skipped.length) { host.hidden = true; return; }
+
+    host.hidden = false;
+    host.innerHTML = '<h2>Looked for, not published</h2>' +
+      '<p class="card-sub">These breakdowns are not currently available as a data ' +
+      'file from Home Affairs. The pipeline checks for them on every run and a card ' +
+      'will appear here if one is published.</p><ul>' +
+      skipped.map(function (problem) {
+        var series = (payload.series || {})[problem.series] || {};
+        return '<li>' + esc(series.title || problem.series) +
+          '<div class="meta">' + esc(problem.reason) + '</div></li>';
+      }).join('') + '</ul>';
+  }
+
+  function renderSources(sources) {
+    var host = document.getElementById('sourceList');
+    if (!sources.length) {
+      host.innerHTML = '<li>No sources recorded yet.</li>';
+      return;
+    }
+
+    host.innerHTML = sources.map(function (source) {
+      var meta = [
+        source.format ? source.format.toUpperCase() : null,
+        source.row_count ? Charts.formatValue(source.row_count) + ' rows' : null,
+        source.sheet ? 'sheet: ' + source.sheet : null,
+        source.resource_updated ? 'file updated ' + formatDate(source.resource_updated) : null,
+        source.dataset_updated ? 'dataset updated ' + formatDate(source.dataset_updated) : null
+      ].filter(Boolean).join(' · ');
+
+      return '<li><a href="' + esc(source.dataset_url) + '" target="_blank" rel="noopener">' +
+        esc(source.title) + '</a>' +
+        (source.resource_name ? ' — ' + esc(source.resource_name) : '') +
+        '<div class="meta">' + esc(meta) + '</div></li>';
+    }).join('');
+  }
+
+  function renderLoadFailure(url, error) {
+    document.getElementById('cards').innerHTML =
+      '<div class="card is-wide"><div class="empty">' +
+      '<p>Could not load <code>' + esc(url) + '</code> (' + esc(error.message) + ').</p>' +
+      '<p>If you opened this file directly from disk, serve the folder over HTTP ' +
+      'instead: <code>python3 -m http.server</code>.</p></div></div>';
+    document.getElementById('freshness').innerHTML = field('Status', 'Data file unavailable');
+  }
+
+  /* ------------------------------------------------------------------ dates */
+
+  function formatDateTime(value) {
+    if (!value) return 'never';
+    var date = new Date(value);
+    if (isNaN(date)) return String(value);
+    return date.toLocaleString('en-AU', {
+      day: 'numeric', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+  }
+
+  function formatDate(value) {
+    if (!value) return '';
+    var date = new Date(value);
+    if (isNaN(date)) return String(value);
+    return date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  /* ------------------------------------------------------------------ theme */
+
+  function setupTheme() {
+    var button = document.getElementById('themeToggle');
+    var stored = null;
+    try { stored = localStorage.getItem('visa-theme'); } catch (e) { /* private mode */ }
+    if (stored) document.documentElement.setAttribute('data-theme', stored);
+    label();
+
+    button.addEventListener('click', function () {
+      var next = current() === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('visa-theme', next); } catch (e) { /* ignore */ }
+      label();
+    });
+
+    function current() {
+      // Dark is the default; only an explicit stamp moves off it.
+      return document.documentElement.getAttribute('data-theme') || 'dark';
+    }
+
+    function label() {
+      button.textContent = current() === 'dark' ? 'Light theme' : 'Dark theme';
+    }
+  }
+})();
