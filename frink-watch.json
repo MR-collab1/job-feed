@@ -8,7 +8,7 @@
     "FRN"
   ],
   "baseline_established": "2026-08-30",
-  "last_checked": "2026-09-25T00:00Z",
+  "last_checked": "2026-09-27T00:00Z",
   "known_assets": [
     {
       "name": "Frinkcoin",
@@ -426,6 +426,17 @@
         "text_does_not_claim_it": "The OVERVIEW says 'means of exchanging with the real economy' - medium of exchange, one of money's three functions. It never mentions USD, a peg, reserves, redemption or stability.",
         "conflation_warning": "Bok Khoo's professional bio describes bringing 'traditional fiat financial instruments' to Ethereum. That is BOK'S work, not FRNK's. The only link between them is the MIT template header - the exact misreading flagged in bok_consulting_attribution."
       }
+    },
+    {
+      "name": "Official Flink Coin",
+      "ticker": "FRINKCOIN",
+      "chain": "Solana",
+      "contract": "4AgQQKT2Rr1BXHGWwyiyXhjkcUAaurv5myaTa8z8pump",
+      "known_venues": [
+        "pump.fun (the 'pump' suffix is a pump.fun launch marker)"
+      ],
+      "contract_confidence": "UNVERIFIED - from a search result",
+      "notes": "EIGHTEENTH FRINK-named asset. Note the name is 'Flink', not 'Frink' - a typosquat of a parody coin. Pre-existing; a discovery, not a listing."
     }
   ],
   "notify_on": [
@@ -442,7 +453,10 @@
     "CRITICAL FALSE POSITIVE: DEX aggregators, routers, wallets and trading bots (Jupiter, Phantom, Maestro Bot, Soul Sniper, MEXC DEX+, 1inch etc.) 'supporting' a token. These surface ANY token with an on-chain pool automatically - they are not listings and involve no exchange decision. 'MEXC DEX+' in particular is MEXC's on-chain aggregator front-end and is NOT a MEXC centralized-exchange listing.",
     "Same contract address appearing on a second chain's explorer (e.g. FRNK 0xf938c9a2... on both Etherscan and BscScan). EVM addresses are deterministic from deployer+nonce, so cross-chain address reuse is trivial and means nothing. Not a bridge, not a listing, and prices on the two chains are unlinked.",
     "Aggregator boilerplate listing a token as 'available on' a long DEX roster (PancakeSwap v2, Mdex, BSCswap, Anyswap, BSCStation, CheeseSwap, O3swap, Bscex, Autofarm, ApeSwap, BakerySwap, Biswap, 1inch, ParaSwap, Pionex...). This is generated for any BEP-20 because routers CAN route it if a pool exists. Reported liquidity for FRNK on BSC is N/A. Not listings.",
-    "The '(c) by Moritz Neto with BokkyPooBah / Bok Consulting Pty Ltd Au' header in any FRINK-named contract. It is MIT template attribution present in 25,536 GitHub Solidity files and implies NO audit, endorsement or involvement by Bok Consulting."
+    "The '(c) by Moritz Neto with BokkyPooBah / Bok Consulting Pty Ltd Au' header in any FRINK-named contract. It is MIT template attribution present in 25,536 GitHub Solidity files and implies NO audit, endorsement or involvement by Bok Consulting.",
+    "Cross-chain address reuse - the SAME address on ETH and BSC is two unrelated contracts (deployer nonce 6 on both chains). Not a bridge, not a listing.",
+    "Long DEX/router rosters (Jupiter, Phantom, Maestro, Soul Sniper, MEXC DEX+) - these are aggregators over ONE pool, not separate listings.",
+    "Bitget's $142.89M FRNK market cap - fabricated by multiplying a 2020 ETH-chain price by the BSC supply. Not a signal."
   ],
   "baseline_notes": "2026-09-09 00:48Z check: no listing. Recorded a sixth Ethereum FRINK (0x57fe4fdb..., deployed ~Oct 2024) confirmed directly from Etherscan via user screenshot - unindexed by every aggregator, deployer bridge-funded.",
   "data_quality_warnings": [
@@ -453,7 +467,8 @@
     "2026-09-09: a search summary reported '$0.00 24h volume, $2.67K market cap, 1 billion circulating supply' for 0xed2ee398. That was CONFLATION - the 1B supply belongs to 0x46493b80. Direct verification showed 0xed2ee398 stable at ~$10.8K liquidity and ~$8.7K volume. Always re-verify alarming metrics against a second query before acting on them.",
     "SUMMARIZER ERROR 2026-09-25: a search summary claimed 0xb943B74B... is 'the contract address where FRNK was deployed'. It is NOT. The contract is 0xf938c9a2... (Etherscan). 0xb943B7... is the wallet that received 100% of supply in the constructor. The error comes from parroting the template's stale 'Deployed to:' header comment.",
     "CONFIRMED 2026-09-25 at bytecode level: aggregators (Bitget web3 /swap/bnb/, poocoin, CoinMarketCap) present ETH FRNK and BSC FRNK at 0xf938c9a2... as ONE asset and may merge their price/volume/market-cap figures. They are different contracts with different decimals (8 vs 18) and different compilers (0.4.24 vs 0.8.1). Any blended figure across the two is meaningless.",
-    "METHOD NOTE: a known compiler version only implies explorer verification when it was READ OFF a verified source page. It can also be decoded from the CBOR metadata trailer of unverified bytecode (as done for BSC FRNK). Do not conflate the two."
+    "METHOD NOTE: a known compiler version only implies explorer verification when it was READ OFF a verified source page. It can also be decoded from the CBOR metadata trailer of unverified bytecode (as done for BSC FRNK). Do not conflate the two.",
+    "CoinMarketCap/CoinCarp state FRNK was 'created in February 2020'. FALSE - the creation transaction is 2020-04-12 18:30:01 UTC, block 9,859,173, nonce 6. Every aggregator carries the same wrong month, which is where my own earlier misdating came from. Treat aggregator provenance fields as unverified."
   ],
   "episode_timeline": {
     "premise_made_public": "January 2020 - Fox released the episode title and synopsis; covered by The Springfield Shopper (news.simpsonswiki.com) in Jan 2020 under 'Professor Frink develops a cryptocurrency that makes him rich in February'",
@@ -462,26 +477,10 @@
     "conclusion": "NO FRINK-named token is known to predate the episode. Even if FRNK were minted 1-22 Feb 2020 (before broadcast), the premise was already public from January 2020, so it could not constitute foreknowledge or prediction. Every FRINK token post-dates public knowledge of the episode."
   },
   "frink_language_founder_watch": {
-    "subject": "Alan Eliasen - designer and implementer of the Frink programming language (frinklang.org), first released Dec 2001. Also authored several faster BigInteger algorithms in Java 8.",
-    "naming_link": "Eliasen named the LANGUAGE after Professor Frink from The Simpsons - the same character the episode's fictional coin is named for. So the language and the memecoins share a source, not a lineage.",
-    "finding_20260911": "NO EVIDENCE that Alan Eliasen has launched, endorsed, or been involved with any cryptocurrency. Multiple searches across his name, the language, and crypto/blockchain terms returned only his programming-language work. No token names him as founder.",
-    "no_disclaimer_found": "Could not locate any statement on frinklang.org either claiming or disclaiming affiliation with any FRINK token.",
-    "caution": "Absence of evidence from web search is not proof. But the pattern here is the opposite of a founder launch: tokens borrowing a name, with no named team.",
-    "deep_search_20260916": {
-      "whitepaper": "NONE FOUND. No paper authored by Eliasen on arXiv or SSRN relating to blockchain, cryptocurrency or distributed ledgers. Searches return only unrelated authors' blockchain papers.",
-      "team": "NO TEAM FOUND. Frink is consistently attributed to Alan Eliasen alone across Wikipedia, Rosetta Code, the Amazon Appstore listing and frinklang.org, since Dec 2001. It appears to be a solo project, so there is no 'team' to have crypto involvement.",
-      "wikipedia_blockchain_list": "He does NOT appear on Wikipedia's 'List of people in blockchain technology'.",
-      "CRITICAL_FALSE_POSITIVE": "frinklang.org hosts files named cryptoProviders.frink and cryptoAES256.frink. These are CRYPTOGRAPHY samples - they enumerate Java Cryptography Architecture providers and demonstrate AES-256 encryption/decryption. They have NOTHING to do with cryptocurrency. This is the single most likely source of a false 'Frink language does crypto' association and must not be reported as crypto involvement.",
-      "known_channels": "X/Twitter account @Frinklang exists (language account). OEIS wiki profile exists. No crypto content found on either.",
-      "conclusion": "No evidence of any cryptocurrency work, whitepaper, token, or blockchain involvement by Alan Eliasen, and no team exists around the language."
-    },
-    "token_affiliation_deepdive_20260916": {
-      "question": "Does any token claim association with the Frink PROGRAMMING LANGUAGE (frinklang.org)?",
-      "answer": "NO. No token found claims technical, official or endorsed affiliation with the language. Multiple independent sources explicitly state the tokens and the language are unrelated and share the name only via the Simpsons character.",
-      "only_adjacency_found": "The FRINK Token (Polygon, frinktoken.net) has a GitHub repository tagged under the 'frink' TOPIC - the same topic tag used by Frink-language repos. This places the token's repo alongside language repos when browsing github.com/topics/frink. This is ADJACENCY BY TAG, not a claim of affiliation, but it is the one place where a browser could form a false impression.",
-      "marketing_claim_to_flag": "The project states '100% liquidity locked and no rug pull risk until November 25, 2026'. 'No rug pull risk' is OVERSTATED. A liquidity lock prevents LP withdrawal only; it does not prevent the team dumping held tokens, does not rule out mint or blacklist functions in an unaudited contract, and expires on that date. Treat the phrase as marketing, not a security guarantee.",
-      "conclusion": "No token is associated with the Frink programming language. The 17 FRINK-named assets and the language independently take their name from Professor Frink."
-    }
+    "subject": "Alan Eliasen, creator of the Frink programming language",
+    "status_2026_09_27": "NO CRYPTO. No token, launch, endorsement or affiliation found. futureboy.us last updated 2026-02-28; activity remains units-of-measure computing, BigInteger algorithms (Karatsuba, 3-way Toom-Cook in Java 1.8) and OEIS.",
+    "conclusion": "Every FRINK-named asset traces to The Simpsons' Professor Frink, not to the language. No link, and none has ever appeared.",
+    "consecutive_clean_weeks": "all checks to date"
   },
   "refresh_log": [
     {
@@ -510,6 +509,87 @@
         "Alan Eliasen: no crypto, no token, no whitepaper. frinklang.org/.com still EGRESS_BLOCKED."
       ],
       "asset_count_unchanged": 16
+    },
+    {
+      "date": "2026-09-27",
+      "scope": "Full forensic rebuild from user-supplied primary-source exports",
+      "result": "MAJOR. Operator cluster mapped and closed on a single Binance account; ETH->BSC airdrop link proven 13/13; 2026 revival dated to 22 September; four corrections logged.",
+      "sources": "Etherscan + BscScan CSV exports and screenshots supplied by the user; all explorers and RPC endpoints remain egress-blocked to me.",
+      "listings_watch": "NO NEW ASSETS. Searches surfaced 4onqpWnV..., 8ptRMYbz..., 0x46493b80..., the Raydium pair and frinkcoinz.com - all already tracked. One backlog item added: 'Official Flink Coin' 4AgQQKT2...pump (18th).",
+      "status_changes": "Frink Coin (FRN) presale closed 2026-04-30 at 0.025205 USDT, DEX listing promised, not confirmed. The Solana FRINKCOIN Raydium pool sat at ~$8K market cap as of 2026-06-25.",
+      "founder_watch": "CLEAN."
     }
-  ]
+  ],
+  "operator_cluster": {
+    "summary": "One party controls both FRNK deployments and ran a multi-token operation. Established from primary-source exports, not inference.",
+    "wallets": {
+      "0xb943B74B93485B9Cb47E614C54e946D7c16ad2c8": {
+        "role": "deployer + owner (ETH) + treasury (BSC)",
+        "eth": "first tx 2020-04-11 17:16 funded by Binance 0x3f5ce5fb...; FRNK deployed 2020-04-12 18:30 at nonce 6; total Ethereum lifespan 5.4 days, last activity 2020-04-17",
+        "bsc": "first tx 2021-02-26 funded by Binance Hot Wallet 2; FRNK deployed 2021-02-27 23:32 at nonce 6",
+        "dormant_since": "2021-05-11 22:17:40 (1,964 days as of 2026-09-27) - CONFIRMED from a current export",
+        "eth_holdings_today": "ZERO. The Ethereum holder list accounts for 100.0000% of supply across 30 addresses and this wallet is not among them."
+      },
+      "0x2a6a9467eFE5A49caaBc9b38cC0EDbB8f680Ff98": {
+        "role": "insider seller",
+        "received": "2,100,000,000 FRNK = exactly 10% of BSC supply, airdropped 2021-02-28",
+        "prefunded_by_deployer": "0.02506634 BNB on 2021-02-26, the day BEFORE the token existed",
+        "extracted": "$18,898 out vs $1,704 in = ~$17,194 net, from selling the airdrop"
+      },
+      "0x02abC53304BCCA2d33262f437751fC9bE58C679A": {
+        "role": "second insider + token factory",
+        "received": "160,000,000 FRNK (still unsold, 5.5 years later) + $1,233.83 BNB from the other two wallets",
+        "deployed": "ORP 0x990f8b7f6565CE89127c81AE3f865E5d216Ea1C8, Keep 0x3636B06D3fEBCE9D5A9cA8B55190122D9938AB25, Bomb 0xed799464f007EcfF51Dcfcb6f5025C5a261C27Ae - all on 2021-03-01",
+        "note": "Keep's liquidity lived 8.4 minutes; Bomb's 14.1 minutes. Addresses derived via CREATE and confirmed against the wallet's own approve/transfer targets."
+      },
+      "0xdb865594116c0D201326D3fCF74E36AFfD976e9d": {
+        "role": "single-purpose relay",
+        "history": "exactly 2 transactions: in $8,891.53 from the seller, out $8,886.49 to Binance hot wallet 4.54 hours later"
+      }
+    },
+    "SHARED_BINANCE_DEPOSIT_ADDRESS": {
+      "address": "0xB411dF4B6df75904A47C26aE33B6901cCdC958A6",
+      "significance": "A Binance deposit address is assigned to ONE KYC'd account. Three separate wallets paid into it across two chains: the ETH deployer (2020-04-14, $670.73), 0x02abC533 (2021-02-28, $1,022.62) and 0x2a6a9467 (2021-03-02/05-09/05-10, $8,907.27). 94.2% of all extracted value reached Binance.",
+      "conclusion": "The cluster is closed. One verified identity sits behind it, held by Binance and reachable only by legal process."
+    }
+  },
+  "eth_bsc_migration_PROVEN": {
+    "claim": "The BSC launch airdrop was a 1:1 copy of the Ethereum holder list.",
+    "evidence": "All 13 recipients of BSC Disperse #1 (2021-02-28 01:12, total 18,542,403.80426863) match Ethereum holders by ADDRESS and by AMOUNT to 8 decimal places. 13/13 exact.",
+    "corroborating": "No amount exceeds 8 dp although BSC FRNK has 18 decimals; the total is 88.30% of the Ethereum supply, not of BSC's.",
+    "meaning": "A manual snapshot-and-distribute. The only functional link between the two tokens - a one-off event in Feb 2021, not an ongoing bridge."
+  },
+  "corrections_log": [
+    "2026-09-27 EtherDelta: I dated the stranded EtherDelta balance to 2016-2018 and inferred a 'crypto-native since 2017' operator. WRONG. The EtherDelta activity is 15-17 April 2020, three days AFTER deployment - EtherDelta listed any ERC-20 without permission, so it was a listing attempt. The wallet's first transaction is 2020-04-11; it was purpose-built 25.2 hours before the token.",
+    "2026-09-27 Extraction: I said the operation was 'net break-even, nothing extracted'. WRONG - I had only examined the deployer's own wallet. ~$17,194 was extracted through associate wallet 0x2a6a9467.",
+    "2026-09-27 The 2.27bn gap: I reported ~2,266,792,768 FRNK had 'moved, timing unknown' from the deployer. Almost certainly WRONG - the wallet has made no transaction since 2021-05-11, so it cannot have sent anything. The gap is an artefact of my reconstruction, most likely the unaccounted FRNK side of the May 2021 PancakeSwap V2 liquidity event.",
+    "2026-09-27 Ethereum pool: I said no Uniswap pool existed on Ethereum. A pair does exist - 0x266458e5379b91b076c0d17795df15b400bdacb9 'Uniswap V2: FRNK' - holding 0.36200106 FRNK. Drained, but present."
+  ],
+  "revival_2026": {
+    "date": "2026-09-22",
+    "evidence": "Calls to the BSC FRNK contract: 2 in all of 2025, 2 in Jan-Sep 2026, then 137 on 22 September alone, 165 over six days. 36 distinct wallets across the whole dormant period; 65 in six days.",
+    "venue": "Uniswap V4 on BNB Chain, PoolManager 0x28e2Ea090877bF75740558f6BFB36A5ffeE9e9dF (V4 is a singleton - no per-pair contract exists)",
+    "deployer_involvement": "NONE. 0xb943B7... made no transaction on or near 22 September and remains dormant since 2021.",
+    "PRIMARY_OPEN_QUESTION": {
+      "address": "0xB8E02d517b733541DF04c7404864546e21e50df4",
+      "known": "Approved FRNK 2023-12-24 and 2025-02-14 - so it held tokens through the dormant years. Transfer at 20:52:14 on 2026-09-22, the ignition minute, then four more approvals. Sold 660,649 FRNK in a 63-second burst on 25 Sep, supplying 87.1% of one buyer's position, having received nothing in-window.",
+      "unknown": "Its INBOUND FRNK transfers. If they trace to the deployer or the cluster, the 2021 operator is behind the revival under a new address. If they trace to open-market purchases in 2023, the revival is independent.",
+      "how_to_check": "BscScan BEP-20 transfer tab for that address, filtered to FRNK, sorted oldest first."
+    }
+  },
+  "episode_alignment_final": {
+    "winner": "0xf938c9a22c6fc9e6b81b24b68db94b92dc4a7976 (ETHEREUM)",
+    "score": "27/27 after forensics; the BSC twin scores 8.5/27. Gap widened from 6.0 to 18.5 points.",
+    "decisive_facts": [
+      "Creator retained ZERO - holder list covers 100.0000% of supply and the deployer is absent from it. This is the Frink renunciation, verified.",
+      "21,000,000 supply mirrors Bitcoin's cap - the only one of 18 assets that does.",
+      "Deployed 2020-04-12, exactly 49 days after the episode aired 2020-02-23.",
+      "Never marketed on the episode; the project's own copy invokes Bitcoin and never mentions The Simpsons.",
+      "11.70% of supply pushed at 7 exchanges and 3 DEXs seeking a listing. Every one ignored it.",
+      "One EtherDelta trade, two cancelled orders, gone in 6 days. No profit, ever.",
+      "Creator identifiable via two Binance fundings and a Binance deposit address - uniquely among the 18, it could be served."
+    ],
+    "the_inversion": "The BSC twin is the same author doing the opposite: 61% retained, 10% to its own second wallet, ~$17,194 extracted, one of four tokens produced by the cluster. Same key, opposite character."
+  },
+  "known_asset_count": 18
 }
